@@ -3,6 +3,9 @@
 
 #include <QObject>
 
+#include "signalvalue.h"
+#include "context.h"
+
 namespace Simulation
 {
 
@@ -15,7 +18,7 @@ namespace Simulation
     signals:
 
     public slots:
-
+        void set(Context* context, SignalValue value);
     };
 
 }

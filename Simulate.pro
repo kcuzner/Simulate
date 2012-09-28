@@ -18,13 +18,15 @@ SOURCES += main.cpp\
     simulation/context.cpp \
     simulation/input.cpp \
     simulation/output.cpp \
-    simulation/model.cpp
+    simulation/model.cpp \
+    simulation/signalvalue.cpp
 
 HEADERS  += mainwindow.h \
     simulation/block.h \
     simulation/context.h \
     simulation/input.h \
     simulation/output.h \
-    simulation/model.h
+    simulation/model.h \
+    simulation/signalvalue.h
 
 FORMS    += mainwindow.ui
