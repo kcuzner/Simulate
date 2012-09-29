@@ -10,6 +10,7 @@ namespace Simulation
 {
     class Input;
     class Block;
+    class Model;
 
     /**
      * @brief A simulation context
@@ -18,8 +19,8 @@ namespace Simulation
     {
         Q_OBJECT
     public:
-        explicit Context(double timeStep, QObject *parent = 0);
-        Context(Context* parent);
+        explicit Context(Model* model, double timeStep, QObject *parent = 0);
+        Context(Model* model, Context* parent);
 
         /**
          * @brief Returns the timestep of this context
@@ -32,7 +33,17 @@ namespace Simulation
          */
         void setTimeStep(double timeStep);
 
-        Context* createChildContext();
+        /**
+         * @brief Creates a child context from this context
+         * @return
+         */
+        Context* createChildContext(Model *model);
+
+        /**
+         * @brief Steps the blocks attached to this context
+         */
+        void step();
+
 
     signals:
 
@@ -85,6 +96,10 @@ namespace Simulation
 
         double timeStep;
         QList<Context*> children;
+        /**
+         * @brief Model this is attached to
+         */
+        Model* model;
 
     };
 

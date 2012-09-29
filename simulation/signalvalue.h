@@ -6,6 +6,9 @@
 namespace Simulation
 {
 
+    /**
+     * @brief The SignalValue class
+     */
     class SignalValue
     {
     public:

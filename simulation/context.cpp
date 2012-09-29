@@ -1,19 +1,20 @@
 #include "context.h"
 #include "input.h"
 #include "block.h"
+#include "model.h"
 
 #include <stdexcept>
 
 using namespace std;
 using namespace Simulation;
 
-Context::Context(double timeStep, QObject *parent) :
+Context::Context(Model* model, double timeStep, QObject *parent) :
     QObject(parent)
 {
     this->setTimeStep(timeStep);
 }
 
-Context::Context(Context *parent) :
+Context::Context(Model* model, Context *parent) :
     QObject(parent)
 {
     this->setTimeStep(parent->getTimeStep());
@@ -40,9 +41,9 @@ void Context::setTimeStep(double timeStep)
 
 }
 
-Context *Context::createChildContext()
+Context *Context::createChildContext(Model* model)
 {
-    Context* child = new Context(this);
+    Context* child = new Context(model, this);
     this->children.append(child);
     return child;
 }
