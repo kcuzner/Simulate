@@ -1,4 +1,6 @@
 #include "context.h"
+#include "input.h"
+#include "block.h"
 
 #include <stdexcept>
 
@@ -45,7 +47,30 @@ Context *Context::createChildContext()
     return child;
 }
 
-
 void Context::reset()
+{
+}
+
+void Context::setInput(Input *input, SignalValue value)
+{
+}
+
+Context::BlockData::BlockData(Block *block)
+{
+}
+
+void Context::BlockData::reset()
+{
+}
+
+void Context::BlockData::newStep()
+{
+}
+
+void Context::BlockData::setValue(QString valueName, SignalValue value)
+{
+}
+
+SignalValue Context::BlockData::getValue(QString valueName)
 {
 }
