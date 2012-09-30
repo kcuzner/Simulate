@@ -1,0 +1,48 @@
+Simulate
+
+A Graphical C++ & Python based model simulation engine
+
+By Kevin Cuzner
+
+Owing to the lack of variety in open souce model simulation, it was decided to
+create this simulation engine. The engine operates under the following
+principles:
+
+A Model is the basic container for a simulation. It contains Blocks which are
+connected together in order to represent a single step in a mathematical
+equation. Blocks may have any number of Inputs and Outputs. Outputs can be
+connected to multiple Inputs, but Inputs may only be connected to one Output.
+Models define special blocks called Entry and Exit points which represent
+both initial/static values in the model and persistant values. If an Entry and
+an Exit have the same name, when a step in a simulation completes, the Entry
+will be set to the value of the corrisponding Exit block before the next step
+executes, effectively creating a stepped loop. The special ModelBlock is a
+block which is attached to a Model. The Entry and Exit points of the attached
+model, so long as they do not have matching names, will be trasformed into the
+Inputs and Outputs of the ModelBlock.
+
+When a simulation is executed, a Context is created. This Context contains all
+the persistent values for blocks and a list of all the Inputs and Outputs for
+a block. At the beginning of each step, the blocks are asked to initialize
+themselves for the step. After this initialization, all the blocks which do
+not have any inputs have their step() method executed. When a block executes,
+it asks the Context to set its Outputs to computed values. The Context then
+goes through the Outputs and sets any Inputs connected to them to the Outputs'
+assigned values. The cycle then continues by the Context executing all the
+Blocks completed by setting those inputs. A step ends when a context no longer
+has Blocks to execute.
+
+To determine the approximate length of a step, the context records the number
+of blocks which had to execute before the step was completed. This number is
+approximate because it is possible to have blocks which trigger looping or
+conditional portions of the simulation which may not fire under all
+circimstances.
+
+Threading is accomplished by delegating the execution of Block steps in a
+context to separate threads. The number of threads is determined by either a 
+limit or the number of processors in the computer plus one. When Blocks
+finished executing in the separate thread, the resulting block execution
+requests are sent back to the main context for execution in a different
+thread. Networking is also possible in the case where there are multiple large
+child ModelBlocks to execute in a Model.
+
