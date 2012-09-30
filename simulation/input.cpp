@@ -9,14 +9,15 @@ Input::Input(Block *parent, QString name) :
 {
     this->block = parent;
     this->name = name;
+    this->output = NULL;
 }
 
 Input::~Input()
 {
-    //disconnect this input from all the outputs
-    for(QSet<Output*>::iterator i = this->connected.begin(); i != this->connected.end(); i++)
+    //disconnect this input from its output
+    if (this->output != NULL)
     {
-        (*i)->disconnect(this, false);
+        this->output->disconnect(this, false);
     }
 }
 
@@ -25,10 +26,18 @@ QString Input::getName()
     return this->name;
 }
 
+bool Input::isConnected()
+{
+    return this->output != NULL;
+}
+
 void Input::connect(Output *output, bool backRef)
 {
-    if (this->connected.contains(output))
-        return; //don't double connect outputs
+    if (this->output == output)
+        return; //no need to do this again
+
+    //if we are already connected, we get to disconnect
+    this->disconnect();
 
     if (backRef)
     {
@@ -37,13 +46,15 @@ void Input::connect(Output *output, bool backRef)
         output->connect(this, false);
     }
 
-    this->connected.insert(output);
+    this->output = output;
+
+    this->connected(output);
 }
 
-void Input::disconnect(Output *output, bool backRef)
+void Input::disconnect(bool backRef)
 {
-    if (!this->connected.contains(output))
-        return; //no need to remove something that isn't there
+    if (this->output == NULL)
+        return; //nothing to disconnect
 
     if (backRef)
     {
@@ -51,9 +62,7 @@ void Input::disconnect(Output *output, bool backRef)
         output->disconnect(this, false);
     }
 
-    this->connected.remove(output);
-}
+    this->output = NULL; //we forget about the output
 
-void Input::set(Context *context, SignalValue value)
-{
+    this->disconnected();
 }

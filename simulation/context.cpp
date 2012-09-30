@@ -52,7 +52,7 @@ void Context::reset()
 {
 }
 
-void Context::setInput(Input *input, SignalValue value)
+void Context::setInput(Input *input, SignalValue* value)
 {
 }
 
@@ -68,10 +68,10 @@ void Context::BlockData::newStep()
 {
 }
 
-void Context::BlockData::setValue(QString valueName, SignalValue value)
+void Context::BlockData::setValue(QString valueName, SignalValue *value)
 {
 }
 
-SignalValue Context::BlockData::getValue(QString valueName)
+SignalValue *Context::BlockData::getValue(QString valueName)
 {
 }

@@ -44,6 +44,20 @@ namespace Simulation
          */
         void step();
 
+        /**
+         * @brief isBlockReady called by inputs to determine if the block should be queued
+         * @param block
+         * @return
+         */
+        bool isBlockReady(Block* block);
+
+        /**
+         * @brief getInputValue returns the current value of an input in this context
+         * @param input
+         * @return
+         */
+        SignalValue* getInputValue(Input* input);
+
 
     signals:
 
@@ -56,7 +70,7 @@ namespace Simulation
          * @brief Sets an input to a value in this context
          * @param input
          */
-        void setInput(Input* input, SignalValue value);
+        void setInput(Input* input, SignalValue* value);
 
     protected:
         /**
@@ -81,17 +95,17 @@ namespace Simulation
              * @param valueName Name of the value to set
              * @param value Value to set it to
              */
-            void setValue(QString valueName, SignalValue value);
+            void setValue(QString valueName, SignalValue* value);
             /**
              * @brief Returns a value by name
              * @param valueName Name of the value to get
              * @return
              */
-            SignalValue getValue(QString valueName);
+            SignalValue* getValue(QString valueName);
 
         protected:
-            QHash<Input*, SignalValue> inputValues;
-            QHash<QString, SignalValue> blockValues;
+            QHash<Input*, SignalValue*> inputValues;
+            QHash<QString, SignalValue*> blockValues;
         };
 
         double timeStep;

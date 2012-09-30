@@ -7,7 +7,11 @@ namespace Simulation
 {
 
     /**
-     * @brief The SignalValue class
+     * @brief The SignalValue class.
+     *
+     * References coming from outputs setting inputs are to be
+     * valid for the duration of the context. References in a
+     * context are kept until they are replaced by another value.
      */
     class SignalValue
     {

@@ -48,7 +48,7 @@ namespace Simulation
          * @param context Context to run in
          * @param value Value to set the inputs to
          */
-        void set(Context* context, SignalValue value);
+        void set(Context* context, SignalValue* value);
 
     protected:
         Block* block;

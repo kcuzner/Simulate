@@ -53,11 +53,14 @@ void Output::disconnect(Input *input, bool backRef)
     this->connected.remove(input);
 }
 
-void Output::set(Context *context, SignalValue value)
+void Output::set(Context *context, SignalValue* value)
 {
     //when this output is set, we set all of our connected inputs to the passed value
     for(QSet<Input*>::iterator i = this->connected.begin(); i != this->connected.end(); i++)
     {
-        (*i)->set(context, value);
+        //the context will do the actual setting so that it can be
+        //delegated to another thread and so it can keep track of
+        //step progress
+        context->setInput((*i), value);
     }
 }

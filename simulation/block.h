@@ -17,6 +17,10 @@ namespace Simulation
         explicit Block(QObject *parent = 0);
 
     signals:
+        void inputAdded(Input*);
+        void inputRemoved(Input*);
+        void outputAdded(Input*);
+        void outputRemoved(Input*);
 
     public slots:
 
