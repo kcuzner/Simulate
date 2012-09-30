@@ -16,7 +16,7 @@ Output::~Output()
     //disconnect this output from all the inputs here
     for(QSet<Input*>::iterator i = this->connected.begin(); i != this->connected.end(); i++)
     {
-        (*i)->disconnect(this, false);
+        (*i)->disconnect(false);
     }
 }
 
@@ -47,7 +47,7 @@ void Output::disconnect(Input *input, bool backRef)
     if (backRef)
     {
         //apply a back reference to the input
-        input->disconnect(this, false);
+        input->disconnect(false);
     }
 
     this->connected.remove(input);

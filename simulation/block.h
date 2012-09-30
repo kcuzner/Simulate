@@ -4,13 +4,15 @@
 #include <QObject>
 #include <QString>
 #include <QHash>
+#include <QRunnable>
 
 namespace Simulation
 {
     class Input;
     class Output;
+    class Context;
 
-    class Block : public QObject
+    class Block : public QObject, QRunnable
     {
         Q_OBJECT
     public:
@@ -19,10 +21,11 @@ namespace Simulation
     signals:
         void inputAdded(Input*);
         void inputRemoved(Input*);
-        void outputAdded(Input*);
-        void outputRemoved(Input*);
+        void outputAdded(Output*);
+        void outputRemoved(Output*);
 
     public slots:
+        virtual void execute(Context* context) = 0;
 
     protected:
         Input* addInput(QString name);

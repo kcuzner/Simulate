@@ -66,3 +66,8 @@ void Input::disconnect(bool backRef)
 
     this->disconnected();
 }
+
+void Input::set(Context* context, SignalValue* value)
+{
+
+}
