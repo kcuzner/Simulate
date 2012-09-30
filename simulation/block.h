@@ -6,18 +6,20 @@
 #include <QHash>
 #include <QRunnable>
 
+#include "factorygeneratedobject.h"
+
 namespace Simulation
 {
     class Input;
     class Output;
     class Context;
 
-    class Block : public QObject
+    class Block : public QObject, FactoryGeneratedObject<Block>
     {
         Q_OBJECT
 
     public:
-        explicit Block(QObject *parent = 0);
+        explicit Block(QString name, QObject *parent = 0);
 
         QHash<QString, Input*> getInputs();
         QHash<QString, Output*> getOutputs();

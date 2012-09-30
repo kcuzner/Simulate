@@ -19,7 +19,8 @@ SOURCES += main.cpp\
     simulation/input.cpp \
     simulation/output.cpp \
     simulation/model.cpp \
-    simulation/signalvalue.cpp
+    simulation/signalvalue.cpp \
+    simulation/blockfactory.cpp
 
 HEADERS  += mainwindow.h \
     simulation/block.h \
@@ -27,6 +28,8 @@ HEADERS  += mainwindow.h \
     simulation/input.h \
     simulation/output.h \
     simulation/model.h \
-    simulation/signalvalue.h
+    simulation/signalvalue.h \
+    simulation/blockfactory.h \
+    simulation/factorygeneratedobject.h
 
 FORMS    += mainwindow.ui

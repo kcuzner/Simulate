@@ -1,12 +1,15 @@
 #include "block.h"
 #include "input.h"
 #include "output.h"
+#include "blockfactory.h"
 
 using namespace Simulation;
 
-Block::Block(QObject *parent) :
+Block::Block(QString name, QObject *parent) :
     QObject(parent)
 {
+    //declare this object in the block factory
+
 }
 
 QHash<QString, Input *> Block::getInputs()
