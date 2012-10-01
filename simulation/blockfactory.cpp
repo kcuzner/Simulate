@@ -3,20 +3,28 @@
 
 using namespace Simulation;
 
-BlockFactory::BlockFactory()
-{
-}
+BlockFactory* BlockFactory::instance;
 
 BlockFactory *BlockFactory::getInstance()
 {
-    if (mInstance)
-        return mInstance;
+    if (instance)
+        return instance;
 
-    mInstance = new BlockFactory();
+    instance = new BlockFactory();
 
-    return mInstance;
+    return instance;
 }
 
-void BlockFactory::declareBlock(QString name, Block* (*generate)())
+void BlockFactory::declareBlock(QString name, GenerateBlock generator)
+{
+    this->blocks[name] = generator;
+}
+
+Block *BlockFactory::generateBlock(QString name)
+{
+    return this->blocks[name]();
+}
+
+BlockFactory::BlockFactory()
 {
 }

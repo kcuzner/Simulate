@@ -29,7 +29,6 @@ HEADERS  += mainwindow.h \
     simulation/output.h \
     simulation/model.h \
     simulation/signalvalue.h \
-    simulation/blockfactory.h \
-    simulation/factorygeneratedobject.h
+    simulation/blockfactory.h
 
 FORMS    += mainwindow.ui

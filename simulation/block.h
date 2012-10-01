@@ -6,7 +6,7 @@
 #include <QHash>
 #include <QRunnable>
 
-#include "factorygeneratedobject.h"
+#include "blockfactory.h"
 
 namespace Simulation
 {
@@ -14,12 +14,12 @@ namespace Simulation
     class Output;
     class Context;
 
-    class Block : public QObject, FactoryGeneratedObject<Block>
+    class Block : public QObject
     {
         Q_OBJECT
 
     public:
-        explicit Block(QString name, QObject *parent = 0);
+        Block(QString name, GenerateBlock generator, QObject *parent = 0);
 
         QHash<QString, Input*> getInputs();
         QHash<QString, Output*> getOutputs();

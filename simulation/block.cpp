@@ -5,11 +5,11 @@
 
 using namespace Simulation;
 
-Block::Block(QString name, QObject *parent) :
-    QObject(parent)
+Block::Block(QString name, GenerateBlock generator, QObject *parent)
+    : QObject(parent)
 {
-    //declare this object in the block factory
-
+    //declare this object to the block factory
+    BlockFactory::getInstance()->declareBlock(name, generator);
 }
 
 QHash<QString, Input *> Block::getInputs()

@@ -4,27 +4,29 @@
 #include <QString>
 #include <QHash>
 
-#include "block.h"
-
-class BlockFactory
+namespace Simulation
 {
-public:
+    class Block;
 
-    /**
-     * @brief Returns the singleton instance of this block
-     * @return
-     */
-    static BlockFactory* getInstance();
+    typedef Block* (*GenerateBlock)();
 
-    void declareBlock(QString name, Simulation::Block* (*generate)());
+    class BlockFactory
+    {
+    public:
 
-private:
-    BlockFactory();
+        static BlockFactory* getInstance();
 
-    static BlockFactory* mInstance;
-    QHash<QString, Simulation::Block* (*)()> blocks;
-};
+        void declareBlock(QString name, GenerateBlock generator);
 
-BlockFactory* BlockFactory::mInstance;
+        Block* generateBlock(QString name);
+
+    protected:
+        BlockFactory();
+
+        static BlockFactory* instance;
+        QHash<QString, GenerateBlock> blocks;
+    };
+
+}
 
 #endif // BLOCKFACTORY_H
