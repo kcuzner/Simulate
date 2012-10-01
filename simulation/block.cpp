@@ -9,6 +9,16 @@ Block::Block(QObject *parent) :
 {
 }
 
+QHash<QString, Input *> Block::getInputs()
+{
+    return this->inputs;
+}
+
+QHash<QString, Output *> Block::getOutputs()
+{
+    return this->outputs;
+}
+
 Input *Block::addInput(QString name)
 {
     if (this->inputs.contains(name))
@@ -21,7 +31,7 @@ Input *Block::addInput(QString name)
 
     this->inputs[name] = input;
 
-    this->inputAdded(input);
+    emit(inputAdded(input));
 
     return input;
 }
@@ -31,14 +41,14 @@ Output *Block::addOutput(QString name)
     if (this->outputs.contains(name))
     {
         //no need to add a new output if they already have one by this name
-        return this->inputs[name];
+        return this->outputs[name];
     }
 
     Output* output = new Output(this, name);
 
     this->outputs[name] = output;
 
-    this->outputAdded(output);
+    emit(outputAdded(output));
 
     return output;
 }
@@ -54,17 +64,39 @@ void Block::removeInput(QString name)
 
     this->inputs.remove(name);
 
-    this->inputRemoved(input);
+    emit(inputRemoved(input));
 }
 
 void Block::removeInput(Input *input)
 {
+    if (!this->inputs.contains(input->getName()))
+    {
+        return;
+    }
+
+    this->removeInput(input->getName());
 }
 
 void Block::removeOutput(QString name)
 {
+    if (!this->inputs.contains(name))
+    {
+        return;
+    }
+
+    Output* output = this->outputs[name];
+
+    this->outputs.remove(name);
+
+    emit(outputRemoved(output));
 }
 
-void Block::removeOutput(Input *input)
+void Block::removeOutput(Output *output)
 {
+    if (!this->outputs.contains(output->getName()))
+    {
+        return;
+    }
+
+    this->removeOutput(output->getName());
 }

@@ -5,6 +5,7 @@
 
 namespace Simulation
 {
+    class Block;
 
     class Model : public QObject
     {
@@ -15,6 +16,9 @@ namespace Simulation
     signals:
 
     public slots:
+
+    protected:
+        QList<Block*> blocks;
 
     };
 

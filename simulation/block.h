@@ -12,11 +12,15 @@ namespace Simulation
     class Output;
     class Context;
 
-    class Block : public QObject, QRunnable
+    class Block : public QObject
     {
         Q_OBJECT
+
     public:
         explicit Block(QObject *parent = 0);
+
+        QHash<QString, Input*> getInputs();
+        QHash<QString, Output*> getOutputs();
 
     signals:
         void inputAdded(Input*);
@@ -33,7 +37,7 @@ namespace Simulation
         void removeInput(QString name);
         void removeInput(Input* input);
         void removeOutput(QString name);
-        void removeOutput(Input* input);
+        void removeOutput(Output* output);
 
     private:
         QHash<QString, Input*> inputs;

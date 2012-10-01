@@ -4,6 +4,7 @@
 #include <QObject>
 #include <QList>
 #include <QHash>
+#include <QQueue>
 #include "signalvalue.h"
 
 namespace Simulation
@@ -18,6 +19,9 @@ namespace Simulation
     class Context : public QObject
     {
         Q_OBJECT
+
+        Q_PROPERTY(double TimeStep READ getTimeStep WRITE setTimeStep)
+
     public:
         explicit Context(Model* model, double timeStep, QObject *parent = 0);
         Context(Model* model, Context* parent);
@@ -27,11 +31,6 @@ namespace Simulation
          * @return Timestep of this context
          */
         double getTimeStep();
-        /**
-         * @brief setTimeStep
-         * @param timeStep
-         */
-        void setTimeStep(double timeStep);
 
         /**
          * @brief Creates a child context from this context
@@ -60,6 +59,7 @@ namespace Simulation
 
 
     signals:
+        void finished();
 
     public slots:
         /**
@@ -71,6 +71,11 @@ namespace Simulation
          * @param input
          */
         void setInput(Input* input, SignalValue* value);
+        /**
+         * @brief setTimeStep
+         * @param timeStep
+         */
+        void setTimeStep(double timeStep);
 
     protected:
         /**
@@ -114,6 +119,8 @@ namespace Simulation
          * @brief Model this is attached to
          */
         Model* model;
+        QQueue<Block*> execute;
+        QList<Block*>::iterator current;
 
     };
 
