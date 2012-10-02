@@ -12,6 +12,10 @@ Block::Block(QString name, GenerateBlock generator, QObject *parent)
     BlockFactory::getInstance()->declareBlock(name, generator);
 }
 
+Block::~Block()
+{
+}
+
 QHash<QString, Input *> Block::getInputs()
 {
     return this->inputs;
@@ -102,4 +106,10 @@ void Block::removeOutput(Output *output)
     }
 
     this->removeOutput(output->getName());
+}
+
+
+void Block::execute(Context *context)
+{
+    this->compute(context);
 }

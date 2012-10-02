@@ -7,12 +7,12 @@
 #include <QRunnable>
 
 #include "blockfactory.h"
+#include "context.h"
 
 namespace Simulation
 {
     class Input;
     class Output;
-    class Context;
 
     class Block : public QObject
     {
@@ -20,9 +20,12 @@ namespace Simulation
 
     public:
         Block(QString name, GenerateBlock generator, QObject *parent = 0);
+        ~Block();
 
         QHash<QString, Input*> getInputs();
         QHash<QString, Output*> getOutputs();
+
+        virtual void compute(Context* context) = 0;
 
     signals:
         void inputAdded(Input*);
@@ -31,7 +34,7 @@ namespace Simulation
         void outputRemoved(Output*);
 
     public slots:
-        virtual void execute(Context* context) = 0;
+        void execute(Context* context);
 
     protected:
         Input* addInput(QString name);
