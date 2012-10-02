@@ -8,6 +8,7 @@
 
 #include "blockfactory.h"
 #include "context.h"
+#include "model.h"
 
 namespace Simulation
 {
@@ -19,7 +20,7 @@ namespace Simulation
         Q_OBJECT
 
     public:
-        Block(QString name, GenerateBlock generator, QObject *parent = 0);
+        Block(Model* model);
         ~Block();
 
         QHash<QString, Input*> getInputs();

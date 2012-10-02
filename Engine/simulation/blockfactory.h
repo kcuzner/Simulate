@@ -4,11 +4,13 @@
 #include <QString>
 #include <QHash>
 
+#include "model.h"
+
 namespace Simulation
 {
     class Block;
 
-    typedef Block* (*GenerateBlock)();
+    typedef Block* (*GenerateBlock)(Model*);
 
     class BlockFactory
     {
@@ -32,7 +34,7 @@ namespace Simulation
          * @param name
          * @return
          */
-        Block* generateBlock(QString name);
+        Block* generateBlock(QString name, Model *model);
 
     private:
         BlockFactory();

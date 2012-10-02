@@ -20,8 +20,7 @@ SOURCES += main.cpp\
     simulation/output.cpp \
     simulation/model.cpp \
     simulation/signalvalue.cpp \
-    simulation/blockfactory.cpp \
-    blocks/varstatic.cpp
+    simulation/blockfactory.cpp
 
 HEADERS  += mainwindow.h \
     simulation/block.h \
@@ -30,7 +29,6 @@ HEADERS  += mainwindow.h \
     simulation/output.h \
     simulation/model.h \
     simulation/signalvalue.h \
-    simulation/blockfactory.h \
-    blocks/varstatic.h
+    simulation/blockfactory.h
 
 FORMS    += mainwindow.ui

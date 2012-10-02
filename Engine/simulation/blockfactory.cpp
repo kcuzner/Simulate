@@ -20,9 +20,9 @@ void BlockFactory::declareBlock(QString name, GenerateBlock generator)
     this->blocks[name] = generator;
 }
 
-Block *BlockFactory::generateBlock(QString name)
+Block *BlockFactory::generateBlock(QString name, Model* model)
 {
-    return this->blocks[name]();
+    return this->blocks[name](model);
 }
 
 BlockFactory::BlockFactory()

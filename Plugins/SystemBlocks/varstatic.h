@@ -12,10 +12,10 @@ namespace Blocks
         Q_OBJECT
 
     public:
-        VarStatic();
+        VarStatic(Simulation::Model *model);
         ~VarStatic();
 
-        static Block* generate();
+        static Block* generate(Simulation::Model *model);
 
         virtual void compute(Simulation::Context* context);
 

@@ -5,11 +5,9 @@
 
 using namespace Simulation;
 
-Block::Block(QString name, GenerateBlock generator, QObject *parent)
-    : QObject(parent)
+Block::Block(Model *model)
+    : QObject(model)
 {
-    //declare this object to the block factory
-    BlockFactory::getInstance()->declareBlock(name, generator);
 }
 
 Block::~Block()
