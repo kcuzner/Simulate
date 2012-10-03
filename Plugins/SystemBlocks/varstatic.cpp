@@ -1,5 +1,4 @@
 #include "varstatic.h"
-#include "../simulation/blockfactory.h"
 
 using namespace Blocks;
 using namespace Simulation;

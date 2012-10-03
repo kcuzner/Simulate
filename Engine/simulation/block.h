@@ -5,6 +5,7 @@
 #include <QString>
 #include <QHash>
 #include <QRunnable>
+#include <QtPlugin>
 
 #include "blockfactory.h"
 #include "context.h"

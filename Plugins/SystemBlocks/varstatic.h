@@ -1,8 +1,8 @@
 #ifndef VARSTATIC_H
 #define VARSTATIC_H
 
-#include "../simulation/block.h"
-#include "../simulation/context.h"
+#include "../../Engine/simulation/block.h"
+#include "../../Engine/simulation/context.h"
 
 namespace Blocks
 {

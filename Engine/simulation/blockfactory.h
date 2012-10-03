@@ -36,7 +36,7 @@ namespace Simulation
          */
         Block* generateBlock(QString name, Model *model);
 
-    private:
+    //private:
         BlockFactory();
 
         static BlockFactory* instance;
