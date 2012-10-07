@@ -39,11 +39,6 @@ namespace Simulation
         Context* createChildContext(Model *model);
 
         /**
-         * @brief Steps the blocks attached to this context
-         */
-        void step();
-
-        /**
          * @brief isBlockReady called by inputs to determine if the block should be queued
          * @param block
          * @return
@@ -59,7 +54,7 @@ namespace Simulation
 
 
     signals:
-        void finished();
+        void finished(int steps);
 
     public slots:
         /**
@@ -76,42 +71,17 @@ namespace Simulation
          * @param timeStep
          */
         void setTimeStep(double timeStep);
+        void queueBlock(Block* block);
+        /**
+         * @brief Steps the blocks attached to this context
+         */
+        void step();
 
     protected:
         /**
-         * @brief Contains data for a block in this context
+         * @brief Initializes the blocks attached to the model in this context
          */
-        class BlockData
-        {
-        public:
-            BlockData(Block* block);
-
-            /**
-             * @brief Resets the block values and input values
-             */
-            void reset();
-            /**
-             * @brief Resets the input values to null in preparation for a new step
-             */
-            void newStep();
-
-            /**
-             * @brief Sets a value for the block to persist between steps
-             * @param valueName Name of the value to set
-             * @param value Value to set it to
-             */
-            void setValue(QString valueName, SignalValue* value);
-            /**
-             * @brief Returns a value by name
-             * @param valueName Name of the value to get
-             * @return
-             */
-            SignalValue* getValue(QString valueName);
-
-        protected:
-            QHash<Input*, SignalValue*> inputValues;
-            QHash<QString, SignalValue*> blockValues;
-        };
+        void initialize();
 
         double timeStep;
         QList<Context*> children;

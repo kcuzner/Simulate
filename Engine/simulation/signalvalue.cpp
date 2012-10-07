@@ -1,16 +1,18 @@
 #include "signalvalue.h"
 
+#include "stepcontext.h"
+
 #include <stdexcept>
 
 using namespace Simulation;
 
-SignalValue::SignalValue(double value)
+SignalValue::SignalValue(StepContext *context, double value)
 {
     this->values = new std::vector<double>(1, value);
     this->redimension(1);
 }
 
-SignalValue::SignalValue(std::vector<double> values, int columns)
+SignalValue::SignalValue(StepContext *context,std::vector<double> values, int columns)
 {
     this->values = new std::vector<double>(values);
     this->redimension(columns);

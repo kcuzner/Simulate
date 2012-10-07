@@ -1,6 +1,10 @@
 #include <QApplication>
 #include <QLabel>
 #include <QPluginLoader>
+#include <QSplashScreen>
+#include <QDir>
+#include <QMessageBox>
+
 #include "mainwindow.h"
 
 #include "simulation/model.h"
@@ -15,27 +19,33 @@ using namespace std;
 
 int main(int argc, char *argv[])
 {
-    cout << "hi" << endl;
-
-    QCoreApplication::addLibraryPath("../Simulate/Plugins/bin");
-
-    QPluginLoader loader("../Simulate/Plugin/libSystemBlocks.so");
-
-    BlockPlugin* plugin = (BlockPlugin*)loader.instance();
-
-    BlockFactory* factory = new BlockFactory();
-    plugin->declareBlocks(factory);
-
-    //for(QHash<QString, Simulation::GenerateBlock>::iterator i = factory->blocks.begin(); i != factory->blocks.end(); i++)
-    //{
-        //cout << i.key().data() << endl;
-    //}
-
-    cout << "hi" << endl;
-
     QApplication a(argc, argv);
+
+    //show a splash screen while things are loading
+    QDir dataDir(a.applicationDirPath());
+    dataDir.cdUp();
+    if (!dataDir.cd("data"))
+    {
+        cout << "ERROR: No data directory. Please ensure the application was installed correctly." << endl;
+        return -1;
+    }
+
+    QPixmap p(dataDir.absoluteFilePath("splash.png"));
+
+    if (p.isNull())
+    {
+        cout << "ERROR: Unable to load splash.png in the data directory." << endl;
+        return -1;
+    }
+
+    QSplashScreen s(p);
+    s.show();
+
+    //load all the plugins in the plugins directory
+
     MainWindow w;
     w.show();
-    
+    s.finish(&w);
+
     return a.exec();
 }

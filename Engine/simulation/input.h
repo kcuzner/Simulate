@@ -12,6 +12,8 @@ namespace Simulation
 {
     class Block;
     class Output;
+    class SignalValue;
+    class StepContext;
 
     /**
      * @brief Represents an input to a block
@@ -21,12 +23,18 @@ namespace Simulation
     class Input : public QObject
     {
         Q_OBJECT
+
+        Q_PROPERTY(QString Name READ getName)
+        Q_PROPERTY(Block* Block READ getBlock)
+
     public:
         Input(Block *parent, QString name);
 
         ~Input();
 
         QString getName();
+        SignalValue* getValue(StepContext* context);
+        Block* getBlock();
 
         /**
          * @brief isConnected returns true of this input is connected
@@ -50,7 +58,6 @@ namespace Simulation
         void disconnected();
 
     public slots:
-        void set(Context* context, SignalValue* value);
 
     protected:
         Block* block;

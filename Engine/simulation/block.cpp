@@ -2,6 +2,8 @@
 #include "input.h"
 #include "output.h"
 #include "blockfactory.h"
+#include "signalvalue.h"
+#include "stepcontext.h"
 
 using namespace Simulation;
 
@@ -22,6 +24,11 @@ QHash<QString, Input *> Block::getInputs()
 QHash<QString, Output *> Block::getOutputs()
 {
     return this->outputs;
+}
+
+double Block::getOption(const QString &name)
+{
+    return this->options[name];
 }
 
 Input *Block::addInput(QString name)
@@ -106,8 +113,17 @@ void Block::removeOutput(Output *output)
     this->removeOutput(output->getName());
 }
 
+void Block::initialize(Context *context)
+{
 
-void Block::execute(Context *context)
+}
+
+void Block::execute(StepContext *context)
 {
     this->compute(context);
+}
+
+void Block::setOption(const QString &name, double value)
+{
+    this->options[name] = value;
 }

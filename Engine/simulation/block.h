@@ -15,6 +15,7 @@ namespace Simulation
 {
     class Input;
     class Output;
+    class ContextStep;
 
     class Block : public QObject
     {
@@ -27,7 +28,10 @@ namespace Simulation
         QHash<QString, Input*> getInputs();
         QHash<QString, Output*> getOutputs();
 
-        virtual void compute(Context* context) = 0;
+        virtual QStringList getOptionsList() = 0;
+        double getOption(const QString &name);
+
+        virtual void compute(StepContext* context) = 0;
 
     signals:
         void inputAdded(Input*);
@@ -36,7 +40,9 @@ namespace Simulation
         void outputRemoved(Output*);
 
     public slots:
-        void execute(Context* context);
+        void initialize(Context* context);
+        void execute(StepContext* context);
+        void setOption(const QString& name, double value);
 
     protected:
         Input* addInput(QString name);
@@ -45,6 +51,8 @@ namespace Simulation
         void removeInput(Input* input);
         void removeOutput(QString name);
         void removeOutput(Output* output);
+
+        QHash<QString, double> options;
 
     private:
         QHash<QString, Input*> inputs;

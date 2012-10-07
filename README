@@ -4,6 +4,12 @@ A Graphical C++ & Python based model simulation engine
 
 By Kevin Cuzner
 
+At the moment this is less of a readme and more of a place for me to write
+down my ideas and details on how this works. Later these details will be moved
+to documentation.
+
+SUMMARY:
+
 Owing to the lack of variety in open souce model simulation, it was decided to
 create this simulation engine. The engine operates under the following
 principles:
@@ -45,4 +51,27 @@ finished executing in the separate thread, the resulting block execution
 requests are sent back to the main context for execution in a different
 thread. Networking is also possible in the case where there are multiple large
 child ModelBlocks to execute in a Model.
+
+
+DETAILS:
+
+Context-Model Relationship: A context is instantiated being attached to a
+model. If this model is null, lots of exceptions will be thrown later. After a
+context is reset or created and before any blocks are executed, the context
+will scan all the blocks in a model.
+
+Context-Block Relationship: When a context initializes itself before any steps
+are run, it scans each block and populates a QHash with keys which are
+pointers to the Block's Inputs. The hash links an Input* to a SignalValue*.
+
+StepContext: A StepContext is used as a parent for all objects which are
+considered local to a given step and need to be deleted at the end of a step.
+A StepContext is created by a Context for every step and is passed into all
+block execution methods and input/output set methods. It has a link to its
+parent context. The StepContext should be used as a factory for anything that
+is destroyed when a step is completed (such as a SignalValue).
+
+
+
+
 

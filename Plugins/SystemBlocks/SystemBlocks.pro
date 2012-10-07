@@ -6,8 +6,10 @@
 
 QT       += script svg xml xmlpatterns
 
-TARGET = SystemBlocks
+TARGET = $$qtLibraryTarget(SystemBlocks)
 TEMPLATE = lib
+
+DESTDIR = ../../bin/plugins
 
 DEFINES += SYSTEMBLOCKS_LIBRARY
 

@@ -17,7 +17,9 @@ namespace Blocks
 
         static Block* generate(Simulation::Model *model);
 
-        virtual void compute(Simulation::Context* context);
+        virtual void compute(Simulation::StepContext* context);
+
+        virtual QStringList getOptionsList();
 
     public slots:
     };

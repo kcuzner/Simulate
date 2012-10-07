@@ -2,6 +2,7 @@
 #define MODEL_H
 
 #include <QObject>
+#include <QList>
 
 namespace Simulation
 {
@@ -13,9 +14,13 @@ namespace Simulation
     public:
         explicit Model(QObject *parent = 0);
 
+        QList<Block*> getBlocks();
+
     signals:
+        void blockAdded(Block* block);
 
     public slots:
+        void addBlock(Block* block);
 
     protected:
         QList<Block*> blocks;

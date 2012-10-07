@@ -1,6 +1,7 @@
 #include "output.h"
 #include "input.h"
 #include "block.h"
+#include "stepcontext.h"
 
 using namespace Simulation;
 
@@ -53,14 +54,14 @@ void Output::disconnect(Input *input, bool backRef)
     this->connected.remove(input);
 }
 
-void Output::set(Context *context, SignalValue* value)
+void Output::set(StepContext *context, SignalValue* value)
 {
     //when this output is set, we set all of our connected inputs to the passed value
     for(QSet<Input*>::iterator i = this->connected.begin(); i != this->connected.end(); i++)
     {
-        //the context will do the actual setting so that it can be
-        //delegated to another thread and so it can keep track of
-        //step progress
+        //the step context holds the actual input values. Inputs are
+        //merely fronts for getting the input from a context and serve
+        //the main purpose of linking a block to an input.
         context->setInput((*i), value);
     }
 }

@@ -1,6 +1,8 @@
 #include "input.h"
 #include "block.h"
 #include "output.h"
+#include "signalvalue.h"
+#include "stepcontext.h"
 
 using namespace Simulation;
 
@@ -24,6 +26,16 @@ Input::~Input()
 QString Input::getName()
 {
     return this->name;
+}
+
+SignalValue *Input::getValue(StepContext *context)
+{
+    return context->getInputValue(this); //get our input value in this context
+}
+
+Block *Input::getBlock()
+{
+    return this->block;
 }
 
 bool Input::isConnected()
@@ -65,9 +77,4 @@ void Input::disconnect(bool backRef)
     this->output = NULL; //we forget about the output
 
     this->disconnected();
-}
-
-void Input::set(Context* context, SignalValue* value)
-{
-
 }

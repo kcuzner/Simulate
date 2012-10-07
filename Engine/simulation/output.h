@@ -11,6 +11,7 @@ namespace Simulation
 {
     class Block;
     class Input;
+    class StepContext;
 
     /**
      * @brief Represents an output port on a block
@@ -48,7 +49,7 @@ namespace Simulation
          * @param context Context to run in
          * @param value Value to set the inputs to
          */
-        void set(Context* context, SignalValue* value);
+        void set(StepContext* context, SignalValue* value);
 
     protected:
         Block* block;

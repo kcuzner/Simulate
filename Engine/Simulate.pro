@@ -11,6 +11,7 @@ greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 TARGET = Simulate
 TEMPLATE = app
 
+DESTDIR += ../bin
 
 SOURCES += main.cpp\
         mainwindow.cpp \
@@ -20,7 +21,9 @@ SOURCES += main.cpp\
     simulation/output.cpp \
     simulation/model.cpp \
     simulation/signalvalue.cpp \
-    simulation/blockfactory.cpp
+    simulation/blockfactory.cpp \
+    pluginsdialog.cpp \
+    simulation/stepcontext.cpp
 
 HEADERS  += mainwindow.h \
     simulation/block.h \
@@ -30,6 +33,9 @@ HEADERS  += mainwindow.h \
     simulation/model.h \
     simulation/signalvalue.h \
     simulation/blockfactory.h \
-    simulation/blockplugin.h
+    simulation/blockplugin.h \
+    pluginsdialog.h \
+    simulation/stepcontext.h
 
-FORMS    += mainwindow.ui
+FORMS    += mainwindow.ui \
+    pluginsdialog.ui

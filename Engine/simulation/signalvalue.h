@@ -2,9 +2,12 @@
 #define SIGNALVALUE_H
 
 #include <vector>
+#include <QObject>
 
 namespace Simulation
 {
+
+    class StepContext;
 
     /**
      * @brief The SignalValue class.
@@ -13,11 +16,13 @@ namespace Simulation
      * valid for the duration of the context. References in a
      * context are kept until they are replaced by another value.
      */
-    class SignalValue
+    class SignalValue : public QObject
     {
+        Q_OBJECT
+
     public:
-        SignalValue(double value);
-        SignalValue(std::vector<double> values, int columns);
+        SignalValue(StepContext* context, double value);
+        SignalValue(StepContext* context, std::vector<double> values, int columns);
 
         double getValue(int index);
         double getValue(int column, int index);
