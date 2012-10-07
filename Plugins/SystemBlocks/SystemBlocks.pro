@@ -14,11 +14,13 @@ DESTDIR = ../../bin/plugins
 DEFINES += SYSTEMBLOCKS_LIBRARY
 
 SOURCES += systemblocks.cpp \
-    varstatic.cpp
+    varstatic.cpp \
+    varramp.cpp
 
 HEADERS += systemblocks.h\
         SystemBlocks_global.h \
-    varstatic.h
+    varstatic.h \
+    varramp.h
 
 symbian {
     MMP_RULES += EXPORTUNFROZEN

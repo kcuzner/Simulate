@@ -32,6 +32,11 @@ SignalValue *StepContext::getInputValue(Input *input)
     return NULL; //null value for inputs that aren't yet set
 }
 
+Context *StepContext::getContext()
+{
+    return this->context;
+}
+
 void StepContext::setInput(Input *input, SignalValue *value)
 {
     //when a input is set, we check to see if all the inputs are set for the input's block. If this is the case, we queue the block for execution

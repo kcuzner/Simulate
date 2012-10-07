@@ -29,6 +29,8 @@ namespace Simulation
 
         SignalValue* getInputValue(Input* input);
 
+        Context* getContext();
+
     signals:
 
     public slots:

@@ -23,7 +23,10 @@ SOURCES += main.cpp\
     simulation/signalvalue.cpp \
     simulation/blockfactory.cpp \
     pluginsdialog.cpp \
-    simulation/stepcontext.cpp
+    simulation/stepcontext.cpp \
+    simulation/modelblock.cpp \
+    simulation/entryblock.cpp \
+    simulation/exitblock.cpp
 
 HEADERS  += mainwindow.h \
     simulation/block.h \
@@ -35,7 +38,10 @@ HEADERS  += mainwindow.h \
     simulation/blockfactory.h \
     simulation/blockplugin.h \
     pluginsdialog.h \
-    simulation/stepcontext.h
+    simulation/stepcontext.h \
+    simulation/modelblock.h \
+    simulation/entryblock.h \
+    simulation/exitblock.h
 
 FORMS    += mainwindow.ui \
     pluginsdialog.ui

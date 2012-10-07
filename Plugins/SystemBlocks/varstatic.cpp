@@ -23,7 +23,15 @@ Block *VarStatic::generate(Model* model)
 
 void VarStatic::compute(StepContext *context)
 {
-    QHash<QString, Output*> outputs = this->getOutputs();
+    QList<Output*> outputs = this->getOutputs().values();
+
+    double value = this->getOption("Value");
+
+    Output* output;
+    foreach(output, outputs)
+    {
+        output->set(context, context->createSignalValue(value));
+    }
 }
 
 QStringList VarStatic::getOptionsList()
