@@ -6,6 +6,7 @@
 #include <QMessageBox>
 
 #include "mainwindow.h"
+#include "modelwindow.h"
 
 #include "simulation/model.h"
 #include "simulation/block.h"
@@ -46,6 +47,9 @@ int main(int argc, char *argv[])
     MainWindow w;
     w.show();
     s.finish(&w);
+
+    ModelWindow w2;
+    w2.show();
 
     return a.exec();
 }
