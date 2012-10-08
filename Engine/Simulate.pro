@@ -27,7 +27,8 @@ SOURCES += main.cpp\
     simulation/modelblock.cpp \
     simulation/entryblock.cpp \
     simulation/exitblock.cpp \
-    modeleditorwidget.cpp
+    modeleditorwidget.cpp \
+    modelwindow.cpp
 
 HEADERS  += mainwindow.h \
     simulation/block.h \
@@ -43,7 +44,9 @@ HEADERS  += mainwindow.h \
     simulation/modelblock.h \
     simulation/entryblock.h \
     simulation/exitblock.h \
-    modeleditorwidget.h
+    modeleditorwidget.h \
+    modelwindow.h
 
 FORMS    += mainwindow.ui \
-    pluginsdialog.ui
+    pluginsdialog.ui \
+    modelwindow.ui
