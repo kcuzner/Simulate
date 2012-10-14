@@ -11,6 +11,13 @@ ModelWindow::ModelWindow(QWidget *parent) :
 {
     ui->setupUi(this);
 
+    editor = new ModelEditorWidget(this);
+
+    ui->scrollArea->setWidget(editor);
+
+    editor->show();
+    ui->scrollArea->show();
+
     //ui->actionM_odels->setChecked(true);
     //ui->action_Blocks->setChecked(true);
 }
@@ -20,36 +27,14 @@ ModelWindow::~ModelWindow()
     delete ui;
 }
 
-void ModelWindow::modelDockMenuToggled(bool state)
+void ModelWindow::undockBlockDock()
 {
-    if (state)
-    {
-        this->ui->modelsDockWidget->show();
-    }
-    else
-    {
-        this->ui->modelsDockWidget->hide();
-    }
+    ui->blocksDockWidget->show();
+    ui->blocksDockWidget->setFloating(true);
 }
 
-void ModelWindow::modelDockVisibilityChanged(bool state)
+void ModelWindow::undockModelDock()
 {
-    this->ui->actionM_odels->setChecked(state);
-}
-
-void ModelWindow::blockDockMenuToggled(bool state)
-{
-    if (state)
-    {
-        this->ui->blocksDockWidget->show();
-    }
-    else
-    {
-        this->ui->blocksDockWidget->hide();
-    }
-}
-
-void ModelWindow::blockDockVisibilityChanged(bool state)
-{
-    this->ui->action_Blocks->setChecked(state);
+    ui->modelsDockWidget->show();
+    ui->modelsDockWidget->setFloating(true);
 }

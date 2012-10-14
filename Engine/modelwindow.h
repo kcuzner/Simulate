@@ -3,6 +3,8 @@
 
 #include <QMainWindow>
 
+#include "modeleditorwidget.h"
+
 namespace Ui {
 class ModelWindow;
 }
@@ -16,13 +18,12 @@ public:
     ~ModelWindow();
 
 public slots:
-    void modelDockMenuToggled(bool state);
-    void modelDockVisibilityChanged(bool state);
-    void blockDockMenuToggled(bool state);
-    void blockDockVisibilityChanged(bool state);
+    void undockBlockDock(void);
+    void undockModelDock(void);
     
 private:
     Ui::ModelWindow *ui;
+    ModelEditorWidget* editor;
 };
 
 #endif // MODELWINDOW_H

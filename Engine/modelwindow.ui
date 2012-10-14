@@ -26,9 +26,10 @@
          <x>0</x>
          <y>0</y>
          <width>503</width>
-         <height>522</height>
+         <height>512</height>
         </rect>
        </property>
+       <layout class="QVBoxLayout" name="verticalLayout_3"/>
       </widget>
      </widget>
     </item>
@@ -40,7 +41,7 @@
      <x>0</x>
      <y>0</y>
      <width>800</width>
-     <height>23</height>
+     <height>29</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -224,7 +225,7 @@
   </action>
   <action name="actionM_odels">
    <property name="checkable">
-    <bool>true</bool>
+    <bool>false</bool>
    </property>
    <property name="text">
     <string>&amp;Models</string>
@@ -235,7 +236,7 @@
   </action>
   <action name="action_Blocks">
    <property name="checkable">
-    <bool>true</bool>
+    <bool>false</bool>
    </property>
    <property name="text">
     <string>&amp;Blocks</string>
@@ -249,29 +250,13 @@
  <connections>
   <connection>
    <sender>actionM_odels</sender>
-   <signal>toggled(bool)</signal>
+   <signal>activated()</signal>
    <receiver>ModelWindow</receiver>
-   <slot>modelDockMenuToggled(bool)</slot>
+   <slot>undockModelDock()</slot>
    <hints>
     <hint type="sourcelabel">
      <x>-1</x>
      <y>-1</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>399</x>
-     <y>299</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>modelsDockWidget</sender>
-   <signal>visibilityChanged(bool)</signal>
-   <receiver>ModelWindow</receiver>
-   <slot>modelDockVisibilityChanged(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>137</x>
-     <y>442</y>
     </hint>
     <hint type="destinationlabel">
      <x>399</x>
@@ -281,9 +266,9 @@
   </connection>
   <connection>
    <sender>action_Blocks</sender>
-   <signal>toggled(bool)</signal>
+   <signal>activated()</signal>
    <receiver>ModelWindow</receiver>
-   <slot>blockDockMenuToggled(bool)</slot>
+   <slot>undockBlockDock()</slot>
    <hints>
     <hint type="sourcelabel">
      <x>-1</x>
@@ -295,27 +280,9 @@
     </hint>
    </hints>
   </connection>
-  <connection>
-   <sender>blocksDockWidget</sender>
-   <signal>visibilityChanged(bool)</signal>
-   <receiver>ModelWindow</receiver>
-   <slot>blockDockVisibilityChanged(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>137</x>
-     <y>171</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>399</x>
-     <y>299</y>
-    </hint>
-   </hints>
-  </connection>
  </connections>
  <slots>
-  <slot>modelDockMenuToggled(bool)</slot>
-  <slot>modelDockVisibilityChanged(bool)</slot>
-  <slot>blockDockMenuToggled(bool)</slot>
-  <slot>blockDockVisibilityChanged(bool)</slot>
+  <slot>undockModelDock()</slot>
+  <slot>undockBlockDock()</slot>
  </slots>
 </ui>

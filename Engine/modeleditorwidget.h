@@ -2,6 +2,7 @@
 #define MODELEDITORWIDGET_H
 
 #include <QWidget>
+#include <QPaintEvent>
 
 class ModelEditorWidget : public QWidget
 {
@@ -12,6 +13,9 @@ public:
 signals:
     
 public slots:
+
+protected:
+    virtual void paintEvent(QPaintEvent *e);
     
 };
 
