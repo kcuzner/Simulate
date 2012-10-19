@@ -16,6 +16,9 @@ public slots:
 
 protected:
     virtual void paintEvent(QPaintEvent *e);
+
+private:
+    QPixmap getABlock();
     
 };
 
