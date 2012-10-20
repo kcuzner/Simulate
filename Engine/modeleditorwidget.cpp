@@ -19,6 +19,10 @@ ModelEditorWidget::ModelEditorWidget(QWidget *parent) :
     this->update();
 }
 
+void ModelEditorWidget::setModel(Simulation::Model *)
+{
+}
+
 void ModelEditorWidget::paintEvent(QPaintEvent *e)
 {
     QWidget::paintEvent(e);
@@ -32,6 +36,12 @@ void ModelEditorWidget::paintEvent(QPaintEvent *e)
     painter.drawRect(0, 0, 500, 500);
 
     painter.drawPixmap(250, 250, this->getABlock());
+}
+
+void ModelEditorWidget::mouseReleaseEvent(QMouseEvent *e)
+{
+    cout << e->pos().x() << "," << e->pos().y() << endl;
+    cout.flush();
 }
 
 QPixmap ModelEditorWidget::getABlock()

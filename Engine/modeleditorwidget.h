@@ -1,6 +1,9 @@
 #ifndef MODELEDITORWIDGET_H
 #define MODELEDITORWIDGET_H
 
+#include "simulation/model.h"
+#include "simulation/block.h"
+
 #include <QWidget>
 #include <QPaintEvent>
 
@@ -13,12 +16,15 @@ public:
 signals:
     
 public slots:
+    void setModel(Simulation::Model*);
 
 protected:
     virtual void paintEvent(QPaintEvent *e);
+    virtual void mouseReleaseEvent(QMouseEvent *);
 
 private:
     QPixmap getABlock();
+    Simulation::Model* model;
     
 };
 
