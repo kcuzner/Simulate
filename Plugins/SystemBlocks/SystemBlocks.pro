@@ -20,7 +20,11 @@ SOURCES += systemblocks.cpp \
 HEADERS += systemblocks.h\
         SystemBlocks_global.h \
     varstatic.h \
-    varramp.h
+    varramp.h \
+    ../../Engine/simulation/iblockplugin.h \
+    ../../Engine/ipluginbase.h \
+    ../../Engine/simulation/block.h \
+    ../../Engine/simulation/context.h
 
 symbian {
     MMP_RULES += EXPORTUNFROZEN

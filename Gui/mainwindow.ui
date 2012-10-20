@@ -39,7 +39,14 @@
     <addaction name="actionSave_As"/>
     <addaction name="actionExit"/>
    </widget>
+   <widget class="QMenu" name="menuPlugins">
+    <property name="title">
+     <string>&amp;Plugins</string>
+    </property>
+    <addaction name="actionView"/>
+   </widget>
    <addaction name="menuFile"/>
+   <addaction name="menuPlugins"/>
   </widget>
   <widget class="QToolBar" name="mainToolBar">
    <attribute name="toolBarArea">
@@ -80,8 +87,33 @@
     <string>Exit</string>
    </property>
   </action>
+  <action name="actionView">
+   <property name="text">
+    <string>&amp;View</string>
+   </property>
+  </action>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
  <resources/>
- <connections/>
+ <connections>
+  <connection>
+   <sender>actionView</sender>
+   <signal>activated()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>viewPlugins()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>299</x>
+     <y>199</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+ <slots>
+  <slot>viewPlugins()</slot>
+ </slots>
 </ui>

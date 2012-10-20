@@ -28,7 +28,8 @@ SOURCES += main.cpp\
     simulation/entryblock.cpp \
     simulation/exitblock.cpp \
     modeleditorwidget.cpp \
-    modelwindow.cpp
+    modelwindow.cpp \
+    plugintracker.cpp
 
 HEADERS  += mainwindow.h \
     simulation/block.h \
@@ -38,14 +39,16 @@ HEADERS  += mainwindow.h \
     simulation/model.h \
     simulation/signalvalue.h \
     simulation/blockfactory.h \
-    simulation/blockplugin.h \
     pluginsdialog.h \
     simulation/stepcontext.h \
     simulation/modelblock.h \
     simulation/entryblock.h \
     simulation/exitblock.h \
     modeleditorwidget.h \
-    modelwindow.h
+    modelwindow.h \
+    plugintracker.h \
+    ipluginbase.h \
+    simulation/iblockplugin.h
 
 FORMS    += mainwindow.ui \
     pluginsdialog.ui \

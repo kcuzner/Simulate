@@ -10,13 +10,19 @@
 class ModelEditorWidget : public QWidget
 {
     Q_OBJECT
+
+    Q_PROPERTY(int GridDelta READ getGridDelta WRITE setGridDelta)
+
 public:
     explicit ModelEditorWidget(QWidget *parent = 0);
+
+    int getGridDelta();
     
 signals:
     
 public slots:
     void setModel(Simulation::Model*);
+    void setGridDelta(int);
 
 protected:
     virtual void paintEvent(QPaintEvent *e);
@@ -25,6 +31,7 @@ protected:
 private:
     QPixmap getABlock();
     Simulation::Model* model;
+    int gridDelta; //delta for the grid
     
 };
 

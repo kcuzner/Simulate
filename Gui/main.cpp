@@ -10,7 +10,7 @@
 
 #include "simulation/model.h"
 #include "simulation/block.h"
-#include "simulation/blockplugin.h"
+#include "simulation/iblockplugin.h"
 #include "simulation/blockfactory.h"
 
 #include <iostream>
@@ -47,9 +47,6 @@ int main(int argc, char *argv[])
     MainWindow w;
     w.show();
     s.finish(&w);
-
-    ModelWindow w2;
-    w2.show();
 
     return a.exec();
 }

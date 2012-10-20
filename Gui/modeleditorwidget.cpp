@@ -12,15 +12,24 @@ ModelEditorWidget::ModelEditorWidget(QWidget *parent) :
 {
     this->setAcceptDrops(true);
 
-    this->setFixedSize(1000, 1000);
+    this->setGridDelta(10);
 
-    cout << this->rect().x() << " " << this->rect().width() << endl;
 
     this->update();
 }
 
+int ModelEditorWidget::getGridDelta()
+{
+    return this->gridDelta;
+}
+
 void ModelEditorWidget::setModel(Simulation::Model *)
 {
+}
+
+void ModelEditorWidget::setGridDelta(int value)
+{
+    this->gridDelta = value;
 }
 
 void ModelEditorWidget::paintEvent(QPaintEvent *e)
@@ -30,12 +39,25 @@ void ModelEditorWidget::paintEvent(QPaintEvent *e)
     QPainter painter(this);
     painter.setClipRegion(this->visibleRegion());
 
-    painter.setBrush(QBrush(this->palette().color(QPalette::Highlight)));
-    painter.setPen(QPen(Qt::red, 2));
+    painter.setBrush(QBrush(this->palette().color(QPalette::Base)));
+    painter.setPen(QPen(this->palette().color(QPalette::Base), 1));
 
-    painter.drawRect(0, 0, 500, 500);
+    QRect size = this->rect();
 
-    painter.drawPixmap(250, 250, this->getABlock());
+    painter.drawRect(size);
+
+    painter.setPen(QPen(this->palette().color(QPalette::Text), 1));
+
+    painter.drawRect(100, 100, 100, 100);
+
+    for(int gy = 0; gy < size.height(); gy += this->gridDelta)
+    {
+        for(int gx = 0; gx < size.width(); gx += this->gridDelta)
+        {
+            painter.drawPoint(gx, gy);
+        }
+    }
+
 }
 
 void ModelEditorWidget::mouseReleaseEvent(QMouseEvent *e)
