@@ -48,7 +48,9 @@ HEADERS  += mainwindow.h \
     modelwindow.h \
     plugintracker.h \
     ipluginbase.h \
-    simulation/iblockplugin.h
+    simulation/iblockplugin.h \
+    simulation/istepcontext.h \
+    simulation/iblockcore.h
 
 FORMS    += mainwindow.ui \
     pluginsdialog.ui \

@@ -22,7 +22,7 @@ SignalValue *StepContext::createSignalValue(std::vector<double> values, int colu
     return new SignalValue(this, values, columns);
 }
 
-SignalValue *StepContext::getInputValue(Input *input)
+/*SignalValue *StepContext::getInputValue(Input *input)
 {
     if (this->inputValues.contains(input))
     {
@@ -30,11 +30,15 @@ SignalValue *StepContext::getInputValue(Input *input)
     }
 
     return NULL; //null value for inputs that aren't yet set
-}
+}*/
 
 Context *StepContext::getContext()
 {
     return this->context;
+}
+
+QList<double> *StepContext::getInputValue(IBlockCore *block, const QString &inputName)
+{
 }
 
 void StepContext::setInput(Input *input, SignalValue *value)
@@ -54,4 +58,8 @@ void StepContext::setInput(Input *input, SignalValue *value)
 
     //if we made it this far, we get to queue the block for execution
     this->context->queueBlock(input->getBlock());
+}
+
+void StepContext::setOutputValue(IBlockCore *block, const QString &outputName, QList<double> value)
+{
 }

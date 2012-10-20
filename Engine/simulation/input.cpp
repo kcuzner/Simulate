@@ -30,7 +30,8 @@ QString Input::getName()
 
 SignalValue *Input::getValue(StepContext *context)
 {
-    return context->getInputValue(this); //get our input value in this context
+    return NULL;
+    //return context->getInputValue(this); //get our input value in this context
 }
 
 Block *Input::getBlock()
