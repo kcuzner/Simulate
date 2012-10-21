@@ -21,7 +21,7 @@ namespace Simulation
      * Its main purpose in life is to simply be a memory management go-between
      * for the context.
      */
-    class StepContext : public IStepContext, QObject
+    class StepContext : public QObject, IStepContext
     {
         Q_OBJECT
 
