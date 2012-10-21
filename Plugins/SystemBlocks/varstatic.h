@@ -1,27 +1,31 @@
 #ifndef VARSTATIC_H
 #define VARSTATIC_H
 
-#include "../../Engine/simulation/block.h"
-#include "../../Engine/simulation/context.h"
+#include "../../Engine/simulation/iblockcore.h"
 
 namespace Blocks
 {
 
-    class VarStatic : Simulation::Block
+    class VarStatic : public QObject, Simulation::IBlockCore
     {
         Q_OBJECT
 
+        Q_INTERFACES(Simulation::IBlockCore)
+
     public:
-        VarStatic(Simulation::Model *model);
+        VarStatic(QObject* parent = 0);
         ~VarStatic();
 
-        static Block* generate(Simulation::Model *model);
+        static IBlockCore* generate(QObject* parent = 0);
 
-        virtual void compute(Simulation::StepContext* context);
+        virtual void initialize(QHash<QString, QList<double> > *context);
 
-        virtual QStringList getOptionsList();
+        virtual QStringList getOptionList();
+
+        virtual QHash<QString, QList<double> > execute(QHash<QString, QList<double> > &inputs, QHash<QString, QList<double> > *context);
 
     public slots:
+        virtual void setOption(const QString &name, const QList<double> value);
     };
 
 }

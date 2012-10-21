@@ -14,6 +14,15 @@ Owing to the lack of variety in open souce model simulation, it was decided to
 create this simulation engine. The engine operates under the following
 principles:
 
+ 1) Simulations are represented by inter-connected Blocks which encapsulate an
+    operation.
+ 2) Simulations may be used inside of other Simulations (in this case, the
+    Simulation is called a Model)
+ 3) The Engine itself doesn't define exact operations done by Blocks. This is
+    achieved by extending the engine by way of QtPlugins.
+
+MODE OF OPERATION:
+
 A Model is the basic container for a simulation. It contains Blocks which are
 connected together in order to represent a single step in a mathematical
 equation. Blocks may have any number of Inputs and Outputs. Outputs can be
@@ -51,6 +60,26 @@ finished executing in the separate thread, the resulting block execution
 requests are sent back to the main context for execution in a different
 thread. Networking is also possible in the case where there are multiple large
 child ModelBlocks to execute in a Model.
+
+INTERFACES:
+
+Due to the fact that the Engine must be extended, all portions of the engine
+which face towards plugins use Qt-style interfaces. Interface class names are
+preceded by an 'I' in the C# fashion to distinguish them from other classes.
+
+Blocks use an IBlockCore interface which can be extended by the plugins. Later
+versions may generalize the entire block so the whole thing can be interfaced.
+The Block class still have virtual methods, but they are no longer pure virtual
+and by default point to the IBlockCore methods or use the IBlockCore. Blocks
+like the ModelBlock, EntryBlock, and ExitBlock must still override Block.
+
+CONNECTIONS:
+
+Connecting between blocks using the Input and Output classes described above is
+a purely engine-internal function. To allow for extensibility without having the
+need for each library to implement then entire engine, outputs and inputs are
+referred to by their string names (which are unique to the block, but don't have
+to be unique to the model).
 
 
 DETAILS:

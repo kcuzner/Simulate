@@ -7,34 +7,20 @@
 using namespace Blocks;
 using namespace Simulation;
 
-VarStatic::VarStatic(Model* model) : Block(model)
+VarStatic::VarStatic(QObject *parent) : QObject(parent)
 {
-    this->addOutput("Value");
 }
 
 VarStatic::~VarStatic()
 {
 }
 
-Block *VarStatic::generate(Model* model)
+IBlockCore *VarStatic::generate(QObject *parent)
 {
-    return new VarStatic(model);
+    return new VarStatic(parent);
 }
 
-void VarStatic::compute(StepContext *context)
-{
-    QList<Output*> outputs = this->getOutputs().values();
-
-    double value = this->getOption("Value");
-
-    Output* output;
-    foreach(output, outputs)
-    {
-        output->set(context, context->createSignalValue(value));
-    }
-}
-
-QStringList VarStatic::getOptionsList()
+QStringList VarStatic::getOptionList()
 {
     QStringList ret;
     ret << "Value";
@@ -42,3 +28,11 @@ QStringList VarStatic::getOptionsList()
     return ret;
 }
 
+
+QHash<QString, QList<double> > VarStatic::execute(QHash<QString, QList<double> > &inputs, QHash<QString, QList<double> > *context)
+{
+}
+
+void VarStatic::setOption(const QString &name, const QList<double> value)
+{
+}

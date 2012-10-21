@@ -7,7 +7,7 @@
 
 using namespace Simulation;
 
-Block::Block(Model *model)
+Block::Block(Model *model, IBlockCore *core)
     : QObject(model)
 {
 }
@@ -26,9 +26,17 @@ QHash<QString, Output *> Block::getOutputs()
     return this->outputs;
 }
 
+QStringList Block::getOptionsList()
+{
+}
+
 double Block::getOption(const QString &name)
 {
     return this->options[name];
+}
+
+void Block::compute(StepContext *context)
+{
 }
 
 Input *Block::addInput(QString name)

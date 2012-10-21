@@ -1,6 +1,7 @@
 #include "systemblocks.h"
 
 #include "varstatic.h"
+#include "varramp.h"
 
 using namespace Simulation;
 using namespace Blocks;
@@ -11,7 +12,7 @@ SystemBlocks::SystemBlocks()
 
 void SystemBlocks::declareBlocks(BlockFactory *factory)
 {
-    factory->declareBlock("var.static", VarStatic::generate);
+    factory->declareBlock("var.ramp", VarRamp::generate);
 }
 
 QString SystemBlocks::getName()

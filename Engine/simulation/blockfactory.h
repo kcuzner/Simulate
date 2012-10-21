@@ -5,12 +5,13 @@
 #include <QHash>
 
 #include "model.h"
+#include "iblockcore.h"
 
 namespace Simulation
 {
     class Block;
 
-    typedef Block* (*GenerateBlock)(Model*);
+    typedef IBlockCore* (*GenerateBlock)(QObject*);
 
     class BlockFactory
     {

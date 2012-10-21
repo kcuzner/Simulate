@@ -10,28 +10,29 @@
 #include "blockfactory.h"
 #include "context.h"
 #include "model.h"
+#include "iblockcore.h"
 
 namespace Simulation
 {
     class Input;
     class Output;
-    class ContextStep;
+    class StepContext;
 
     class Block : public QObject
     {
         Q_OBJECT
 
     public:
-        Block(Model* model);
+        Block(Model* model, IBlockCore* core);
         ~Block();
 
         QHash<QString, Input*> getInputs();
         QHash<QString, Output*> getOutputs();
 
-        virtual QStringList getOptionsList() = 0;
+        virtual QStringList getOptionsList();
         double getOption(const QString &name);
 
-        virtual void compute(StepContext* context) = 0;
+        virtual void compute(StepContext* context);
 
     signals:
         void inputAdded(Input*);
@@ -53,6 +54,8 @@ namespace Simulation
         void removeOutput(Output* output);
 
         QHash<QString, double> options;
+
+        IBlockCore* core;
 
     private:
         QHash<QString, Input*> inputs;
