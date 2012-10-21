@@ -5,7 +5,6 @@
 #include <QHash>
 #include <vector>
 
-#include "istepcontext.h"
 #include "iblockcore.h"
 
 namespace Simulation
@@ -21,11 +20,9 @@ namespace Simulation
      * Its main purpose in life is to simply be a memory management go-between
      * for the context.
      */
-    class StepContext : public QObject, IStepContext
+    class StepContext : public QObject
     {
         Q_OBJECT
-
-        Q_INTERFACES(Simulation::IStepContext)
 
     public:
         StepContext(Context *context);

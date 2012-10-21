@@ -23,7 +23,7 @@ namespace Simulation
         Q_OBJECT
 
     public:
-        Block(Model* model, IBlockCore* core);
+        Block(Model* model, QSharedPointer<IBlockCore> core);
         ~Block();
 
         QHash<QString, Input*> getInputs();
@@ -45,6 +45,12 @@ namespace Simulation
         void execute(StepContext* context);
         void setOption(const QString& name, double value);
 
+    protected slots:
+        void coreInputAdded(const QString& name, int rank);
+        void coreOutputAdded(const QString& name, int rank);
+        void coreInputRemoved(const QString& name);
+        void coreOutputRemoved(const QString& name);
+
     protected:
         Input* addInput(QString name);
         Output* addOutput(QString name);
@@ -53,9 +59,7 @@ namespace Simulation
         void removeOutput(QString name);
         void removeOutput(Output* output);
 
-        QHash<QString, double> options;
-
-        IBlockCore* core;
+        QSharedPointer<IBlockCore> core;
 
     private:
         QHash<QString, Input*> inputs;

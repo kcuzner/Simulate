@@ -5,7 +5,7 @@
 using namespace Simulation;
 
 EntryBlock::EntryBlock(Model *model, QString name) :
-    Block(model)
+    Block(model, QSharedPointer<IBlockCore>())
 {
     this->addOutput("Output");
     this->name = name;

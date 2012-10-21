@@ -5,19 +5,29 @@
 #include <QHash>
 #include <QList>
 #include <QStringList>
+#include <QSharedPointer>
 
 namespace Simulation
 {
+    /**
+     * @brief Interface for the core component of a block which does computations and setup
+     */
     class IBlockCore
     {
     public:
         virtual ~IBlockCore() {}
 
         /**
+         * @brief Returns this IBlockCore as an instance
+         * @return
+         */
+        virtual QObject* instance() = 0;
+
+        /**
          * @brief initializes the block into the passed context of variables
          * @param context to modify to initial values
          */
-        virtual void initialize(QHash<QString, QList<double> >* context) = 0;
+        virtual void initialize(QSharedPointer<QHash<QString, QSharedPointer<QList<double> > > > context) = 0;
 
         virtual QStringList getOptionList() = 0;
 
@@ -27,16 +37,20 @@ namespace Simulation
          * @param context to modify with persistent variables
          * @return outputs
          */
-        virtual QHash<QString, QList<double> > execute(QHash<QString, QList<double> >& inputs, QHash<QString, QList<double> >* context) = 0;
+        virtual QSharedPointer<QHash<QString, QSharedPointer<QList<double> > > > execute(QSharedPointer<QHash<QString, QSharedPointer<QList<double> > > > inputs, QSharedPointer<QHash<QString, QSharedPointer<QList<double> > > > context) = 0;
 
-    signals:
+        virtual double getOption(const QString &name) = 0;
+        virtual void setOption(const QString &name, const double value) = 0;
+
+        /**
+         * Implement the following signals and slots in an IBlockCore:
+         */
+    /*signals:
         void addOutput(const QString&, int rank);
         void addInput(const QString&, int rank);
         void removeOutput(const QString&);
         void removeInput(const QString&);
-
-    public slots:
-        virtual void setOption(const QString& name, const QList<double> value) = 0;
+    */
     };
 }
 

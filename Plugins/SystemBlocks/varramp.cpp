@@ -5,6 +5,7 @@ using namespace Simulation;
 VarRamp::VarRamp(QObject *parent)
     : QObject(parent)
 {
+    this->options = QSharedPointer<QHash<QString, double> >(new QHash<QString, double>);
 }
 
 IBlockCore *VarRamp::generate(QObject *parent)
@@ -12,7 +13,12 @@ IBlockCore *VarRamp::generate(QObject *parent)
     return new VarRamp(parent);
 }
 
-void VarRamp::initialize(QHash<QString, QList<double> > *context)
+QObject *VarRamp::instance()
+{
+    return this;
+}
+
+void VarRamp::initialize(QSharedPointer<QHash<QString, QSharedPointer<QList<double> > > > context)
 {
 }
 
@@ -20,11 +26,16 @@ QStringList VarRamp::getOptionList()
 {
 }
 
-
-QHash<QString, QList<double> > VarRamp::execute(QHash<QString, QList<double> > &inputs, QHash<QString, QList<double> > *context)
+QSharedPointer<QHash<QString, QSharedPointer<QList<double> > > > VarRamp::execute(QSharedPointer<QHash<QString, QSharedPointer<QList<double> > > > inputs, QSharedPointer<QHash<QString, QSharedPointer<QList<double> > > > context)
 {
 }
 
-void VarRamp::setOption(const QString &name, const QList<double> value)
+double VarRamp::getOption(const QString &name)
 {
+    return (*this->options)[name];
+}
+
+void VarRamp::setOption(const QString &name, const double value)
+{
+    (*this->options)[name] = value;
 }

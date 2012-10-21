@@ -3,7 +3,7 @@
 using namespace Simulation;
 
 ModelBlock::ModelBlock(Model *model, Model *executionModel) :
-    Block(model)
+    Block(model, QSharedPointer<IBlockCore>())
 {
     this->model = executionModel;
 }

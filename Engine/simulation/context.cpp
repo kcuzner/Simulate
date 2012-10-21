@@ -94,8 +94,31 @@ Context *Context::createChildContext(Model* model)
     return child;
 }
 
+QHash<QString, QList<double> > *Context::getPersistantBlockContext(Block *instance)
+{
+    if (this->variableContexts.contains(instance))
+    {
+        return this->variableContexts[instance];
+    }
+
+    //create a new context for this instance
+    QHash<QString, QList<double> >* context = new QHash<QString, QList<double> >();
+    this->variableContexts[instance] = context;
+
+    return context;
+}
+
 void Context::reset()
 {
+    //delete all our existing contexts
+    QHash<QString, QList<double> >* current;
+    foreach(current, this->variableContexts.values())
+    {
+        delete current;
+    }
+
+    //we can now clear it since all resources are freed
+    this->variableContexts.clear();
 }
 
 void Context::setInput(Input *input, SignalValue* value)

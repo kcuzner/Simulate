@@ -39,6 +39,13 @@ namespace Simulation
         Context* createChildContext(Model *model);
 
         /**
+         * @brief Returns the context used by a block for storing persistant variables for this context
+         * @param instance
+         * @return Persistant variable hash
+         */
+        QHash<QString, QList<double> >* getPersistantBlockContext(Block* instance);
+
+        /**
          * @brief isBlockReady called by inputs to determine if the block should be queued
          * @param block
          * @return
@@ -91,6 +98,8 @@ namespace Simulation
         Model* model;
         QQueue<Block*> execute;
         QList<Block*>::iterator current;
+
+        QHash<Block*, QHash<QString, QList<double> >* > variableContexts;
 
     };
 

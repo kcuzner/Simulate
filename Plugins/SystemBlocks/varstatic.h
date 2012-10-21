@@ -18,14 +18,25 @@ namespace Blocks
 
         static IBlockCore* generate(QObject* parent = 0);
 
-        virtual void initialize(QHash<QString, QList<double> > *context);
+        virtual QObject* instance();
+
+        virtual void initialize(QSharedPointer<QHash<QString, QSharedPointer<QList<double> > > > context);
 
         virtual QStringList getOptionList();
 
-        virtual QHash<QString, QList<double> > execute(QHash<QString, QList<double> > &inputs, QHash<QString, QList<double> > *context);
+        virtual QSharedPointer<QHash<QString, QSharedPointer<QList<double> > > > execute(QSharedPointer<QHash<QString, QSharedPointer<QList<double> > > > inputs, QSharedPointer<QHash<QString, QSharedPointer<QList<double> > > > context);
 
-    public slots:
-        virtual void setOption(const QString &name, const QList<double> value);
+        virtual double getOption(const QString &name);
+        virtual void setOption(const QString &name, const double value);
+
+    signals:
+        void addOutput(const QString&, int rank);
+        void addInput(const QString&, int rank);
+        void removeOutput(const QString&);
+        void removeInput(const QString&);
+
+    private:
+        QSharedPointer<QHash<QString, double> > options;
     };
 
 }

@@ -23,7 +23,6 @@ HEADERS += ipluginbase.h \
            simulation/iblockcore.h \
            simulation/iblockplugin.h \
            simulation/input.h \
-           simulation/istepcontext.h \
            simulation/model.h \
            simulation/modelblock.h \
            simulation/output.h \

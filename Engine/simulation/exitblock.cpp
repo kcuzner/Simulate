@@ -5,7 +5,7 @@
 using namespace Simulation;
 
 ExitBlock::ExitBlock(Model *model, QString name) :
-    Block(model)
+    Block(model, QSharedPointer<IBlockCore>())
 {
     this->addInput("Input");
     this->name = name;

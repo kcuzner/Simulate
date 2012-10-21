@@ -22,7 +22,7 @@ void BlockFactory::declareBlock(QString name, GenerateBlock generator)
 
 Block *BlockFactory::generateBlock(QString name, Model* model)
 {
-    return new Block(model, this->blocks[name](model));
+    return new Block(model, QSharedPointer<IBlockCore>(this->blocks[name](model)));
 }
 
 BlockFactory::BlockFactory()
