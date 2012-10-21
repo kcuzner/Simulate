@@ -1,7 +1,6 @@
 #include "output.h"
 #include "input.h"
 #include "block.h"
-#include "stepcontext.h"
 
 using namespace Simulation;
 
@@ -54,7 +53,7 @@ void Output::disconnect(Input *input, bool backRef)
     this->connected.remove(input);
 }
 
-void Output::set(StepContext *context, SignalValue* value)
+void Output::set(Context *context, QSharedPointer<QList<double> > value)
 {
     //when this output is set, we set all of our connected inputs to the passed value
     for(QSet<Input*>::iterator i = this->connected.begin(); i != this->connected.end(); i++)

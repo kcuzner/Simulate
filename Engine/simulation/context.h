@@ -5,7 +5,7 @@
 #include <QList>
 #include <QHash>
 #include <QQueue>
-#include "signalvalue.h"
+#include <QSharedPointer>
 
 namespace Simulation
 {
@@ -43,7 +43,7 @@ namespace Simulation
          * @param instance
          * @return Persistant variable hash
          */
-        QHash<QString, QList<double> >* getPersistantBlockContext(Block* instance);
+        QSharedPointer<QHash<QString, QSharedPointer<QList<double> > > > getPersistantBlockContext(Block* instance);
 
         /**
          * @brief isBlockReady called by inputs to determine if the block should be queued
@@ -57,7 +57,9 @@ namespace Simulation
          * @param input
          * @return
          */
-        SignalValue* getInputValue(Input* input);
+        QSharedPointer<QList<double> > getInputValue(Input* input);
+
+        QSharedPointer<QHash<QString, QSharedPointer<QList<double> > > > getBlockInputs(Block* instance);
 
 
     signals:
@@ -72,7 +74,7 @@ namespace Simulation
          * @brief Sets an input to a value in this context
          * @param input
          */
-        void setInput(Input* input, SignalValue* value);
+        void setInput(Input* input, QSharedPointer<QList<double> > value);
         /**
          * @brief setTimeStep
          * @param timeStep
@@ -99,7 +101,8 @@ namespace Simulation
         QQueue<Block*> execute;
         QList<Block*>::iterator current;
 
-        QHash<Block*, QHash<QString, QList<double> >* > variableContexts;
+        QHash<Block*, QSharedPointer<QHash<QString, QSharedPointer<QList<double> > > > > variableContexts;
+        QHash<Input*, QSharedPointer<QList<double> > > inputValues;
 
     };
 

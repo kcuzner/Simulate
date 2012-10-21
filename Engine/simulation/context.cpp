@@ -2,7 +2,6 @@
 #include "input.h"
 #include "block.h"
 #include "model.h"
-#include "stepcontext.h"
 
 #include <stdexcept>
 
@@ -44,14 +43,13 @@ void Context::setTimeStep(double timeStep)
 
 }
 
-void Context::queueBlock(Block *block)
+void Context::queueBlock(Simulation::Block* block)
 {
     this->execute.enqueue(block);
 }
 
 void Context::step()
 {
-    StepContext* context = new StepContext(this); //create a new step context
 
     this->initialize(); //initialize all our blocks
 
@@ -61,14 +59,12 @@ void Context::step()
         //dequeue a block in the execution queue
         Block* blk = this->execute.dequeue();
 
-        blk->execute(context);
+        blk->execute(this);
 
         executions++;
     }
 
     emit(this->finished(executions));
-
-    delete context;
 }
 
 void Context::initialize()
@@ -94,7 +90,7 @@ Context *Context::createChildContext(Model* model)
     return child;
 }
 
-QHash<QString, QList<double> > *Context::getPersistantBlockContext(Block *instance)
+QSharedPointer<QHash<QString, QSharedPointer<QList<double> > > > Context::getPersistantBlockContext(Block *instance)
 {
     if (this->variableContexts.contains(instance))
     {
@@ -102,25 +98,22 @@ QHash<QString, QList<double> > *Context::getPersistantBlockContext(Block *instan
     }
 
     //create a new context for this instance
-    QHash<QString, QList<double> >* context = new QHash<QString, QList<double> >();
+    QSharedPointer<QHash<QString, QSharedPointer<QList<double> > > > context(new QHash<QString,QSharedPointer<QList<double> > >());
     this->variableContexts[instance] = context;
 
     return context;
 }
 
-void Context::reset()
+QSharedPointer<QList<double> > Context::getInputValue(Input *input)
 {
-    //delete all our existing contexts
-    QHash<QString, QList<double> >* current;
-    foreach(current, this->variableContexts.values())
-    {
-        delete current;
-    }
-
-    //we can now clear it since all resources are freed
-    this->variableContexts.clear();
 }
 
-void Context::setInput(Input *input, SignalValue* value)
+void Context::reset()
 {
+    this->variableContexts.clear(); //because this is a hashset of QSharedPointers, this shouldn't cause a memory leak
+}
+
+void Context::setInput(Input *input, QSharedPointer<QList<double> > value)
+{
+    this->inputValues[input] = value;
 }

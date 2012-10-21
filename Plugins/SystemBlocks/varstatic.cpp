@@ -1,6 +1,5 @@
 #include "varstatic.h"
 #include "../../Engine/simulation/output.h"
-#include "../../Engine/simulation/stepcontext.h"
 
 #include <QStringList>
 

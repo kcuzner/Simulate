@@ -25,9 +25,7 @@ HEADERS += ipluginbase.h \
            simulation/input.h \
            simulation/model.h \
            simulation/modelblock.h \
-           simulation/output.h \
-           simulation/signalvalue.h \
-           simulation/stepcontext.h
+           simulation/output.h
 FORMS += mainwindow.ui modelwindow.ui pluginsdialog.ui
 SOURCES += main.cpp \
            mainwindow.cpp \
@@ -43,6 +41,4 @@ SOURCES += main.cpp \
            simulation/input.cpp \
            simulation/model.cpp \
            simulation/modelblock.cpp \
-           simulation/output.cpp \
-           simulation/signalvalue.cpp \
-           simulation/stepcontext.cpp
+           simulation/output.cpp

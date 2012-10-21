@@ -5,15 +5,12 @@
 #include <QSet>
 #include <QString>
 
-#include "signalvalue.h"
 #include "context.h"
 
 namespace Simulation
 {
     class Block;
     class Output;
-    class SignalValue;
-    class StepContext;
 
     /**
      * @brief Represents an input to a block
@@ -33,7 +30,7 @@ namespace Simulation
         ~Input();
 
         QString getName();
-        SignalValue* getValue(StepContext* context);
+        QSharedPointer<QList<double> > getValue(Context* context);
         Block* getBlock();
 
         /**

@@ -26,24 +26,24 @@ namespace Simulation
         Block(Model* model, QSharedPointer<IBlockCore> core);
         ~Block();
 
-        QHash<QString, Input*> getInputs();
-        QHash<QString, Output*> getOutputs();
+        QHash<QString, QSharedPointer<Input> > getInputs();
+        QHash<QString, QSharedPointer<Output> > getOutputs();
 
         virtual QStringList getOptionsList();
         double getOption(const QString &name);
 
-        virtual void compute(StepContext* context);
+        virtual void compute(Context* context);
 
     signals:
-        void inputAdded(Input*);
-        void inputRemoved(Input*);
-        void outputAdded(Output*);
-        void outputRemoved(Output*);
+        void inputAdded(QSharedPointer<Input>);
+        void inputRemoved(QSharedPointer<Input>);
+        void outputAdded(QSharedPointer<Output>);
+        void outputRemoved(QSharedPointer<Output>);
 
     public slots:
-        void initialize(Context* context);
-        void execute(StepContext* context);
-        void setOption(const QString& name, double value);
+        virtual void initialize(Context* context);
+        virtual void execute(Context* context);
+        virtual void setOption(const QString& name, double value);
 
     protected slots:
         void coreInputAdded(const QString& name, int rank);
@@ -52,18 +52,18 @@ namespace Simulation
         void coreOutputRemoved(const QString& name);
 
     protected:
-        Input* addInput(QString name);
-        Output* addOutput(QString name);
-        void removeInput(QString name);
-        void removeInput(Input* input);
-        void removeOutput(QString name);
-        void removeOutput(Output* output);
+        QSharedPointer<Input> addInput(const QString& name);
+        QSharedPointer<Output> addOutput(const QString& name);
+        void removeInput(const QString& name);
+        void removeInput(QSharedPointer<Input> input);
+        void removeOutput(const QString& name);
+        void removeOutput(QSharedPointer<Output> output);
 
         QSharedPointer<IBlockCore> core;
 
     private:
-        QHash<QString, Input*> inputs;
-        QHash<QString, Output*> outputs;
+        QHash<QString, QSharedPointer<Input> > inputs;
+        QHash<QString, QSharedPointer<Output> > outputs;
     };
 
 }

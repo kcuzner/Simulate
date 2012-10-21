@@ -1,8 +1,6 @@
 #include "input.h"
 #include "block.h"
 #include "output.h"
-#include "signalvalue.h"
-#include "stepcontext.h"
 
 using namespace Simulation;
 
@@ -28,10 +26,9 @@ QString Input::getName()
     return this->name;
 }
 
-SignalValue *Input::getValue(StepContext *context)
+QSharedPointer<QList<double> > Input::getValue(Context *context)
 {
-    return NULL;
-    //return context->getInputValue(this); //get our input value in this context
+    return context->getInputValue(this); //get our input value in this context
 }
 
 Block *Input::getBlock()

@@ -2,8 +2,6 @@
 #include "input.h"
 #include "output.h"
 #include "blockfactory.h"
-#include "signalvalue.h"
-#include "stepcontext.h"
 
 using namespace Simulation;
 
@@ -26,12 +24,12 @@ Block::~Block()
 {
 }
 
-QHash<QString, Input *> Block::getInputs()
+QHash<QString, QSharedPointer<Input> > Block::getInputs()
 {
     return this->inputs;
 }
 
-QHash<QString, Output *> Block::getOutputs()
+QHash<QString, QSharedPointer<Output> > Block::getOutputs()
 {
     return this->outputs;
 }
@@ -44,11 +42,11 @@ double Block::getOption(const QString &name)
 {
 }
 
-void Block::compute(StepContext *context)
+void Block::compute(Context *context)
 {
 }
 
-Input *Block::addInput(QString name)
+QSharedPointer<Input> Block::addInput(const QString &name)
 {
     if (this->inputs.contains(name))
     {
@@ -56,7 +54,7 @@ Input *Block::addInput(QString name)
         return this->inputs[name];
     }
 
-    Input* input = new Input(this, name);
+    QSharedPointer<Input> input(new Input(this, name));
 
     this->inputs[name] = input;
 
@@ -65,7 +63,7 @@ Input *Block::addInput(QString name)
     return input;
 }
 
-Output *Block::addOutput(QString name)
+QSharedPointer<Output> Block::addOutput(const QString &name)
 {
     if (this->outputs.contains(name))
     {
@@ -73,7 +71,7 @@ Output *Block::addOutput(QString name)
         return this->outputs[name];
     }
 
-    Output* output = new Output(this, name);
+    QSharedPointer<Output> output(new Output(this, name));
 
     this->outputs[name] = output;
 
@@ -82,21 +80,21 @@ Output *Block::addOutput(QString name)
     return output;
 }
 
-void Block::removeInput(QString name)
+void Block::removeInput(const QString &name)
 {
     if (!this->inputs.contains(name))
     {
         return; //no need for removing something that doesn't exist
     }
 
-    Input* input = this->inputs[name];
+    QSharedPointer<Input> input = this->inputs[name];
 
     this->inputs.remove(name);
 
     emit(inputRemoved(input));
 }
 
-void Block::removeInput(Input *input)
+void Block::removeInput(QSharedPointer<Input> input)
 {
     if (!this->inputs.contains(input->getName()))
     {
@@ -106,21 +104,21 @@ void Block::removeInput(Input *input)
     this->removeInput(input->getName());
 }
 
-void Block::removeOutput(QString name)
+void Block::removeOutput(const QString &name)
 {
     if (!this->inputs.contains(name))
     {
         return;
     }
 
-    Output* output = this->outputs[name];
+    QSharedPointer<Output> output = this->outputs[name];
 
     this->outputs.remove(name);
 
     emit(outputRemoved(output));
 }
 
-void Block::removeOutput(Output *output)
+void Block::removeOutput(QSharedPointer<Output> output)
 {
     if (!this->outputs.contains(output->getName()))
     {
@@ -138,7 +136,7 @@ void Block::initialize(Context *context)
     }
 }
 
-void Block::execute(StepContext *context)
+void Block::execute(Context *context)
 {
     this->compute(context);
 }
