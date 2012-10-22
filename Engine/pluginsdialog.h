@@ -15,6 +15,9 @@ class PluginsDialog : public QDialog
 public:
     explicit PluginsDialog(PluginTracker* tracker, QWidget *parent = 0);
     ~PluginsDialog();
+
+public slots:
+    void onPluginError();
     
 private:
     Ui::PluginsDialog *ui;

@@ -37,7 +37,7 @@ signals:
     void errorsWhileLoading();
 
 public slots:
-    void rescan();
+    void scan();
     void selectDirectory(QString directory);
     
 protected:

@@ -11,8 +11,6 @@ PluginTracker::PluginTracker(QObject *parent) :
 {
     this->pluginDirectory = QDir::current();
     this->pluginDirectory.cd(PLUGIN_DEFAULT_DIRECTORY);
-
-    this->rescan();
 }
 
 QVariant PluginTracker::data(const QModelIndex &index, int role) const
@@ -48,7 +46,7 @@ QString PluginTracker::getError()
     return QString();
 }
 
-void PluginTracker::rescan()
+void PluginTracker::scan()
 {
     QStringList filters;
     filters << PLUGIN_NAME_FILTERS;
@@ -58,6 +56,7 @@ void PluginTracker::rescan()
     QString file;
 
     cout << "Scanning" << this->pluginDirectory.absolutePath().toLocal8Bit().data() << endl;
+    cout.flush();
 
     bool errors = false;
 
@@ -84,11 +83,17 @@ void PluginTracker::rescan()
         }
     }
 
+    errors = true;
+    this->errors.enqueue("Oh noes!!");
+    this->errors.enqueue("Oh noes again!");
+
     if (errors)
     {
         //emit our errors signal since some where queued
+        cout << "hi!" << endl;
+        cout.flush();
         if (!this->errors.empty())
-            emit(this->errorsWhileLoading());
+            emit this->errorsWhileLoading();
     }
 }
 
@@ -96,6 +101,4 @@ void PluginTracker::selectDirectory(QString directory)
 {
     this->pluginDirectory = QDir(directory);
 }
-
-
 
