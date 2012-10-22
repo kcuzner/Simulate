@@ -16,7 +16,7 @@ class SYSTEMBLOCKSSHARED_EXPORT SystemBlocks : public QObject, Simulation::IBloc
 public:
     SystemBlocks();
 
-    void declareBlocks(Simulation::BlockFactory *factory);
+    void declareBlocks(Simulation::IBlockFactory *factory);
     QString getName();
     QString getDescription();
 };

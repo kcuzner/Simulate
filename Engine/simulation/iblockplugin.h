@@ -3,7 +3,8 @@
 
 #include <QtPlugin>
 #include <QObject>
-#include "blockfactory.h"
+
+#include "iblockfactory.h"
 #include "../ipluginbase.h"
 
 namespace Simulation
@@ -22,7 +23,7 @@ namespace Simulation
          * @brief Called when the plugin needs to declare its blocks to the passed factory
          * @param factory Factory to declare to
          */
-        virtual void declareBlocks(BlockFactory* factory) = 0;
+        virtual void declareBlocks(IBlockFactory* factory) = 0;
     };
 
 }

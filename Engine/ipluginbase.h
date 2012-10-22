@@ -7,7 +7,7 @@
 class IPluginBase
 {
 public:
-    virtual ~IPluginBase() {};
+    virtual ~IPluginBase() {}
 
     virtual QString getName() = 0;
     virtual QString getDescription() = 0;

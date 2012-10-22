@@ -6,15 +6,16 @@
 
 #include "model.h"
 #include "iblockcore.h"
+#include "iblockfactory.h"
 
 namespace Simulation
 {
     class Block;
 
-    typedef IBlockCore* (*GenerateBlock)(QObject*);
-
-    class BlockFactory
+    class BlockFactory : public IBlockFactory
     {
+        Q_INTERFACES(Simulation::IBlockFactory)
+
     public:
 
         /**
@@ -28,7 +29,7 @@ namespace Simulation
          * @param name
          * @param generator Static generator function from the block matching the GenerateBlock type
          */
-        void declareBlock(QString name, GenerateBlock generator);
+        virtual void declareBlock(QString name, GenerateBlock generator);
 
         /**
          * @brief Generates a block with the given name

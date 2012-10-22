@@ -1,6 +1,6 @@
 #include "plugintracker.h"
 
-#include "ipluginbase.h"
+#include "simulation/iblockplugin.h"
 
 #include <QPluginLoader>
 #include <iostream>
@@ -54,11 +54,13 @@ void PluginTracker::rescan()
         if (!instance) {
             cout << loader.errorString().toLocal8Bit().data() << endl;
         }
+        else {
+            cout << "Yay111" << endl;
+        }
         //attempt to cast the instance to one of our plugins
-        IPluginBase* plugin = qobject_cast<IPluginBase*>(instance);
+        Simulation::IBlockPlugin* plugin = qobject_cast<Simulation::IBlockPlugin*>(instance);
         if (plugin) {
-            cout << file.toLocal8Bit().data() << endl;
-            cout.flush();
+            cout << "Yay!" << endl;
         }
     }
 }

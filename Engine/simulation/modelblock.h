@@ -2,6 +2,10 @@
 #define MODELBLOCK_H
 
 #include "block.h"
+#include "entryblock.h"
+#include "exitblock.h"
+
+#include <QSharedPointer>
 
 namespace Simulation
 {
@@ -11,10 +15,19 @@ namespace Simulation
     class ModelBlock : Block
     {
     public:
-        ModelBlock(Model* model, Model* executionModel);
+        ModelBlock(Model* model, QSharedPointer<Model> executionModel);
+
+        virtual QStringList getOptionsList();
+        virtual void execute(Context *context);
+
+    protected slots:
+        void modelEntryAdded(QSharedPointer<EntryBlock> entry);
+        void modelExitAdded(QSharedPointer<ExitBlock> exit);
+        void modelEntryRemoved(QSharedPointer<EntryBlock> entry);
+        void modelExitRemoved(QSharedPointer<ExitBlock> exit);
 
     protected:
-        Model* model;
+        QSharedPointer<Model> model;
     };
 
 }

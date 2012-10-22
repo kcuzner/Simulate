@@ -10,7 +10,7 @@ SystemBlocks::SystemBlocks()
 {
 }
 
-void SystemBlocks::declareBlocks(BlockFactory *factory)
+void SystemBlocks::declareBlocks(IBlockFactory *factory)
 {
     factory->declareBlock("var.ramp", VarRamp::generate);
 }
