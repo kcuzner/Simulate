@@ -4,7 +4,6 @@
 #include "varramp.h"
 
 using namespace Simulation;
-using namespace Blocks;
 
 SystemBlocks::SystemBlocks()
 {
@@ -12,6 +11,7 @@ SystemBlocks::SystemBlocks()
 
 void SystemBlocks::declareBlocks(IBlockFactory *factory)
 {
+    factory->declareBlock("var.static", VarStatic::generate);
     factory->declareBlock("var.ramp", VarRamp::generate);
 }
 

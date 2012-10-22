@@ -17,6 +17,8 @@ PluginsDialog::PluginsDialog(PluginTracker *tracker, QWidget *parent) :
     connect(this->tracker, SIGNAL(errorsWhileLoading()), SLOT(onPluginError()));
 
     this->tracker->scan();
+
+    this->ui->treeView->setModel(this->tracker);
 }
 
 PluginsDialog::~PluginsDialog()
@@ -26,8 +28,6 @@ PluginsDialog::~PluginsDialog()
 
 void PluginsDialog::onPluginError()
 {
-    cout << "hi" << endl;
-    cout.flush();
     if (!this->tracker->hasErrors())
         return; //nothing to do if there are no errors
 

@@ -3,6 +3,7 @@
 
 #include "pluginsdialog.h"
 #include "plugintracker.h"
+#include "simulation/blockfactory.h"
 
 #include <QMainWindow>
 
@@ -25,6 +26,8 @@ private:
     Ui::MainWindow *ui;
     PluginsDialog* pluginsDialog;
     PluginTracker* pluginTracker;
+
+    Simulation::BlockFactory* blockFactory;
 };
 
 #endif // MAINWINDOW_H

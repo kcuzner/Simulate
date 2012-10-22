@@ -3,7 +3,6 @@
 
 #include <QStringList>
 
-using namespace Blocks;
 using namespace Simulation;
 
 VarStatic::VarStatic(QObject *parent) : QObject(parent)
