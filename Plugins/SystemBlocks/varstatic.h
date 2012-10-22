@@ -6,7 +6,7 @@
 namespace Blocks
 {
 
-    class VarStatic : public QObject, Simulation::IBlockCore
+    class VarStatic : public QObject, public Simulation::IBlockCore
     {
         Q_OBJECT
 

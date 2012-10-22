@@ -10,6 +10,7 @@ ModelBlock::ModelBlock(Model *model, QSharedPointer<Model> executionModel) :
 
 QStringList ModelBlock::getOptionsList()
 {
+    return QStringList();
 }
 
 void ModelBlock::execute(Context *context)

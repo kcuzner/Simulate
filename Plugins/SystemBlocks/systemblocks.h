@@ -7,7 +7,7 @@
 #include "../../Engine/simulation/iblockplugin.h"
 #include "SystemBlocks_global.h"
 
-class SYSTEMBLOCKSSHARED_EXPORT SystemBlocks : public QObject, Simulation::IBlockPlugin
+class SYSTEMBLOCKSSHARED_EXPORT SystemBlocks : public QObject, public Simulation::IBlockPlugin
 {
 
     Q_OBJECT

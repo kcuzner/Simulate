@@ -17,6 +17,8 @@
 #include <QHash>
 #include <QAbstractListModel>
 #include <QVariant>
+#include <QSharedPointer>
+#include <QQueue>
 
 class PluginTracker : public QAbstractListModel
 {
@@ -26,9 +28,13 @@ public:
 
     QVariant data(const QModelIndex &index, int role) const;
     int rowCount(const QModelIndex &parent) const;
+
+    bool hasErrors();
+    QString getError();
     
 signals:
-    void pluginLoaded(IPluginBase* plugin);
+    void pluginLoaded(QSharedPointer<IPluginBase> plugin);
+    void errorsWhileLoading();
 
 public slots:
     void rescan();
@@ -36,7 +42,8 @@ public slots:
     
 protected:
     QDir pluginDirectory;
-    QHash<QString, IPluginBase*> plugins;
+    QHash<QString, IPluginBase* > plugins;
+    QQueue<QString> errors;
 };
 
 #endif // PLUGINTRACKER_H

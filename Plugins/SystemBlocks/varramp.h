@@ -3,7 +3,7 @@
 
 #include "../../Engine/simulation/iblockcore.h"
 
-class VarRamp : public QObject, Simulation::IBlockCore
+class VarRamp : public QObject, public Simulation::IBlockCore
 {
     Q_OBJECT
 

@@ -33,6 +33,21 @@ int PluginTracker::rowCount(const QModelIndex &parent) const
         return this->plugins.count();
 }
 
+bool PluginTracker::hasErrors()
+{
+    return !this->errors.empty();
+}
+
+QString PluginTracker::getError()
+{
+    if (!this->errors.empty())
+    {
+        return this->errors.dequeue();
+    }
+
+    return QString();
+}
+
 void PluginTracker::rescan()
 {
     QStringList filters;
@@ -44,6 +59,8 @@ void PluginTracker::rescan()
 
     cout << "Scanning" << this->pluginDirectory.absolutePath().toLocal8Bit().data() << endl;
 
+    bool errors = false;
+
     foreach(file, files)
     {
         if (this->plugins.keys().contains(file))
@@ -52,16 +69,26 @@ void PluginTracker::rescan()
         QPluginLoader loader(this->pluginDirectory.absoluteFilePath(file));
         QObject* instance = loader.instance();
         if (!instance) {
-            cout << loader.errorString().toLocal8Bit().data() << endl;
-        }
-        else {
-            cout << "Yay111" << endl;
+            //there was an error
+            QString error = "Error loading ";
+            error.append(this->pluginDirectory.absoluteFilePath(file));
+            error.append(" ");
+            error.append(loader.errorString());
+            this->errors.enqueue(error);
+            errors = true;
         }
         //attempt to cast the instance to one of our plugins
-        Simulation::IBlockPlugin* plugin = qobject_cast<Simulation::IBlockPlugin*>(instance);
-        if (plugin) {
-            cout << "Yay!" << endl;
+        Simulation::IBlockPlugin* blockPlugin = qobject_cast<Simulation::IBlockPlugin*>(instance);
+        if (blockPlugin) {
+            this->plugins[blockPlugin->getName()] = blockPlugin;
         }
+    }
+
+    if (errors)
+    {
+        //emit our errors signal since some where queued
+        if (!this->errors.empty())
+            emit(this->errorsWhileLoading());
     }
 }
 

@@ -13,7 +13,7 @@ namespace Simulation
     /**
      * @brief Defines an interface for a plugin
      */
-    class IBlockPlugin : IPluginBase
+    class IBlockPlugin : public IPluginBase
     {
         Q_INTERFACES(IPluginBase)
     public:
