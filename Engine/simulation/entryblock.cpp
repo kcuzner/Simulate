@@ -13,11 +13,17 @@ EntryBlock::EntryBlock(Model *model, QString name) :
 
 QStringList EntryBlock::getOptionsList()
 {
-    return QStringList();
+    QStringList options;
+    options << "Value";
+    return options;
 }
 
-void EntryBlock::compute(StepContext *context)
+void EntryBlock::execute(Context *context)
 {
+    double val = this->getOption("Value");
+    QSharedPointer<QList<double> > values(new QList<double>());
+    (*values) << val;
+    this->setOutputValue(context, "Value", values);
 }
 
 QString EntryBlock::getName()

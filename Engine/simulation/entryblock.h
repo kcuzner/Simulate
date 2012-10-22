@@ -13,7 +13,7 @@ namespace Simulation
         EntryBlock(Model* model, QString name);
 
         virtual QStringList getOptionsList();
-        virtual void compute(StepContext *context);
+        virtual void execute(Context *context);
 
         QString getName();
 

@@ -106,6 +106,24 @@ QSharedPointer<QHash<QString, QSharedPointer<QList<double> > > > Context::getPer
 
 QSharedPointer<QList<double> > Context::getInputValue(Input *input)
 {
+    if (this->inputValues.contains(input))
+        return this->inputValues[input];
+    else
+        return QSharedPointer<QList<double> >(); //return null
+}
+
+QSharedPointer<QHash<QString, QSharedPointer<QList<double> > > > Context::getBlockInputs(Block *instance)
+{
+    QSharedPointer<QHash<QString, QSharedPointer<QList<double> > > > inputValues(new QHash<QString, QSharedPointer<QList<double> > >());
+
+    QHash<QString, QSharedPointer<Input> > inputs = instance->getInputs();
+    QSharedPointer<Input> input;
+    foreach(input, inputs.values())
+    {
+        (*inputValues)[input->getName()] = this->getInputValue(input.data());
+    }
+
+    return inputValues;
 }
 
 void Context::reset()

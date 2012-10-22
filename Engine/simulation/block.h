@@ -7,7 +7,6 @@
 #include <QRunnable>
 #include <QtPlugin>
 
-#include "blockfactory.h"
 #include "context.h"
 #include "model.h"
 #include "iblockcore.h"
@@ -30,9 +29,7 @@ namespace Simulation
         QHash<QString, QSharedPointer<Output> > getOutputs();
 
         virtual QStringList getOptionsList();
-        double getOption(const QString &name);
-
-        virtual void compute(Context* context);
+        virtual double getOption(const QString &name);
 
     signals:
         void inputAdded(QSharedPointer<Input>);
@@ -50,6 +47,7 @@ namespace Simulation
         void coreOutputAdded(const QString& name, int rank);
         void coreInputRemoved(const QString& name);
         void coreOutputRemoved(const QString& name);
+        void setOutputValue(Context *context, const QString& name, QSharedPointer<QList<double> > value);
 
     protected:
         QSharedPointer<Input> addInput(const QString& name);
@@ -62,8 +60,9 @@ namespace Simulation
         QSharedPointer<IBlockCore> core;
 
     private:
-        QHash<QString, QSharedPointer<Input> > inputs;
-        QHash<QString, QSharedPointer<Output> > outputs;
+        QSharedPointer<QHash<QString, QSharedPointer<Input> > > inputs;
+        QSharedPointer<QHash<QString, QSharedPointer<Output> > > outputs;
+        QSharedPointer<QHash<QString, double> > options;
     };
 
 }
