@@ -5,7 +5,6 @@
 
 namespace Simulation
 {
-
     class ExitBlock : public Block
     {
         Q_OBJECT
@@ -14,7 +13,7 @@ namespace Simulation
         ExitBlock(Model* model, QString name);
 
         virtual QStringList getOptionsList();
-        virtual void compute(StepContext *context);
+        virtual void compute(Context *context);
 
         QString getName();
 

@@ -4,6 +4,7 @@
 #include <QObject>
 #include <QList>
 #include <QHash>
+#include <QSharedPointer>
 
 namespace Simulation
 {
@@ -17,30 +18,28 @@ namespace Simulation
     public:
         explicit Model(QObject *parent = 0);
 
-        QList<Block*> getBlocks();
+        QList<QSharedPointer<Block> > getBlocks();
 
-        Block* addBlock(Block* block);
-        EntryBlock *addEntry(QString &name);
-        ExitBlock *addExit(QString name);
+        void addBlock(QSharedPointer<Block> block);
+        QSharedPointer<EntryBlock> addEntry(const QString &name);
+        QSharedPointer<ExitBlock> addExit(const QString &name);
 
     signals:
-        void blockAdded(Block* block);
-        void blockRemoved(Block* block);
-        void entryAdded(EntryBlock* block);
-        void exitAdded(ExitBlock* block);
-        void entryRemoved(EntryBlock* block);
-        void exitRemoved(ExitBlock* block);
+        void blockAdded(QSharedPointer<Block> block);
+        void blockRemoved(QSharedPointer<Block> block);
+        void entryAdded(QSharedPointer<EntryBlock> block);
+        void exitAdded(QSharedPointer<ExitBlock> block);
+        void entryRemoved(QSharedPointer<EntryBlock> block);
+        void exitRemoved(QSharedPointer<ExitBlock> block);
 
     public slots:
-        void removeEntry(QString name);
-        void removeEntry(EntryBlock* block);
-        void removeExit(QString name);
-        void removeExit(ExitBlock* block);
+        void removeEntry(const QString &name);
+        void removeExit(const QString &name);
 
     protected:
-        QList<Block*> blocks;
-        QHash<QString, EntryBlock*> entries;
-        QHash<QString, ExitBlock*> exits;
+        QList<QSharedPointer<Block> > blocks;
+        QHash<QString,QSharedPointer<EntryBlock> > entries;
+        QHash<QString, QSharedPointer<ExitBlock> > exits;
 
     };
 

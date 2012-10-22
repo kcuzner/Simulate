@@ -16,8 +16,9 @@ QStringList ExitBlock::getOptionsList()
     return QStringList();
 }
 
-void ExitBlock::compute(StepContext *context)
+void ExitBlock::compute(Context*)
 {
+    //nothing to do here...
 }
 
 QString ExitBlock::getName()

@@ -80,7 +80,7 @@ namespace Simulation
          * @param timeStep
          */
         void setTimeStep(double timeStep);
-        void queueBlock(Block* block);
+        void queueBlock(QSharedPointer<Block> block);
         /**
          * @brief Steps the blocks attached to this context
          */
@@ -98,8 +98,8 @@ namespace Simulation
          * @brief Model this is attached to
          */
         Model* model;
-        QQueue<Block*> execute;
-        QList<Block*>::iterator current;
+        QQueue<QSharedPointer<Block> > execute;
+        QList<QSharedPointer<Block> >::iterator current;
 
         QHash<Block*, QSharedPointer<QHash<QString, QSharedPointer<QList<double> > > > > variableContexts;
         QHash<Input*, QSharedPointer<QList<double> > > inputValues;

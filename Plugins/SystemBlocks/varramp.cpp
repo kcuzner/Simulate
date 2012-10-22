@@ -24,6 +24,12 @@ void VarRamp::initialize(QSharedPointer<QHash<QString, QSharedPointer<QList<doub
 
 QStringList VarRamp::getOptionList()
 {
+    QStringList options;
+    options << "Initial Value"
+            << "Initial/Final Slope"
+            << "Final Value"
+            << "Final/Initial Slope";
+    return options;
 }
 
 QSharedPointer<QHash<QString, QSharedPointer<QList<double> > > > VarRamp::execute(QSharedPointer<QHash<QString, QSharedPointer<QList<double> > > > inputs, QSharedPointer<QHash<QString, QSharedPointer<QList<double> > > > context)

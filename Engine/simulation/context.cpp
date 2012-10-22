@@ -43,7 +43,7 @@ void Context::setTimeStep(double timeStep)
 
 }
 
-void Context::queueBlock(Simulation::Block* block)
+void Context::queueBlock(QSharedPointer<Block> block)
 {
     this->execute.enqueue(block);
 }
@@ -57,7 +57,7 @@ void Context::step()
     while(!this->execute.empty())
     {
         //dequeue a block in the execution queue
-        Block* blk = this->execute.dequeue();
+        QSharedPointer<Block> blk = this->execute.dequeue();
 
         blk->execute(this);
 
@@ -69,10 +69,10 @@ void Context::step()
 
 void Context::initialize()
 {
-    QList<Block*> blocks = this->model->getBlocks();
-    for(QList<Block*>::iterator i = blocks.begin(); i != blocks.end(); i++)
+    QList<QSharedPointer<Block> > blocks = this->model->getBlocks();
+    for(QList<QSharedPointer<Block> >::iterator i = blocks.begin(); i != blocks.end(); i++)
     {
-        Block* blk = (*i);
+        QSharedPointer<Block> blk = (*i);
         blk->initialize(this);
 
         if (blk->getInputs().count() == 0)

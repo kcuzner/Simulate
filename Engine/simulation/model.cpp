@@ -9,24 +9,22 @@ Model::Model(QObject *parent) :
 {
 }
 
-QList<Block *> Model::getBlocks()
+QList<QSharedPointer<Block> > Model::getBlocks()
 {
     return this->blocks;
 }
 
 
-Block* Model::addBlock(Block *block)
+void Model::addBlock(QSharedPointer<Block> block)
 {
     this->blocks << block;
 
     emit(this->blockAdded(block));
-
-    return block;
 }
 
-EntryBlock* Model::addEntry(QString &name)
+QSharedPointer<EntryBlock> Model::addEntry(const QString &name)
 {
-    EntryBlock* block = new EntryBlock(this, name);
+    QSharedPointer<EntryBlock> block(new EntryBlock(this, name));
 
     this->entries[name] = block;
     this->blocks << block;
@@ -37,9 +35,9 @@ EntryBlock* Model::addEntry(QString &name)
     return block;
 }
 
-ExitBlock* Model::addExit(QString name)
+QSharedPointer<ExitBlock> Model::addExit(const QString &name)
 {
-    ExitBlock* block = new ExitBlock(this, name);
+    QSharedPointer<ExitBlock> block(new ExitBlock(this, name));
 
     this->exits[name] = block;
     this->blocks << block;
@@ -50,38 +48,24 @@ ExitBlock* Model::addExit(QString name)
     return block;
 }
 
-void Model::removeEntry(QString name)
+void Model::removeEntry(const QString &name)
 {
-    EntryBlock* block = this->entries[name];
+    QSharedPointer<EntryBlock> block = this->entries[name];
 
-    this->removeEntry(block);
-}
-
-void Model::removeEntry(EntryBlock *block)
-{
-    this->entries.remove(block->getName());
+    this->entries.remove(name);
     this->blocks.removeAll(block);
 
     emit(this->blockRemoved(block));
     emit(this->entryRemoved(block));
-
-    delete block;
 }
 
-void Model::removeExit(QString name)
+void Model::removeExit(const QString &name)
 {
-    ExitBlock* block = this->exits[name];
+    QSharedPointer<ExitBlock> block = this->exits[name];
 
-    this->removeExit(block);
-}
-
-void Model::removeExit(ExitBlock *block)
-{
     this->exits.remove(block->getName());
     this->blocks.removeAll(block);
 
     emit(this->blockRemoved(block));
     emit(this->exitRemoved(block));
-
-    delete block;
 }
