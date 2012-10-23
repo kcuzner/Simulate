@@ -7,39 +7,50 @@
 using namespace std;
 
 PluginTracker::PluginTracker(Simulation::IBlockFactory* blockFactory, QObject *parent) :
-    QAbstractListModel(parent)
+    QAbstractItemModel(parent)
 {
     this->pluginDirectory = QDir::current();
     this->pluginDirectory.cd(PLUGIN_DEFAULT_DIRECTORY);
 
     this->blockFactory = blockFactory;
-    this->scan();
+
+    this->root = new PluginTrackerNode(false, "Plugins", "Loaded Plugins");
+    //we support only blocks at the moment
+    PluginTrackerNode* child = new PluginTrackerNode(false, "Block Plugins", "Block plugins to the simulation engine.", this->root);
+    this->root->appendChild(child);
+    PluginTrackerNode* plugin = new PluginTrackerNode(false, "System Blocks", "System blocks", child);
+    child->appendChild(plugin);
 }
 
 QVariant PluginTracker::data(const QModelIndex &index, int role) const
 {
-    cout << index.row() << endl;
-    cout.flush();
-    if (role == Qt::DisplayRole)
-    {
+    if (!index.isValid())
+        return QVariant();
 
+    if (role != Qt::DisplayRole)
+        return QVariant();
 
-        return this->plugins.values().at(index.row())->getName();
-    }
+    PluginTrackerNode* node = static_cast<PluginTrackerNode*>(index.internalPointer());
 
-    return QVariant();
-}
-
-QModelIndex PluginTracker::index(int row, int column, const QModelIndex &parent) const
-{
+    return node->data(index.column());
 }
 
 int PluginTracker::rowCount(const QModelIndex &parent) const
 {
-    if (parent.isValid())
+    PluginTrackerNode* parentNode;
+    if (parent.column() > 0)
         return 0;
+
+    if (!parent.isValid())
+        parentNode = this->root;
     else
-        return this->plugins.count();
+    {
+        cout << "child" << endl;
+        cout.flush();
+        parentNode = static_cast<PluginTrackerNode*>(parent.internalPointer());
+    }
+
+    return parentNode->childCount();
 }
 
 int PluginTracker::columnCount(const QModelIndex &parent) const
@@ -65,6 +76,39 @@ QVariant PluginTracker::headerData(int section, Qt::Orientation orientation, int
     }
 
     return QVariant();
+}
+
+QModelIndex PluginTracker::index(int row, int column, const QModelIndex &parent) const
+{
+    if (!hasIndex(row, column, parent))
+        return QModelIndex();
+
+    PluginTrackerNode* parentItem;
+
+    if (!parent.isValid())
+        parentItem = this->root;
+    else
+        parentItem = static_cast<PluginTrackerNode*>(parent.internalPointer());
+
+    PluginTrackerNode* childItem = parentItem->child(row);
+    if (childItem)
+        return createIndex(row, column, childItem);
+    else
+        return QModelIndex();
+}
+
+QModelIndex PluginTracker::parent(const QModelIndex &child) const
+{
+    if (!child.isValid())
+        return QModelIndex();
+
+    PluginTrackerNode* childNode = static_cast<PluginTrackerNode*>(child.internalPointer());
+    PluginTrackerNode* parentNode = childNode->parent();
+
+    if (parentNode == this->root)
+        return QModelIndex();
+
+    return createIndex(parentNode->row(), 0, parentNode);
 }
 
 bool PluginTracker::hasErrors()
@@ -138,4 +182,71 @@ void PluginTracker::scan()
 void PluginTracker::selectDirectory(QString directory)
 {
     this->pluginDirectory = QDir(directory);
+}
+
+/**
+ * PluginTrackerNode methods
+ */
+
+PluginTracker::PluginTrackerNode::PluginTrackerNode(bool plugin, QString name, QString description, PluginTracker::PluginTrackerNode *parent)
+{
+    this->name = name;
+    this->description = description;
+    this->parentNode = parent;
+}
+
+PluginTracker::PluginTrackerNode::~PluginTrackerNode()
+{
+    qDeleteAll(this->children);
+}
+
+void PluginTracker::PluginTrackerNode::appendChild(PluginTracker::PluginTrackerNode *child)
+{
+    this->children.append(child);
+}
+
+PluginTracker::PluginTrackerNode *PluginTracker::PluginTrackerNode::child(int row)
+{
+    return this->children.at(row);
+}
+
+int PluginTracker::PluginTrackerNode::childCount() const
+{
+    return this->children.count();
+}
+
+int PluginTracker::PluginTrackerNode::columnCount() const
+{
+    return 2;
+}
+
+QVariant PluginTracker::PluginTrackerNode::data(int column) const
+{
+    if (column == 0)
+    {
+        return this->name;
+    }
+    else if (column == 1)
+    {
+        return this->description;
+    }
+    else
+    {
+        return QVariant();
+    }
+}
+
+int PluginTracker::PluginTrackerNode::row() const
+{
+    if (this->parentNode)
+    {
+        return this->parentNode->children.indexOf(const_cast<PluginTrackerNode*>(this));
+    }
+
+    return 0;
+}
+
+PluginTracker::PluginTrackerNode *PluginTracker::PluginTrackerNode::parent()
+{
+    return this->parentNode;
 }

@@ -13,7 +13,10 @@ MainWindow::MainWindow(QWidget *parent) :
 
 
     this->pluginTracker = new PluginTracker(this->blockFactory, this);
-    this->pluginsDialog = new PluginsDialog(this->pluginTracker, this);
+    connect(this->pluginTracker, SIGNAL(errorsWhileLoading()), SLOT(onPluginError()));
+    this->pluginTracker->scan();
+
+    this->pluginsDialog = NULL;
 }
 
 MainWindow::~MainWindow()
@@ -34,4 +37,24 @@ void MainWindow::viewPlugins()
         this->pluginsDialog->show();
     }
 
+}
+
+void MainWindow::onPluginError()
+{
+    if (!this->pluginTracker->hasErrors())
+        return; //nothing to do if there are no errors
+
+    QMessageBox msgBox;
+    msgBox.setText("There were errors while loading plugins.");
+    msgBox.setInformativeText("Not all plugins may have loaded");
+    QString errors;
+
+    while(this->pluginTracker->hasErrors())
+    {
+        errors.append(this->pluginTracker->getError());
+        errors.append("\n");
+    }
+
+    msgBox.setDetailedText(errors);
+    msgBox.exec();
 }

@@ -21,6 +21,7 @@ public:
 
 public slots:
     void viewPlugins();
+    void onPluginError();
     
 private:
     Ui::MainWindow *ui;
