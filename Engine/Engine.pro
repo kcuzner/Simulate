@@ -26,7 +26,8 @@ HEADERS += ipluginbase.h \
            simulation/model.h \
            simulation/modelblock.h \
            simulation/output.h \
-    simulation/iblockfactory.h
+    simulation/iblockfactory.h \
+    simulation/iblockvisual.h
 FORMS += mainwindow.ui modelwindow.ui pluginsdialog.ui
 SOURCES += main.cpp \
            mainwindow.cpp \

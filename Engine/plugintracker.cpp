@@ -45,8 +45,6 @@ int PluginTracker::rowCount(const QModelIndex &parent) const
         parentNode = this->root;
     else
     {
-        cout << "child" << endl;
-        cout.flush();
         parentNode = static_cast<PluginTrackerNode*>(parent.internalPointer());
     }
 
@@ -92,9 +90,15 @@ QModelIndex PluginTracker::index(int row, int column, const QModelIndex &parent)
 
     PluginTrackerNode* childItem = parentItem->child(row);
     if (childItem)
+    {
         return createIndex(row, column, childItem);
+    }
     else
+    {
+        cout << "oh noes! " << parentItem->data(0).toString().toLocal8Bit().data() << endl;
         return QModelIndex();
+    }
+    cout.flush();
 }
 
 QModelIndex PluginTracker::parent(const QModelIndex &child) const
@@ -207,11 +211,15 @@ void PluginTracker::PluginTrackerNode::appendChild(PluginTracker::PluginTrackerN
 
 PluginTracker::PluginTrackerNode *PluginTracker::PluginTrackerNode::child(int row)
 {
+    cout << this->name.toLocal8Bit().data() << " getting child at " << row << endl;
+    cout.flush();
     return this->children.at(row);
 }
 
 int PluginTracker::PluginTrackerNode::childCount() const
 {
+    cout << this->name.toLocal8Bit().data() << " getting child count: " << this->children.count() << endl;
+    cout.flush();
     return this->children.count();
 }
 
