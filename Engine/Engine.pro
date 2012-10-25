@@ -44,5 +44,4 @@ SOURCES += main.cpp \
            simulation/modelblock.cpp \
            simulation/output.cpp
 
-RESOURCES += \
-    silk.qrc
+RESOURCES +=
