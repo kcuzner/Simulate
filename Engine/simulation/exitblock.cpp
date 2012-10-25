@@ -3,6 +3,7 @@
 #include <QStringList>
 
 using namespace Simulation;
+using namespace Interfaces;
 
 ExitBlock::ExitBlock(Model *model, QString name) :
     Block(model, QSharedPointer<IBlockCore>())

@@ -5,16 +5,16 @@
 #include <QHash>
 
 #include "model.h"
-#include "iblockcore.h"
-#include "iblockfactory.h"
+#include "../interfaces/iblockcore.h"
+#include "../interfaces/iblockfactory.h"
 
 namespace Simulation
 {
     class Block;
 
-    class BlockFactory : public IBlockFactory
+    class BlockFactory : public Interfaces::IBlockFactory
     {
-        Q_INTERFACES(Simulation::IBlockFactory)
+        Q_INTERFACES(Interfaces::IBlockFactory)
 
     public:
 
@@ -29,7 +29,7 @@ namespace Simulation
          * @param name
          * @param generator Static generator function from the block matching the GenerateBlock type
          */
-        virtual void declareBlock(QString name, GenerateBlock generator);
+        virtual void declareBlock(QString name, Interfaces::GenerateBlock generator);
 
         /**
          * @brief Generates a block with the given name
@@ -42,7 +42,7 @@ namespace Simulation
         BlockFactory();
 
         static BlockFactory* instance;
-        QHash<QString, GenerateBlock> blocks;
+        QHash<QString, Interfaces::GenerateBlock> blocks;
     };
 
 }

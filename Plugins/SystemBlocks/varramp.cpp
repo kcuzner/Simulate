@@ -1,6 +1,6 @@
 #include "varramp.h"
 
-using namespace Simulation;
+using namespace Interfaces;
 
 VarRamp::VarRamp(QObject *parent)
     : QObject(parent)

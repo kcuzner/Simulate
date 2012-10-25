@@ -3,6 +3,7 @@
 #include <QStringList>
 
 using namespace Simulation;
+using namespace Interfaces;
 
 EntryBlock::EntryBlock(Model *model, QString name) :
     Block(model, QSharedPointer<IBlockCore>())

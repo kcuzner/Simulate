@@ -1,19 +1,19 @@
 #ifndef VARSTATIC_H
 #define VARSTATIC_H
 
-#include "../../Engine/simulation/iblockcore.h"
+#include "../../Engine/interfaces/iblockcore.h"
 
-class VarStatic : public QObject, public Simulation::IBlockCore
+class VarStatic : public QObject, public Interfaces::IBlockCore
 {
     Q_OBJECT
 
-    Q_INTERFACES(Simulation::IBlockCore)
+    Q_INTERFACES(Interfaces::IBlockCore)
 
 public:
     VarStatic(QObject* parent = 0);
     ~VarStatic();
 
-    static IBlockCore* generate(QObject* parent = 0);
+    static Interfaces::IBlockCore* generate(QObject* parent = 0);
 
     virtual QObject* instance();
 

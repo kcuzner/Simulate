@@ -9,9 +9,9 @@
 #define PLUGIN_NAME_FILTERS "*.so"
 #endif
 
-#include "ipluginbase.h"
-#include "simulation/iblockplugin.h"
-#include "simulation/iblockfactory.h"
+#include "interfaces/ipluginbase.h"
+#include "interfaces/iblockplugin.h"
+#include "interfaces/iblockfactory.h"
 
 #include <QObject>
 #include <QString>
@@ -26,7 +26,7 @@ class PluginTracker : public QAbstractItemModel
 {
     Q_OBJECT
 public:
-    explicit PluginTracker(Simulation::IBlockFactory* blockFactory, QObject *parent = 0);
+    explicit PluginTracker(Interfaces::IBlockFactory* blockFactory, QObject *parent = 0);
 
     QVariant data(const QModelIndex &index, int role) const;
     int rowCount(const QModelIndex &parent) const;
@@ -39,7 +39,7 @@ public:
     QString getError();
     
 signals:
-    void pluginLoaded(QSharedPointer<IPluginBase> plugin);
+    void pluginLoaded(QSharedPointer<Interfaces::IPluginBase> plugin);
     void errorsWhileLoading();
 
 public slots:
@@ -70,12 +70,12 @@ protected:
     };
 
     QDir pluginDirectory;
-    QHash<QString, IPluginBase* > plugins;
-    QHash<QString, Simulation::IBlockPlugin*> blockPlugins;
+    QHash<QString, Interfaces::IPluginBase* > plugins;
+    QHash<QString, Interfaces::IBlockPlugin*> blockPlugins;
     QQueue<QString> errors;
     PluginTrackerNode* root;
 
-    Simulation::IBlockFactory* blockFactory;
+    Interfaces::IBlockFactory* blockFactory;
 };
 
 #endif // PLUGINTRACKER_H

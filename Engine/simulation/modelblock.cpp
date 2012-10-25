@@ -1,6 +1,7 @@
 #include "modelblock.h"
 
 using namespace Simulation;
+using namespace Interfaces;
 
 ModelBlock::ModelBlock(Model *model, QSharedPointer<Model> executionModel) :
     Block(model, QSharedPointer<IBlockCore>())

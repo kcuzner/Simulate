@@ -6,7 +6,7 @@
 #include <QObject>
 #include <QString>
 
-namespace Simulation
+namespace Interfaces
 {
     typedef IBlockCore* (*GenerateBlock)(QObject*);
 
@@ -19,6 +19,6 @@ namespace Simulation
     };
 }
 
-Q_DECLARE_INTERFACE(Simulation::IBlockFactory, "org.Simulate.Engine.IBlockFactory/1.0")
+Q_DECLARE_INTERFACE(Interfaces::IBlockFactory, "org.Simulate.Engine.IBlockFactory/1.0")
 
 #endif // IBLOCKFACTORY_H

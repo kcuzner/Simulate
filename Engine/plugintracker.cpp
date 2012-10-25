@@ -1,12 +1,14 @@
 #include "plugintracker.h"
 
-#include "simulation/iblockplugin.h"
+#include "interfaces/iblockplugin.h"
 
 #include <QPluginLoader>
 #include <iostream>
 using namespace std;
 
-PluginTracker::PluginTracker(Simulation::IBlockFactory* blockFactory, QObject *parent) :
+using namespace Interfaces;
+
+PluginTracker::PluginTracker(Interfaces::IBlockFactory* blockFactory, QObject *parent) :
     QAbstractItemModel(parent)
 {
     this->pluginDirectory = QDir::current();
@@ -161,7 +163,7 @@ void PluginTracker::scan()
             errors = true;
         }
         //attempt to cast the instance to one of our plugins
-        Simulation::IBlockPlugin* blockPlugin = qobject_cast<Simulation::IBlockPlugin*>(instance);
+        Interfaces::IBlockPlugin* blockPlugin = qobject_cast<Interfaces::IBlockPlugin*>(instance);
         if (blockPlugin) {
             this->plugins[blockPlugin->getName()] = blockPlugin;
             this->blockPlugins[blockPlugin->getName()] = blockPlugin;

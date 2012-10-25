@@ -7,7 +7,7 @@
 #include <QStringList>
 #include <QSharedPointer>
 
-namespace Simulation
+namespace Interfaces
 {
     /**
      * @brief Interface for the core component of a block which does computations and setup
@@ -54,6 +54,6 @@ namespace Simulation
     };
 }
 
-Q_DECLARE_INTERFACE(Simulation::IBlockCore, "org.Simulate.Engine.IBlockCore/1.0")
+Q_DECLARE_INTERFACE(Interfaces::IBlockCore, "org.Simulate.Engine.IBlockCore/1.0")
 
 #endif // IBLOCKCORE_H

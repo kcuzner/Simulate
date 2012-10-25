@@ -4,19 +4,19 @@
 #include <QtPlugin>
 #include <QObject>
 
-#include "../../Engine/simulation/iblockplugin.h"
+#include "../../Engine/interfaces/iblockplugin.h"
 #include "SystemBlocks_global.h"
 
-class SYSTEMBLOCKSSHARED_EXPORT SystemBlocks : public QObject, public Simulation::IBlockPlugin
+class SYSTEMBLOCKSSHARED_EXPORT SystemBlocks : public QObject, public Interfaces::IBlockPlugin
 {
 
     Q_OBJECT
-    Q_INTERFACES(Simulation::IBlockPlugin)
+    Q_INTERFACES(Interfaces::IBlockPlugin)
 
 public:
     SystemBlocks();
 
-    void declareBlocks(Simulation::IBlockFactory *factory);
+    void declareBlocks(Interfaces::IBlockFactory *factory);
     QString getName();
     QString getDescription();
 };

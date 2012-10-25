@@ -6,7 +6,7 @@
 #include <QIcon>
 #include <QPainter>
 
-namespace Simulation
+namespace Interfaces
 {
     /**
      * @brief Interface for the visual aspect of a block
@@ -25,6 +25,6 @@ namespace Simulation
     };
 }
 
-Q_DECLARE_INTERFACE(Simulation::IBlockVisual, "org.Simulate.Engine.IBlockVisual/1.0")
+Q_DECLARE_INTERFACE(Interfaces::IBlockVisual, "org.Simulate.Engine.IBlockVisual/1.0")
 
 #endif // IBLOCKVISUAL_H

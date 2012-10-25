@@ -4,6 +4,7 @@
 #include "blockfactory.h"
 
 using namespace Simulation;
+using namespace Interfaces;
 
 Block::Block(Model *model, QSharedPointer<IBlockCore> core)
     : QObject(model)

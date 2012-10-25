@@ -2,6 +2,7 @@
 #include "block.h"
 
 using namespace Simulation;
+using namespace Interfaces;
 
 BlockFactory* BlockFactory::instance;
 

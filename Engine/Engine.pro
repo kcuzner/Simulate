@@ -9,7 +9,7 @@ DEPENDPATH += . simulation
 INCLUDEPATH += . simulation
 
 # Input
-HEADERS += ipluginbase.h \
+HEADERS += interfaces/ipluginbase.h \
            mainwindow.h \
            modeleditorwidget.h \
            modelwindow.h \
@@ -20,14 +20,14 @@ HEADERS += ipluginbase.h \
            simulation/context.h \
            simulation/entryblock.h \
            simulation/exitblock.h \
-           simulation/iblockcore.h \
-           simulation/iblockplugin.h \
+           interfaces/iblockcore.h \
+           interfaces/iblockplugin.h \
            simulation/input.h \
            simulation/model.h \
            simulation/modelblock.h \
            simulation/output.h \
-    simulation/iblockfactory.h \
-    simulation/iblockvisual.h
+    interfaces/iblockfactory.h \
+    interfaces/iblockvisual.h
 FORMS += mainwindow.ui modelwindow.ui pluginsdialog.ui
 SOURCES += main.cpp \
            mainwindow.cpp \

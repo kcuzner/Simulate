@@ -1,13 +1,13 @@
 #ifndef VARRAMP_H
 #define VARRAMP_H
 
-#include "../../Engine/simulation/iblockcore.h"
+#include "../../Engine/interfaces/iblockcore.h"
 
-class VarRamp : public QObject, public Simulation::IBlockCore
+class VarRamp : public QObject, public Interfaces::IBlockCore
 {
     Q_OBJECT
 
-    Q_INTERFACES(Simulation::IBlockCore)
+    Q_INTERFACES(Interfaces::IBlockCore)
 
 public:
     explicit VarRamp(QObject* parent = 0);
@@ -17,7 +17,7 @@ public:
      * @param parent
      * @return
      */
-    static IBlockCore* generate(QObject* parent = 0);
+    static Interfaces::IBlockCore* generate(QObject* parent = 0);
 
     virtual QObject* instance();
 

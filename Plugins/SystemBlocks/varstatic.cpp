@@ -15,7 +15,7 @@ VarStatic::~VarStatic()
 {
 }
 
-IBlockCore *VarStatic::generate(QObject *parent)
+Interfaces::IBlockCore *VarStatic::generate(QObject *parent)
 {
     return new VarStatic(parent);
 }

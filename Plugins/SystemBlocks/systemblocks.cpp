@@ -3,7 +3,7 @@
 #include "varstatic.h"
 #include "varramp.h"
 
-using namespace Simulation;
+using namespace Interfaces;
 
 SystemBlocks::SystemBlocks()
 {

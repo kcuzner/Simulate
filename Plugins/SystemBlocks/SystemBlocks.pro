@@ -21,9 +21,9 @@ HEADERS += systemblocks.h\
         SystemBlocks_global.h \
     varstatic.h \
     varramp.h \
-    ../../Engine/simulation/iblockplugin.h \
-    ../../Engine/ipluginbase.h \
-    ../../Engine/simulation/iblockcore.h
+    ../../Engine/interfaces/iblockplugin.h \
+    ../../Engine/interfaces/ipluginbase.h \
+    ../../Engine/interfaces/iblockcore.h
 
 symbian {
     MMP_RULES += EXPORTUNFROZEN

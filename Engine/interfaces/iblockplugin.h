@@ -5,9 +5,9 @@
 #include <QObject>
 
 #include "iblockfactory.h"
-#include "../ipluginbase.h"
+#include "ipluginbase.h"
 
-namespace Simulation
+namespace Interfaces
 {
 
     /**
@@ -28,6 +28,6 @@ namespace Simulation
 
 }
 
-Q_DECLARE_INTERFACE(Simulation::IBlockPlugin, "org.Simulate.PluginInterfaces.BlockPlugin/1.0")
+Q_DECLARE_INTERFACE(Interfaces::IBlockPlugin, "org.Simulate.PluginInterfaces.BlockPlugin/1.0")
 
 #endif // BLOCKPLUGIN_H

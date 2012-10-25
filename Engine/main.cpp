@@ -10,7 +10,7 @@
 
 #include "simulation/model.h"
 #include "simulation/block.h"
-#include "simulation/iblockplugin.h"
+#include "interfaces/iblockplugin.h"
 #include "simulation/blockfactory.h"
 
 #include <iostream>

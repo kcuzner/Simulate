@@ -9,7 +9,7 @@
 
 #include "context.h"
 #include "model.h"
-#include "iblockcore.h"
+#include "../interfaces/iblockcore.h"
 
 namespace Simulation
 {
@@ -22,7 +22,7 @@ namespace Simulation
         Q_OBJECT
 
     public:
-        Block(Model* model, QSharedPointer<IBlockCore> core);
+        Block(Model* model, QSharedPointer<Interfaces::IBlockCore> core);
         ~Block();
 
         QHash<QString, QSharedPointer<Input> > getInputs();
@@ -57,7 +57,7 @@ namespace Simulation
         void removeOutput(const QString& name);
         void removeOutput(QSharedPointer<Output> output);
 
-        QSharedPointer<IBlockCore> core;
+        QSharedPointer<Interfaces::IBlockCore> core;
 
     private:
         QSharedPointer<QHash<QString, QSharedPointer<Input> > > inputs;
