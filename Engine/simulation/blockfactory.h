@@ -29,7 +29,7 @@ namespace Simulation
          * @param name
          * @param generator Static generator function from the block matching the GenerateBlock type
          */
-        virtual void declareBlock(QString name, Interfaces::GenerateBlock generator);
+        virtual void declareBlock(QString group, QString name, Interfaces::GenerateBlock generator);
 
         /**
          * @brief Generates a block with the given name

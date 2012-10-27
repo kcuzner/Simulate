@@ -15,7 +15,7 @@ namespace Interfaces
     public:
         virtual ~IBlockFactory() {}
 
-        virtual void declareBlock(QString name, GenerateBlock generator) = 0;
+        virtual void declareBlock(QString group, QString name, GenerateBlock generator) = 0;
     };
 }
 

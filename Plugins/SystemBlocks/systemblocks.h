@@ -11,7 +11,7 @@ class SYSTEMBLOCKSSHARED_EXPORT SystemBlocks : public QObject, public Interfaces
 {
 
     Q_OBJECT
-    Q_INTERFACES(Interfaces::IBlockPlugin)
+    Q_INTERFACES(Interfaces::IBlockPlugin Interfaces::IPluginBase)
 
 public:
     SystemBlocks();

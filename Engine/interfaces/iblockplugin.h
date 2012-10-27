@@ -15,7 +15,6 @@ namespace Interfaces
      */
     class IBlockPlugin : public IPluginBase
     {
-        Q_INTERFACES(IPluginBase)
     public:
         virtual ~IBlockPlugin() {}
 

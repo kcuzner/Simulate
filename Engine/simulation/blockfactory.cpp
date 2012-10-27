@@ -16,7 +16,7 @@ BlockFactory *BlockFactory::getInstance()
     return instance;
 }
 
-void BlockFactory::declareBlock(QString name, GenerateBlock generator)
+void BlockFactory::declareBlock(QString group, QString name, GenerateBlock generator)
 {
     this->blocks[name] = generator;
 }
