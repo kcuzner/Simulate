@@ -44,3 +44,6 @@ SOURCES += main.cpp \
            simulation/model.cpp \
            simulation/modelblock.cpp \
            simulation/output.cpp
+
+RESOURCES += \
+    fallback_theme.qrc

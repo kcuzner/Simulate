@@ -26,7 +26,7 @@
          <x>0</x>
          <y>0</y>
          <width>503</width>
-         <height>512</height>
+         <height>492</height>
         </rect>
        </property>
        <layout class="QVBoxLayout" name="verticalLayout_3"/>
@@ -141,6 +141,7 @@
    <attribute name="toolBarBreak">
     <bool>false</bool>
    </attribute>
+   <addaction name="actionNew"/>
   </widget>
   <action name="actionNew">
    <property name="text">

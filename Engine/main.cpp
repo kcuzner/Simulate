@@ -4,6 +4,7 @@
 #include <QSplashScreen>
 #include <QDir>
 #include <QMessageBox>
+#include <QIcon>
 
 #include "mainwindow.h"
 #include "modelwindow.h"
@@ -18,9 +19,18 @@
 using namespace Simulation;
 using namespace std;
 
+static const char* GENERIC_TEST_ICON = "document-open";
+static const char* FALLBACK_THEME = "silk";
+
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
+
+    //check for an icon theme
+    if (!QIcon::hasThemeIcon(GENERIC_TEST_ICON))
+    {
+        QIcon::setThemeName(FALLBACK_THEME); //if we don't have a theme, set it to our backup
+    }
 
     //show a splash screen while things are loading
     QDir dataDir(a.applicationDirPath());
