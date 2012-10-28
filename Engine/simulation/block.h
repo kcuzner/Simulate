@@ -6,6 +6,7 @@
 #include <QHash>
 #include <QRunnable>
 #include <QtPlugin>
+#include <QUuid>
 
 #include "context.h"
 #include "model.h"
@@ -30,6 +31,8 @@ namespace Simulation
 
         virtual QStringList getOptionsList();
         virtual double getOption(const QString &name);
+
+        QUuid getUUid();
 
     signals:
         void inputAdded(QSharedPointer<Input>);
@@ -60,6 +63,7 @@ namespace Simulation
         QSharedPointer<Interfaces::IBlockCore> core;
 
     private:
+        QUuid uuid;
         QSharedPointer<QHash<QString, QSharedPointer<Input> > > inputs;
         QSharedPointer<QHash<QString, QSharedPointer<Output> > > outputs;
         QSharedPointer<QHash<QString, double> > options;

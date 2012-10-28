@@ -2,8 +2,9 @@
 #define MODELWINDOW_H
 
 #include <QMainWindow>
+#include <QToolBox>
 
-#include "modeleditorwidget.h"
+#include "modeleditorscene.h"
 
 namespace Ui {
 class ModelWindow;
@@ -20,10 +21,12 @@ public:
 public slots:
     void undockBlockDock(void);
     void undockModelDock(void);
+    void addBlockGroup(QString& name);
     
 private:
     Ui::ModelWindow *ui;
-    ModelEditorWidget* editor;
+    ModelEditorScene* editorScene;
+    QToolBox* blockToolbox;
 };
 
 #endif // MODELWINDOW_H

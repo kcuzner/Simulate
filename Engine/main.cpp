@@ -58,5 +58,8 @@ int main(int argc, char *argv[])
     w.show();
     s.finish(&w);
 
+    ModelWindow mw(&w);
+    mw.show();
+
     return a.exec();
 }

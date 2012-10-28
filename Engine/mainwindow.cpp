@@ -9,7 +9,7 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
 
-    this->blockFactory = new Simulation::BlockFactory();
+    this->blockFactory = Simulation::BlockFactory::getInstance();
 
 
     this->pluginTracker = new PluginTracker(this->blockFactory, this);

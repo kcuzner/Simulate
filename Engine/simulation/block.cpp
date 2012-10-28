@@ -1,7 +1,6 @@
 #include "block.h"
 #include "input.h"
 #include "output.h"
-#include "blockfactory.h"
 
 using namespace Simulation;
 using namespace Interfaces;
@@ -13,6 +12,8 @@ Block::Block(Model *model, QSharedPointer<IBlockCore> core)
     this->outputs = QSharedPointer<QHash<QString, QSharedPointer<Output> > >(new QHash<QString, QSharedPointer<Output> >());
 
     this->core = core;
+
+    this->uuid = QUuid::createUuid();
 
     if (core)
     {
@@ -70,6 +71,11 @@ double Block::getOption(const QString &name)
     {
         return 0; //default value
     }
+}
+
+QUuid Block::getUUid()
+{
+    return this->uuid;
 }
 
 void Block::initialize(Context *context)

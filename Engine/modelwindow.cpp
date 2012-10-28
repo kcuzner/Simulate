@@ -3,6 +3,8 @@
 
 #include <iostream>
 
+#include <QLabel>
+
 using namespace std;
 
 ModelWindow::ModelWindow(QWidget *parent) :
@@ -11,12 +13,9 @@ ModelWindow::ModelWindow(QWidget *parent) :
 {
     ui->setupUi(this);
 
-    editor = new ModelEditorWidget(this);
+    this->editorScene = new ModelEditorScene(this);
 
-    ui->scrollArea->setWidget(editor);
-
-    editor->show();
-    ui->scrollArea->show();
+    this->ui->graphicsView->setScene(this->editorScene);
 
     //ui->actionM_odels->setChecked(true);
     //ui->action_Blocks->setChecked(true);
@@ -37,4 +36,8 @@ void ModelWindow::undockModelDock()
 {
     ui->modelsDockWidget->show();
     ui->modelsDockWidget->setFloating(true);
+}
+
+void ModelWindow::addBlockGroup(QString &name)
+{
 }

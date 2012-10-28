@@ -5,6 +5,8 @@
 
 #include <QObject>
 #include <QString>
+#include <QIcon>
+#include <QUuid>
 
 namespace Interfaces
 {
@@ -15,7 +17,14 @@ namespace Interfaces
     public:
         virtual ~IBlockFactory() {}
 
-        virtual void declareBlock(QString group, QString name, GenerateBlock generator) = 0;
+        /**
+         * @brief declareBlock
+         * @param group Toolbox group this should belong to
+         * @param name Name of the block
+         * @param generator
+         * @return Name of this block
+         */
+        virtual int declareBlock(QString group, QString name, QIcon icon, GenerateBlock generator) = 0;
     };
 }
 

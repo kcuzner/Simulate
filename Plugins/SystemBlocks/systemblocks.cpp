@@ -11,8 +11,8 @@ SystemBlocks::SystemBlocks()
 
 void SystemBlocks::declareBlocks(IBlockFactory *factory)
 {
-    factory->declareBlock("System", "var.static", VarStatic::generate);
-    factory->declareBlock("System", "var.ramp", VarRamp::generate);
+    factory->declareBlock("Variables", "var.static", QIcon(), VarStatic::generate);
+    factory->declareBlock("Variables", "var.ramp", QIcon(), VarRamp::generate);
 }
 
 QString SystemBlocks::getName()

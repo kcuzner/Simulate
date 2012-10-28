@@ -11,7 +11,6 @@ INCLUDEPATH += . simulation
 # Input
 HEADERS += interfaces/ipluginbase.h \
            mainwindow.h \
-           modeleditorwidget.h \
            modelwindow.h \
            pluginsdialog.h \
            plugintracker.h \
@@ -27,11 +26,12 @@ HEADERS += interfaces/ipluginbase.h \
            simulation/modelblock.h \
            simulation/output.h \
     interfaces/iblockfactory.h \
-    interfaces/iblockvisual.h
+    interfaces/iblockvisual.h \
+    modeleditorscene.h \
+    simulation/blockgrouping.h
 FORMS += mainwindow.ui modelwindow.ui pluginsdialog.ui
 SOURCES += main.cpp \
            mainwindow.cpp \
-           modeleditorwidget.cpp \
            modelwindow.cpp \
            pluginsdialog.cpp \
            plugintracker.cpp \
@@ -43,7 +43,9 @@ SOURCES += main.cpp \
            simulation/input.cpp \
            simulation/model.cpp \
            simulation/modelblock.cpp \
-           simulation/output.cpp
+           simulation/output.cpp \
+    modeleditorscene.cpp \
+    simulation/blockgrouping.cpp
 
 RESOURCES += \
     fallback_theme.qrc
