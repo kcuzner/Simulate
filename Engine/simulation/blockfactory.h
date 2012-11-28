@@ -1,6 +1,7 @@
 #ifndef BLOCKFACTORY_H
 #define BLOCKFACTORY_H
 
+#include <QObject>
 #include <QString>
 #include <QHash>
 
@@ -52,6 +53,7 @@ namespace Simulation
             BlockInfo(int id, QString group, QString name, QIcon icon, Interfaces::GenerateBlock generator);
 
             int getId();
+            QString getGroup();
             QString getName();
             QIcon getIcon();
             Block* generate(Model* model);
@@ -65,7 +67,8 @@ namespace Simulation
         QHash<QString, QSharedPointer<BlockFactory::BlockInfo> > getBlocks(QString groupName);
 
     signals:
-        void blockAdded(QSharedPointer<BlockFactory::BlockInfo>);
+        void blockAdded(QSharedPointer<Simulation::BlockFactory::BlockInfo>);
+        void test(QString);
 
     private:
         BlockFactory();

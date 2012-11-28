@@ -1,6 +1,8 @@
 #include "blockfactory.h"
 #include "block.h"
 
+#include <iostream>
+
 using namespace Simulation;
 using namespace Interfaces;
 
@@ -18,6 +20,10 @@ BlockFactory *BlockFactory::getInstance()
 
 int BlockFactory::declareBlock(QString group, QString name, QIcon icon, GenerateBlock generator)
 {
+    std::cout << "adding " << name.toLocal8Bit().data() << std::endl;
+    std::cout.flush();
+    emit test("Hello");
+
     QSharedPointer<BlockInfo> info(new BlockInfo(this->currentBlockId, group, name, icon, generator));
 
     this->blocks[group][name] = info;
@@ -66,6 +72,11 @@ BlockFactory::BlockInfo::BlockInfo(int id, QString group, QString name, QIcon ic
 int BlockFactory::BlockInfo::getId()
 {
     return this->id;
+}
+
+QString BlockFactory::BlockInfo::getGroup()
+{
+    return this->group;
 }
 
 QString BlockFactory::BlockInfo::getName()
