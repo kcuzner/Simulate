@@ -13,7 +13,9 @@ ModelWindow::ModelWindow(QWidget *parent) :
 {
     ui->setupUi(this);
 
-    this->editorScene = new ModelEditorScene(this);
+    this->model = NULL;
+
+    this->editorScene = new ModelEditorScene(this->model, this);
 
     this->ui->graphicsView->setScene(this->editorScene);
 

@@ -27,6 +27,7 @@ private:
     Ui::ModelWindow *ui;
     ModelEditorScene* editorScene;
     QToolBox* blockToolbox;
+    Simulation::Model* model;
 };
 
 #endif // MODELWINDOW_H

@@ -11,7 +11,7 @@ class ModelEditorScene : public QGraphicsScene
     Q_OBJECT
 
 public:
-    ModelEditorScene(QObject *parent = 0);
+    ModelEditorScene(Simulation::Model* model, QObject *parent = 0);
 
 private:
     Simulation::Model* model;

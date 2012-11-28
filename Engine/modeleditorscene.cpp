@@ -7,6 +7,7 @@
 
 using namespace std;
 
-ModelEditorScene::ModelEditorScene(QObject *parent) : QGraphicsScene(parent)
+ModelEditorScene::ModelEditorScene(Simulation::Model *model, QObject *parent) : QGraphicsScene(parent)
 {
+    this->model = model;
 }
