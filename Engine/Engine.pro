@@ -4,15 +4,40 @@
 #
 #-------------------------------------------------
 
-QT       -= core gui
+QT -= core gui
 
 TARGET = Engine
+DESTDIR = ../lib
 TEMPLATE = lib
 CONFIG += staticlib
 
-SOURCES += engine.cpp
+SOURCES += engine.cpp \
+    model.cpp \
+    defaultblockfactory.cpp \
+    modelblock.cpp \
+    baseblock.cpp \
+    baseblockinput.cpp \
+    baseblockoutput.cpp \
+    defaultcontext.cpp
 
-HEADERS += engine.h
+HEADERS += engine.h \
+    model.h \
+    interfaces/iblock.h \
+    interfaces/iblockfactory.h \
+    interfaces/imodel.h \
+    interfaces/ientryblock.h \
+    interfaces/iexitblock.h \
+    interfaces/icontext.h \
+    interfaces/iblockinput.h \
+    interfaces/iblockoutput.h \
+    defaultblockfactory.h \
+    modelblock.h \
+    baseblock.h \
+    baseblockinput.h \
+    baseblockoutput.h \
+    interfaces/iblockio.h \
+    interfaces/imodelblock.h \
+    defaultcontext.h
 unix:!symbian {
     maemo5 {
         target.path = /opt/usr/lib
@@ -21,3 +46,5 @@ unix:!symbian {
     }
     INSTALLS += target
 }
+
+unix:LIBS += -lboost
