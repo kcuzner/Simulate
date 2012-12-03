@@ -1,33 +1,47 @@
 #ifndef IBLOCKFACTORY_H
 #define IBLOCKFACTORY_H
 
-#include "iblockcore.h"
+#include <string>
 
-#include <QObject>
-#include <QString>
-#include <QIcon>
-#include <QUuid>
+#include <boost/function.hpp>
+#include <boost/smart_ptr.hpp>
 
-namespace Interfaces
+#include "iblock.h"
+#include "imodelblock.h"
+#include "imodel.h"
+
+/**
+ * @brief Interface to a block factory
+ *
+ *
+ */
+class IBlockFactory
 {
-    typedef IBlockCore* (*GenerateBlock)(QObject*);
+public:
+    virtual ~IBlockFactory() {}
 
-    class IBlockFactory
-    {
-    public:
-        virtual ~IBlockFactory() {}
+    /**
+     * @brief Generates a block
+     * @param id Id to use (this should be project unique)
+     * @param group Group the block can be found in
+     * @param name Name of the block to construct
+     * @return pointer to new block or null if no block under the group/name was found
+     */
+    virtual boost::shared_ptr<IBlock> generateBlock(int id, const std::string& group, const std::string& name) = 0;
+    /**
+     * @brief Generates a block that uses the passed model as its computation
+     * @param id Id to use (this should be project unique)
+     * @return pointer to new block or null if unsupported or model pointer was invalid
+     */
+    virtual boost::shared_ptr<IModelBlock> generateModelBlock(int id, boost::weak_ptr<IModel> model) = 0;
 
-        /**
-         * @brief declareBlock
-         * @param group Toolbox group this should belong to
-         * @param name Name of the block
-         * @param generator
-         * @return Name of this block
-         */
-        virtual int declareBlock(QString group, QString name, QIcon icon, GenerateBlock generator) = 0;
-    };
-}
-
-Q_DECLARE_INTERFACE(Interfaces::IBlockFactory, "org.Simulate.Engine.IBlockFactory/1.0")
+    /**
+     * @brief Adds a generator function for the named block to this factory
+     * @param generator Function that can generate this block
+     * @param group Group to put the block under
+     * @param name Name of the block
+     */
+    virtual void declareBlock(const boost::function<boost::shared_ptr<IBlock> (int id)>& generator, const std::string& group, const std::string& name) = 0;
+};
 
 #endif // IBLOCKFACTORY_H
