@@ -35,3 +35,7 @@ boost::shared_ptr<IContext> DefaultContext::createChildContext()
 void DefaultContext::step(boost::shared_ptr<IModel> model)
 {
 }
+
+void DefaultContext::cacheBlockIO(boost::shared_ptr<IBlock> block)
+{
+}

@@ -37,7 +37,8 @@ HEADERS += engine.h \
     baseblockoutput.h \
     interfaces/iblockio.h \
     interfaces/imodelblock.h \
-    defaultcontext.h
+    defaultcontext.h \
+    interfaces/iengine.h
 unix:!symbian {
     maemo5 {
         target.path = /opt/usr/lib
