@@ -3,6 +3,8 @@
 
 #include <map>
 
+#include "interfaces/iblockinput.h"
+#include "interfaces/iblockoutput.h"
 #include "interfaces/icontext.h"
 
 class DefaultContext : public IContext
@@ -27,6 +29,16 @@ public:
     virtual void step(boost::shared_ptr<IModel> model);
 
 protected:
+    /**
+     * @brief Caches the inputs and outputs of the block in preparation for simulation
+     * @param block
+     */
+    void cacheBlockIO(boost::shared_ptr<IBlock> block);
+
+    std::map<IBlock* block, std::map<std::string, boost::weak_ptr<IBlockInput> > > inputCache;
+    std::map<IBlock* block, std::map<std::string, boost::weak_ptr<IBlockOutput> > > outputCache;
+
+    std::map<boost::weak_ptr<IBlockInput>, std::vector<double> > currentInputValues;
 };
 
 #endif // DEFAULTCONTEXT_H
