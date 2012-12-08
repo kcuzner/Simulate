@@ -3,6 +3,7 @@
 
 #include <map>
 
+#include "interfaces/iblock.h"
 #include "interfaces/iblockinput.h"
 #include "interfaces/iblockoutput.h"
 #include "interfaces/icontext.h"
@@ -35,8 +36,14 @@ protected:
      */
     void cacheBlockIO(boost::shared_ptr<IBlock> block);
 
-    std::map<IBlock* block, std::map<std::string, boost::weak_ptr<IBlockInput> > > inputCache;
-    std::map<IBlock* block, std::map<std::string, boost::weak_ptr<IBlockOutput> > > outputCache;
+
+    struct BlockIOCache
+    {
+        std::map<std::string, boost::weak_ptr<IBlockInput> > inputs;
+        std::map<std::string, boost::weak_ptr<IBlockOutput> > outputs;
+    };
+
+    std::map<IBlock*, boost::shared_ptr<BlockIOCache> > ioCache;
 
     std::map<boost::weak_ptr<IBlockInput>, std::vector<double> > currentInputValues;
 };

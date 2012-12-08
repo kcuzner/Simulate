@@ -3,7 +3,7 @@
 
 #include "iblock.h"
 
-class IExitBlock : IBlock
+class IExitBlock : public IBlock
 {
 public:
     virtual ~IExitBlock() {}

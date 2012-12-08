@@ -11,16 +11,17 @@ DESTDIR = ../lib
 TEMPLATE = lib
 CONFIG += staticlib
 
-SOURCES += engine.cpp \
+SOURCES += \
     model.cpp \
     defaultblockfactory.cpp \
     modelblock.cpp \
     baseblock.cpp \
     baseblockinput.cpp \
     baseblockoutput.cpp \
-    defaultcontext.cpp
+    defaultcontext.cpp \
+    simpleengine.cpp
 
-HEADERS += engine.h \
+HEADERS += \
     model.h \
     interfaces/iblock.h \
     interfaces/iblockfactory.h \
@@ -38,7 +39,8 @@ HEADERS += engine.h \
     interfaces/iblockio.h \
     interfaces/imodelblock.h \
     defaultcontext.h \
-    interfaces/iengine.h
+    interfaces/iengine.h \
+    simpleengine.h
 unix:!symbian {
     maemo5 {
         target.path = /opt/usr/lib

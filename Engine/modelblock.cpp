@@ -1,5 +1,8 @@
 #include "modelblock.h"
 
+#include "baseblockinput.h"
+#include "baseblockoutput.h"
+
 ModelBlock::ModelBlock(int id, boost::shared_ptr<IModel> model)
 {
     this->id = id;
@@ -14,6 +17,17 @@ ModelBlock::ModelBlock(int id, boost::shared_ptr<IModel> model)
     //outputs except in the case that an entry and exit have the same name
     std::map<std::string, boost::shared_ptr<IEntryBlock> > entries = model->getEntries();
     std::map<std::string, boost::shared_ptr<IExitBlock> > exits = model->getExits();
+
+    std::map<std::string, boost::shared_ptr<IEntryBlock> >::iterator enIter;
+    for(enIter = entries.begin(); enIter != entries.end(); enIter++)
+    {
+        this->entryAdded((*enIter).second);
+    }
+    std::map<std::string, boost::shared_ptr<IExitBlock> >::iterator exIter;
+    for(exIter = exits.begin(); exIter != exits.end(); exIter++)
+    {
+        this->exitAdded((*exIter).second);
+    }
 }
 
 int ModelBlock::getId()
@@ -49,10 +63,12 @@ void ModelBlock::execute(boost::shared_ptr<IContext> context, double delta)
 
 const std::map<std::string, boost::shared_ptr<IBlockInput> > &ModelBlock::getInputs()
 {
+    return this->inputs;
 }
 
 const std::map<std::string, boost::shared_ptr<IBlockOutput> > &ModelBlock::getOutputs()
 {
+    return this->outputs;
 }
 
 boost::shared_ptr<IModel> ModelBlock::getModel()
@@ -62,17 +78,23 @@ boost::shared_ptr<IModel> ModelBlock::getModel()
 
 void ModelBlock::entryAdded(boost::shared_ptr<IEntryBlock> entry)
 {
-
+    //add an input to match this entry
+    boost::shared_ptr<BaseBlockInput> input(new BaseBlockInput(this, entry->getEntryName()));
+    this->inputs[entry->getEntryName()] = input;
 }
 
 void ModelBlock::entryRemoved(boost::shared_ptr<IEntryBlock> entry)
 {
+    this->inputs.erase(entry->getName());
 }
 
 void ModelBlock::exitAdded(boost::shared_ptr<IExitBlock> exit)
 {
+    boost::shared_ptr<BaseBlockOutput> output(new BaseBlockOutput(this, exit->getExitName()));
+    this->outputs[exit->getExitName()] = output;
 }
 
 void ModelBlock::exitRemoved(boost::shared_ptr<IExitBlock> exit)
 {
+    this->outputs.erase(exit->getExitName());
 }

@@ -1,15 +1,16 @@
 #ifndef ENGINE_H
 #define ENGINE_H
 
+#include "interfaces/iengine.h"
 #include "interfaces/iblockfactory.h"
 #include "interfaces/icontext.h"
 
 #include <boost/smart_ptr.hpp>
 
-class Engine
+class SimpleEngine : IEngine
 {
 public:
-    Engine();
+    SimpleEngine();
 
     boost::shared_ptr<IBlockFactory> getBlockFactory();
     void setBlockFactory(boost::shared_ptr<IBlockFactory> factory);

@@ -1,12 +1,12 @@
 #include <QCoreApplication>
 
-#include "engine.h"
+#include "simpleengine.h"
 
 int main(int argc, char *argv[])
 {
     QCoreApplication a(argc, argv);
 
-    Engine* n = new Engine();
+    SimpleEngine* n = new SimpleEngine();
     
     return a.exec();
 }
