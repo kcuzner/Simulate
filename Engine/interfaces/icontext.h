@@ -61,16 +61,16 @@ public:
     virtual boost::weak_ptr<IContext> getParent() = 0;
 
     /**
-     * @brief Creates a child context of this context
+     * @brief Creates a child context of this context for a model
      * @return
      */
-    virtual boost::shared_ptr<IContext> createChildContext() = 0;
+    virtual boost::shared_ptr<IContext> createChildContext(boost::shared_ptr<IModel>) = 0;
 
     /**
-     * @brief Runs a step on a model using this context. This method should return once running has been completed
+     * @brief Runs a step on the model this context is attached to. This method should return once running has been completed
      * @param model
      */
-    virtual void step(boost::shared_ptr<IModel> model) = 0;
+    virtual void step() = 0;
 };
 
 #endif // ICONTEXT_H

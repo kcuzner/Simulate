@@ -6,33 +6,40 @@
 #include <string>
 #include <vector>
 
-SimpleEngine::SimpleEngine()
+SimpleEngine::SimpleEngine(int steps, double delta)
 {
-    //create a default block factory
-    this->currentFactory = boost::shared_ptr<IBlockFactory>(new DefaultBlockFactory());
+    this->steps = steps;
+    this->delta = delta;
+
+    //create the block factory
+    this->factory = boost::shared_ptr<IBlockFactory>(new DefaultBlockFactory());
+}
+
+int SimpleEngine::getStepsToRun()
+{
+}
+
+void SimpleEngine::setStepsToRun(int n)
+{
+}
+
+double SimpleEngine::getStepDelta()
+{
+}
+
+void SimpleEngine::setStepDelta(double d)
+{
+}
+
+void SimpleEngine::run(boost::shared_ptr<IModel> model)
+{
 }
 
 boost::shared_ptr<IBlockFactory> SimpleEngine::getBlockFactory()
 {
-    return this->currentFactory;
 }
 
-void SimpleEngine::setBlockFactory(boost::shared_ptr<IBlockFactory> factory)
+boost::shared_ptr<IContext> SimpleEngine::setup(boost::shared_ptr<IModel> model)
 {
-    this->currentFactory = factory;
-}
 
-boost::shared_ptr<IContext> SimpleEngine::createContext()
-{
-    return this->contextGenerator();
-}
-
-void SimpleEngine::setContextCreator(boost::function<boost::shared_ptr<IContext> ()> generator)
-{
-    this->contextGenerator = generator;
-}
-
-boost::shared_ptr<IContext> SimpleEngine::generateDefaultContext()
-{
-    return boost::shared_ptr<IContext>(new DefaultContext());
 }

@@ -8,6 +8,8 @@
 #include <boost/smart_ptr.hpp>
 #include <boost/signals2.hpp>
 
+#include "icomponent.h"
+
 #include "iblockinput.h"
 #include "iblockoutput.h"
 #include "icontext.h"
@@ -18,7 +20,7 @@
  * Blocks should be supplied with a unique id, a non-unique group name, and a
  * non-unique name when they are constructed
  */
-class IBlock
+class IBlock : public IComponent
 {
 public:
     virtual ~IBlock() {}

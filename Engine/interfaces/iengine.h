@@ -44,7 +44,7 @@ public:
      * @brief Sets the delta to increment the time constant by after each step
      * @param d
      */
-    virtual void setStepDelta(float d) = 0;
+    virtual void setStepDelta(double d) = 0;
 
     /**
      * @brief Runs a model.
@@ -52,14 +52,16 @@ public:
      */
     virtual void run(boost::shared_ptr<IModel> model) = 0;
 
-    virtual boost::shared_ptr<IBlockFactory> getDefaultBlockFactory() = 0;
-    virtual boost::shared_ptr<IBlockFactory> getCurrentBlockFactory() = 0;
-    virtual void setCurrentBlockFactory(boost::shared_ptr<IBlockFactory> factory) = 0;
+    /**
+     * @brief Returns the block factory for this engine
+     * @return
+     */
+    virtual boost::shared_ptr<IBlockFactory> getBlockFactory() = 0;
 
     /**
-     * @brief Signal emitted when a step completes. First argument is step number completed, second is total steps
+     * @brief Signal emitted when a step completes. Second argument is step number completed, third is total steps
      */
-    boost::signals2::signal<void (int, int)> sigStepCompleted;
+    boost::signals2::signal<void (boost::shared_ptr<IModel>, int, int)> sigStepCompleted;
 };
 
 #endif // IENGINE_H

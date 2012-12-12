@@ -8,6 +8,8 @@
 #include <boost/smart_ptr.hpp>
 #include <boost/signals2.hpp>
 
+#include "icomponent.h"
+
 #include "iblock.h"
 #include "ientryblock.h"
 #include "iexitblock.h"
@@ -15,7 +17,7 @@
 /**
  * @brief Interface to a model encapsulating a number of blocks
  */
-class IModel
+class IModel : public IComponent
 {
 public:
     virtual ~IModel() { }

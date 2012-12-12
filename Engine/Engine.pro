@@ -19,7 +19,8 @@ SOURCES += \
     baseblockinput.cpp \
     baseblockoutput.cpp \
     defaultcontext.cpp \
-    simpleengine.cpp
+    simpleengine.cpp \
+    componenttracker.cpp
 
 HEADERS += \
     model.h \
@@ -40,7 +41,10 @@ HEADERS += \
     interfaces/imodelblock.h \
     defaultcontext.h \
     interfaces/iengine.h \
-    simpleengine.h
+    simpleengine.h \
+    interfaces/icomponent.h \
+    componenttracker.h \
+    interfaces/icomponenttracker.h
 unix:!symbian {
     maemo5 {
         target.path = /opt/usr/lib

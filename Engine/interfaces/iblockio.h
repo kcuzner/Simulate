@@ -5,12 +5,14 @@
 
 #include <boost/smart_ptr.hpp>
 
+#include "icomponent.h"
+
 class IBlock;
 
 /**
  * @brief Base interface for block io classes
  */
-class IBlockIO
+class IBlockIO : public IComponent
 {
 public:
     virtual ~IBlockIO() {}
