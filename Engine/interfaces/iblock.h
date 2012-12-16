@@ -40,6 +40,12 @@ public:
     virtual std::string getName() = 0;
 
     /**
+     * @brief Returns block option names
+     * @return
+     */
+    virtual const std::list<std::string>& getOptionNames() = 0;
+
+    /**
      * @brief Returns a block option value
      * @param name Name of the option
      * @return
@@ -56,7 +62,7 @@ public:
      * @brief Initializes the context to this block
      * @param context Context to initialize
      */
-    virtual void initialize(boost::shared_ptr<IContext> context) = 0;
+    virtual void initialize(IContext* context) = 0;
 
     /**
      * @brief Called to ask the block to execute

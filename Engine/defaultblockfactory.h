@@ -8,7 +8,7 @@
 class DefaultBlockFactory : public IBlockFactory
 {
 public:
-    DefaultBlockFactory();
+    static boost::shared_ptr<DefaultBlockFactory> getInstance();
 
     virtual boost::shared_ptr<IBlock> generateBlock(int id, const std::string &group, const std::string &name);
 
@@ -18,6 +18,11 @@ public:
 
 protected:
     std::map<std::string, std::map<std::string, boost::function<boost::shared_ptr<IBlock> (int)> > > generators;
+
+private:
+    DefaultBlockFactory();
+
+    static boost::shared_ptr<DefaultBlockFactory> instance;
 };
 
 #endif // DEFAULTBLOCKFACTORY_H

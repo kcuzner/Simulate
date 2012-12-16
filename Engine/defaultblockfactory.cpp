@@ -6,6 +6,15 @@ DefaultBlockFactory::DefaultBlockFactory()
 {
 }
 
+boost::shared_ptr<DefaultBlockFactory> DefaultBlockFactory::instance;
+boost::shared_ptr<DefaultBlockFactory> DefaultBlockFactory::getInstance()
+{
+    if (!instance)
+        instance = boost::shared_ptr<DefaultBlockFactory>(new DefaultBlockFactory());
+
+    return instance;
+}
+
 boost::shared_ptr<IBlock> DefaultBlockFactory::generateBlock(int id, const std::string &group, const std::string &name)
 {
     if (this->generators.count(group) == 0)

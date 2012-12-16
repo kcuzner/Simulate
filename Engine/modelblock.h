@@ -18,6 +18,8 @@ public:
     virtual std::string getGroup();
     virtual std::string getName();
 
+    virtual const std::list<std::string>& getOptionNames();
+
     /**
      * @brief Options for a ModelBlock are the initial values of the entry/exit pairs that are looped around when a model is executed
      * @param name Name of the option to get
@@ -32,7 +34,7 @@ public:
     virtual void setOption(const std::string& name, const std::vector<double>& value);
 
 
-    virtual void initialize(boost::shared_ptr<IContext> context);
+    virtual void initialize(IContext* context);
 
     virtual void execute(IContext* context, double delta);
 

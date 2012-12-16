@@ -19,7 +19,9 @@ SOURCES += \
     baseblockinput.cpp \
     baseblockoutput.cpp \
     defaultcontext.cpp \
-    simpleengine.cpp
+    simpleengine.cpp \
+    entryblock.cpp \
+    exitblock.cpp
 
 HEADERS += \
     model.h \
@@ -40,7 +42,9 @@ HEADERS += \
     interfaces/imodelblock.h \
     defaultcontext.h \
     interfaces/iengine.h \
-    simpleengine.h
+    simpleengine.h \
+    entryblock.h \
+    exitblock.h
 unix:!symbian {
     maemo5 {
         target.path = /opt/usr/lib

@@ -45,6 +45,10 @@ std::string ModelBlock::getName()
     return "model";
 }
 
+const std::list<std::string> &ModelBlock::getOptionNames()
+{
+}
+
 const std::vector<double>& ModelBlock::getOption(const std::string &name)
 {
 }
@@ -53,7 +57,7 @@ void ModelBlock::setOption(const std::string &name, const std::vector<double>& v
 {
 }
 
-void ModelBlock::initialize(boost::shared_ptr<IContext> context)
+void ModelBlock::initialize(IContext *context)
 {
 }
 

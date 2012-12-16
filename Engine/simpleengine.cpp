@@ -12,7 +12,7 @@ SimpleEngine::SimpleEngine(int steps, double delta)
     this->delta = delta;
 
     //create the block factory
-    this->factory = boost::shared_ptr<IBlockFactory>(new DefaultBlockFactory());
+    this->factory = DefaultBlockFactory::getInstance();
 }
 
 int SimpleEngine::getStepsToRun()
