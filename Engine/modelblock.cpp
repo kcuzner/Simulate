@@ -3,7 +3,7 @@
 #include "baseblockinput.h"
 #include "baseblockoutput.h"
 
-ModelBlock::ModelBlock(int id, boost::shared_ptr<IModel> model)
+ModelBlock::ModelBlock(long id, boost::shared_ptr<IModel> model)
 {
     this->id = id;
     this->model = model;
@@ -30,7 +30,7 @@ ModelBlock::ModelBlock(int id, boost::shared_ptr<IModel> model)
     }
 }
 
-int ModelBlock::getId()
+long ModelBlock::getId()
 {
     return this->id;
 }
@@ -57,7 +57,7 @@ void ModelBlock::initialize(boost::shared_ptr<IContext> context)
 {
 }
 
-void ModelBlock::execute(boost::shared_ptr<IContext> context, double delta)
+void ModelBlock::execute(IContext *context, double delta)
 {
 }
 
@@ -79,7 +79,7 @@ boost::shared_ptr<IModel> ModelBlock::getModel()
 void ModelBlock::entryAdded(boost::shared_ptr<IEntryBlock> entry)
 {
     //add an input to match this entry
-    boost::shared_ptr<BaseBlockInput> input(new BaseBlockInput(this, entry->getEntryName()));
+    boost::shared_ptr<BaseBlockInput> input(new BaseBlockInput(this->getId(), entry->getEntryName()));
     this->inputs[entry->getEntryName()] = input;
 }
 
@@ -90,7 +90,7 @@ void ModelBlock::entryRemoved(boost::shared_ptr<IEntryBlock> entry)
 
 void ModelBlock::exitAdded(boost::shared_ptr<IExitBlock> exit)
 {
-    boost::shared_ptr<BaseBlockOutput> output(new BaseBlockOutput(this, exit->getExitName()));
+    boost::shared_ptr<BaseBlockOutput> output(new BaseBlockOutput(this->getId(), exit->getExitName()));
     this->outputs[exit->getExitName()] = output;
 }
 

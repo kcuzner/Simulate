@@ -2,6 +2,7 @@
 #define DEFAULTCONTEXT_H
 
 #include <map>
+#include <queue>
 
 #include "interfaces/iblock.h"
 #include "interfaces/iblockinput.h"
@@ -12,19 +13,23 @@
 class DefaultContext : public IContext
 {
 public:
-    DefaultContext(const boost::shared_ptr<IModel>& model);
+    DefaultContext(double stepDelta, const boost::shared_ptr<IModel>& model);
+
+    virtual double getStepDelta();
+
+    virtual void setStepDelta(double d);
 
     virtual void reset();
 
-    virtual boost::shared_ptr<std::vector<double> > getInputValue(IBlock* block, const std::string& name);
+    virtual boost::shared_ptr<std::vector<double> > getInputValue(int blockId, const std::string& name);
 
-    virtual void setOutputValue(IBlock* block, const std::string& name, boost::shared_ptr<std::vector<double> > value);
+    virtual void setOutputValue(int blockId, const std::string& name, boost::shared_ptr<std::vector<double> > value);
 
-    virtual boost::shared_ptr<std::vector<double> > getStoredValue(IBlock* block, const std::string& name);
+    virtual boost::shared_ptr<std::vector<double> > getStoredValue(int blockId, const std::string& name);
 
-    virtual void setStoredValue(IBlock* block, const std::string& name, boost::shared_ptr<std::vector<double> > value);
+    virtual void setStoredValue(int blockId, const std::string& name, boost::shared_ptr<std::vector<double> > value);
 
-    virtual boost::weak_ptr<IContext> getParent();
+    //virtual boost::weak_ptr<IContext> getParent();
 
     virtual boost::shared_ptr<IContext> createChildContext(boost::shared_ptr<IModel>);
 
@@ -40,26 +45,53 @@ protected:
     void cacheBlockIO(const boost::shared_ptr<IBlock>& block);
 
     /**
-     * @brief Goes through the input pointer cache and removes input values to any dead inputs
+     * @brief Prepares the context for a step
      */
-    void cleanDeadInputs();
+    void prepare();
+
+    /**
+     * @brief Queues the block with the given id for execution
+     * @param blockId
+     */
+    void queueBlock(int blockId);
+
+    /**
+     * @brief Sets the inputs attached to the passed output to the given value
+     * @param output
+     * @param value
+     */
+    void setAttachedInputs(boost::shared_ptr<IBlockOutput> output, boost::shared_ptr<std::vector<double> > value);
+
+    /**
+     * @brief Returns whether or not all inputs recorded for this block have values attached
+     * @param blockId
+     * @return
+     */
+    bool areAllCachedInputsSet(int blockId);
 
     /**
      * @brief Cache of inputs/outputs for a block created when the simulation starts
      */
     struct BlockIOCache
     {
-        std::map<std::string, int> inputs; //value: input uid
-        std::map<std::string, boost::weak_ptr<IBlockOutput> > outputs;
+        unsigned int nInputs; //number of inputs
+        std::map<std::string, boost::shared_ptr<std::vector<double> > > inputValues; //input values sorted by name
+        std::map<std::string, boost::weak_ptr<IBlockOutput> > outputs; //output pointers sorted by name
     };
 
-    //key: input uid
-    std::map<int, std::vector<double> > inputValues;
-    std::map<int, boost::weak_ptr<IBlockInput> > inputPointerCache;
-
-    //key: block uid
+    //key: block id
     std::map<int, boost::shared_ptr<BlockIOCache> > ioCache;
 
+    //key: block id
+    std::queue<int> executionQueue;
+
+    //key: block id
+    std::map<int, std::map<std::string, boost::shared_ptr<std::vector<double> > > > storedValues;
+
+    //child contexts
+    std::list<boost::shared_ptr<IContext> > childContexts;
+
+    double stepDelta;
     boost::shared_ptr<IModel> model;
 };
 

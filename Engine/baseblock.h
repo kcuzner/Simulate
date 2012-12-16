@@ -10,9 +10,9 @@
 class BaseBlock : public IBlock
 {
 public:
-    BaseBlock(int id, const std::string& group, const std::string& name);
+    BaseBlock(long id, const std::string& group, const std::string& name);
 
-    virtual int getId();
+    virtual long getId();
     virtual std::string getGroup();
     virtual std::string getName();
 
@@ -40,7 +40,7 @@ protected:
     void removeOutput(const std::string& name);
 
 private:
-    int id;
+    long id;
     std::string name, group;
 
     std::map<std::string, boost::shared_ptr<IBlockInput> > inputs;

@@ -3,14 +3,14 @@
 #include "baseblockinput.h"
 #include "baseblockoutput.h"
 
-BaseBlock::BaseBlock(int id, const std::string& group, const std::string& name)
+BaseBlock::BaseBlock(long id, const std::string& group, const std::string& name)
 {
     this->id = id;
     this->group = group;
     this->name = name;
 }
 
-int BaseBlock::getId()
+long BaseBlock::getId()
 {
     return id;
 }
@@ -40,7 +40,7 @@ boost::shared_ptr<IBlockInput> BaseBlock::addInput(const std::string &name)
     if (this->inputs.count(name))
         return boost::shared_ptr<IBlockInput>();
 
-    boost::shared_ptr<IBlockInput> input(new BaseBlockInput(this, name));
+    boost::shared_ptr<IBlockInput> input(new BaseBlockInput(this->getId(), name));
 
     this->inputs[name] = input;
 
@@ -68,7 +68,7 @@ boost::shared_ptr<IBlockOutput> BaseBlock::addOutput(const std::string &name)
     if (this->outputs.count(name))
         return boost::shared_ptr<IBlockOutput>();
 
-    boost::shared_ptr<IBlockOutput> output(new BaseBlockOutput(this, name));
+    boost::shared_ptr<IBlockOutput> output(new BaseBlockOutput(this->getId(), name));
 
     this->outputs[name] = output;
 

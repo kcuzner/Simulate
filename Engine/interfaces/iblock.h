@@ -8,8 +8,6 @@
 #include <boost/smart_ptr.hpp>
 #include <boost/signals2.hpp>
 
-#include "icomponent.h"
-
 #include "iblockinput.h"
 #include "iblockoutput.h"
 #include "icontext.h"
@@ -20,13 +18,25 @@
  * Blocks should be supplied with a unique id, a non-unique group name, and a
  * non-unique name when they are constructed
  */
-class IBlock : public IComponent
+class IBlock
 {
 public:
     virtual ~IBlock() {}
 
-    virtual int getId() = 0;
+    /**
+     * @brief Returns the model-unique idenfier for this block
+     * @return
+     */
+    virtual long getId() = 0;
+    /**
+     * @brief Returns the group this block belongs to
+     * @return
+     */
     virtual std::string getGroup() = 0;
+    /**
+     * @brief Returns the name of this block type
+     * @return
+     */
     virtual std::string getName() = 0;
 
     /**
@@ -50,10 +60,10 @@ public:
 
     /**
      * @brief Called to ask the block to execute
-     * @param context Context to execute for
+     * @param context Guaranteed safe pointer to the context to execute for
      * @param delta Time since the last execute call in seconds
      */
-    virtual void execute(boost::shared_ptr<IContext> context, double delta) = 0;
+    virtual void execute(IContext* context, double delta) = 0;
 
     /**
      * @brief Gets the inputs to this block

@@ -1,14 +1,19 @@
 #include "baseblockoutput.h"
 
-BaseBlockOutput::BaseBlockOutput(IBlock *parent, const std::string &name)
+BaseBlockOutput::BaseBlockOutput(long parentId, const std::string &name)
 {
     this->name = name;
-    this->parentRef = parent;
+    this->blockId = parentId;
 }
 
 std::string BaseBlockOutput::getName()
 {
     return this->name;
+}
+
+long BaseBlockOutput::getBlockId()
+{
+    return this->blockId;
 }
 
 bool BaseBlockOutput::isSiblingOf(boost::weak_ptr<IBlockIO> io)
@@ -18,12 +23,7 @@ bool BaseBlockOutput::isSiblingOf(boost::weak_ptr<IBlockIO> io)
         return false;
     }
 
-    return io.lock()->hasParent(this->parentRef);
-}
-
-bool BaseBlockOutput::hasParent(IBlock *parent)
-{
-    return this->parentRef == parent;
+    return io.lock()->getBlockId() == this->getBlockId();
 }
 
 const std::set<boost::weak_ptr<IBlockInput> > &BaseBlockOutput::getAttachedInputs()

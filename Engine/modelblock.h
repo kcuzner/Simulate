@@ -11,9 +11,10 @@
 class ModelBlock : public IModelBlock
 {
 public:
-    ModelBlock(int id, boost::shared_ptr<IModel> model);
+    ModelBlock(long id, boost::shared_ptr<IModel> model);
 
-    virtual int getId();
+    virtual long getId();
+
     virtual std::string getGroup();
     virtual std::string getName();
 
@@ -33,7 +34,7 @@ public:
 
     virtual void initialize(boost::shared_ptr<IContext> context);
 
-    virtual void execute(boost::shared_ptr<IContext> context, double delta);
+    virtual void execute(IContext* context, double delta);
 
     virtual const std::map<std::string, boost::shared_ptr<IBlockInput> >& getInputs();
 
@@ -48,7 +49,7 @@ protected:
     void exitRemoved(boost::shared_ptr<IExitBlock>);
 
 private:
-    int id;
+    long id;
     boost::shared_ptr<IModel> model;
     std::map<std::string, boost::shared_ptr<IBlockInput> > inputs;
     std::map<std::string, boost::shared_ptr<IBlockOutput> > outputs;

@@ -47,3 +47,21 @@ In a context, running each individual block is accomplished as follows:
     all the inputs for the block to be assigned, queue the block for
     execution.
 
+To do list
+----------
+
+ * Figure out block tracking
+  * Model level tracking instead of engine level tracking. If we assume there
+    is one context per model then the model can track the block ids. The
+    model gets to call the block factory. When a model is created, it can
+    either do its own block creation through a singleton of a block factory or
+    it could get passed in a block factory to use.
+  * Inputs and outputs are tracked on a per-block basis. In the files and other
+    things they are referenced solely by name, but to speed things up they will
+    be stored by an integer id that is unique over the lifetime of the block
+    they are assigned to. The block should always return weak pointers to its
+    inputs/outputs and strong references to them should be very temporary so that
+    when the block is destroyed its ios go away.
+  * The DefaultContext 
+
+

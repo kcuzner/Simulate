@@ -18,33 +18,44 @@ public:
     virtual ~IContext() {}
 
     /**
+     * @brief Returns the step delta for this context
+     * @return
+     */
+    virtual double getStepDelta() = 0;
+    /**
+     * @brief Sets the step delta for this context and all its children
+     * @param d
+     */
+    virtual void setStepDelta(double d) = 0;
+
+    /**
      * @brief Resets this context to a cleared state
      */
     virtual void reset() = 0;
 
     /**
      * @brief Returns the value of an input for this context
-     * @param block Block the input belongs to
+     * @param blockId UID of the block as returned by getUID
      * @param name Name of the input
      * @return Value of the input or a null pointer
      */
-    virtual boost::shared_ptr<std::vector<double> > getInputValue(IBlock* block, const std::string& name) = 0;
+    virtual boost::shared_ptr<std::vector<double> > getInputValue(int blockId, const std::string& name) = 0;
 
     /**
      * @brief Sets the value of an output for the passed context
-     * @param block Block the output belongs to
+     * @param blockId UID of the block as returned by getUID
      * @param name Name of the output
      * @param value Value to set the output to
      */
-    virtual void setOutputValue(IBlock* block, const std::string& name, boost::shared_ptr<std::vector<double> > value) = 0;
+    virtual void setOutputValue(int blockId, const std::string& name, boost::shared_ptr<std::vector<double> > value) = 0;
 
     /**
      * @brief Returns a stored value in this context
-     * @param block Block to retreive the stored value for
+     * @param blockId UID of the block as returned by getUID
      * @param name Name of the value
      * @return The value
      */
-    virtual boost::shared_ptr<std::vector<double> > getStoredValue(IBlock* block, const std::string& name) = 0;
+    virtual boost::shared_ptr<std::vector<double> > getStoredValue(int blockId, const std::string& name) = 0;
 
     /**
      * @brief Stores a value in this context
@@ -52,13 +63,13 @@ public:
      * @param name Name of the value
      * @param value Value to set
      */
-    virtual void setStoredValue(IBlock* block, const std::string& name, boost::shared_ptr<std::vector<double> > value) = 0;
+    virtual void setStoredValue(int blockId, const std::string& name, boost::shared_ptr<std::vector<double> > value) = 0;
 
     /**
      * @brief Gets the parent context of this child context.
      * @return Parent context
      */
-    virtual boost::weak_ptr<IContext> getParent() = 0;
+    //virtual boost::weak_ptr<IContext> getParent() = 0;
 
     /**
      * @brief Creates a child context of this context for a model

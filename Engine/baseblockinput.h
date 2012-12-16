@@ -6,23 +6,22 @@
 class BaseBlockInput : public IBlockInput
 {
 public:
-    BaseBlockInput(IBlock* parent, const std::string& name);
+    BaseBlockInput(long parentId, const std::string& name);
+
+    virtual long getBlockId();
 
     virtual std::string getName();
 
     virtual bool isSiblingOf(boost::weak_ptr<IBlockIO> io);
-
-    virtual bool hasParent(IBlock* parent);
 
     virtual boost::weak_ptr<IBlockOutput> getAttachedOutput();
 
     virtual bool attachOutput(boost::weak_ptr<IBlockOutput> output);
 
     virtual bool detachOutput(boost::weak_ptr<IBlockOutput> output);
-
 private:
     std::string name;
-    IBlock* parentRef; //WARNING: Do not use this to actually reference the block
+    long blockId; //parent block id
 
     boost::weak_ptr<IBlockOutput> output;
 };
