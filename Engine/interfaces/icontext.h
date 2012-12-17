@@ -72,10 +72,19 @@ public:
     //virtual boost::weak_ptr<IContext> getParent() = 0;
 
     /**
-     * @brief Creates a child context of this context for a model
+     * @brief Creates a child context for a model assigned to a block
+     * @param blockId
+     * @param model
      * @return
      */
-    virtual boost::shared_ptr<IContext> createChildContext(boost::shared_ptr<IModel>) = 0;
+    virtual boost::shared_ptr<IContext> createChildContext(long blockId, boost::shared_ptr<IModel> model) = 0;
+
+    /**
+     * @brief Returns the child context assigned to the block
+     * @param blockId
+     * @return
+     */
+    virtual boost::shared_ptr<IContext> getChildContext(long blockId) = 0;
 
     /**
      * @brief Runs a step on the model this context is attached to. This method should return once running has been completed

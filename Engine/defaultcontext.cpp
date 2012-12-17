@@ -21,10 +21,10 @@ double DefaultContext::getStepDelta()
 void DefaultContext::setStepDelta(double d)
 {
     this->stepDelta = d;
-    std::list<boost::shared_ptr<IContext> >::iterator iter;
+    std::map<long, boost::shared_ptr<IContext> >::iterator iter;
     for(iter = this->childContexts.begin(); iter != this->childContexts.end(); iter++)
     {
-        (*iter)->setStepDelta(d);
+        (*iter).second->setStepDelta(d);
     }
 }
 
@@ -33,11 +33,13 @@ void DefaultContext::reset()
 {
     std::map<int, boost::shared_ptr<IBlock> > blocks = this->model->getBlocks();
 
-    //cache all the io on eadch block
     std::map<int, boost::shared_ptr<IBlock> >::const_iterator iter;
     for(iter = blocks.begin(); iter != blocks.end(); iter++)
     {
+        //cache the IO on the block
         this->cacheBlockIO((*iter).second);
+        //initialize the block to this context
+        (*iter).second->initialize(this);
     }
 }
 
@@ -98,13 +100,21 @@ void DefaultContext::setStoredValue(int blockId, const std::string &name, boost:
     return this->parent;
 }*/
 
-boost::shared_ptr<IContext> DefaultContext::createChildContext(boost::shared_ptr<IModel> model)
+boost::shared_ptr<IContext> DefaultContext::createChildContext(long blockId, boost::shared_ptr<IModel> model)
 {
     boost::shared_ptr<IContext> child(new DefaultContext(this->getStepDelta(), model));
 
-    this->childContexts.push_back(child);
+    this->childContexts[blockId] = child;
 
     return child;
+}
+
+boost::shared_ptr<IContext> DefaultContext::getChildContext(long blockId)
+{
+    if (this->childContexts.count(blockId))
+        return this->childContexts[blockId];
+
+    return boost::shared_ptr<IContext>();
 }
 
 void DefaultContext::step()

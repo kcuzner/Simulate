@@ -56,8 +56,8 @@ private:
     std::map<std::string, boost::shared_ptr<IBlockInput> > inputs;
     std::map<std::string, boost::shared_ptr<IBlockOutput> > outputs;
     std::map<std::string, std::pair<boost::shared_ptr<IEntryBlock>, boost::shared_ptr<IExitBlock> > > optionBlocks;
-    std::map<boost::shared_ptr<IBlockInput>, boost::shared_ptr<IEntryBlock> > inputEntryBlocks;
-    std::map<boost::shared_ptr<IBlockOutput>, boost::shared_ptr<IExitBlock> > outputExitBlocks;
+    std::map<std::string, boost::shared_ptr<IEntryBlock> > inputEntryBlocks;
+    std::map<std::string, boost::shared_ptr<IExitBlock> > outputExitBlocks;
 };
 
 #endif // MODELBLOCK_H

@@ -31,7 +31,9 @@ public:
 
     //virtual boost::weak_ptr<IContext> getParent();
 
-    virtual boost::shared_ptr<IContext> createChildContext(boost::shared_ptr<IModel>);
+    virtual boost::shared_ptr<IContext> createChildContext(long blockId, boost::shared_ptr<IModel>);
+
+    virtual boost::shared_ptr<IContext> getChildContext(long blockId);
 
     virtual void step();
 
@@ -88,8 +90,8 @@ protected:
     //key: block id
     std::map<int, std::map<std::string, boost::shared_ptr<std::vector<double> > > > storedValues;
 
-    //child contexts
-    std::list<boost::shared_ptr<IContext> > childContexts;
+    //child contexts. key: block id
+    std::map<long, boost::shared_ptr<IContext> > childContexts;
 
     double stepDelta;
     boost::shared_ptr<IModel> model;
