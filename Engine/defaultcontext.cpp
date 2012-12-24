@@ -3,6 +3,8 @@
 #include "interfaces/iblockinput.h"
 #include "interfaces/iblockoutput.h"
 
+#include <boost/foreach.hpp>
+
 DefaultContext::DefaultContext(double stepDelta, const boost::shared_ptr<IModel>& model)
 {
     this->stepDelta = stepDelta;
@@ -131,6 +133,18 @@ void DefaultContext::step()
             block->execute(this, this->getStepDelta());
         }
         this->executionQueue.pop(); //finished executing
+    }
+    std::map<std::string, boost::shared_ptr<IEntryBlock> > entries = this->model->getEntries();
+    std::map<std::string, boost::shared_ptr<IExitBlock> > exits = this->model->getExits();
+    //step 3: Matching entries to the exit blocks should transfer values
+    typedef std::pair<std::string, boost::shared_ptr<IExitBlock> > ExitRecord;
+    BOOST_FOREACH(ExitRecord record, exits)
+    {
+        if (entries.count(record.first))
+        {
+            //there is an entry with this name
+            entries[record.first]->setCurrentValue(this, record.second->getCurrentValue(this));
+        }
     }
 }
 

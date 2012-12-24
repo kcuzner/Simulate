@@ -144,6 +144,18 @@ boost::shared_ptr<IModel> ModelBlock::getModel()
     return this->model;
 }
 
+boost::shared_ptr<IContext> ModelBlock::getContext(IContext *context)
+{
+    boost::shared_ptr<IContext> childContext = context->getChildContext(this->getId());
+
+    if (!childContext)
+    {
+        childContext = context->createChildContext(this->getId(), this->model);
+    }
+
+    return childContext;
+}
+
 void ModelBlock::entryAdded(boost::shared_ptr<IEntryBlock> entry)
 {
     //do we have any exits matching the name of this entry?

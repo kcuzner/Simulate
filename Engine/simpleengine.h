@@ -10,21 +10,27 @@
 class SimpleEngine : IEngine
 {
 public:
-    SimpleEngine(int steps, double delta);
+    SimpleEngine(boost::shared_ptr<IModel> model, int steps, double delta);
 
-    virtual int getStepsToRun();
-    virtual void setStepsToRun(int n);
+    virtual unsigned int getStepsToRun();
+    virtual void setStepsToRun(unsigned int n);
 
     virtual double getStepDelta();
     virtual void setStepDelta(double d);
 
-    virtual void run(boost::shared_ptr<IModel> model);
+    virtual boost::shared_ptr<IContext> getContext();
+
+    virtual boost::shared_ptr<IModel> getRootModel();
+
+    virtual void run();
 
     virtual boost::shared_ptr<IBlockFactory> getBlockFactory();
 
 protected:
-    int steps;
+    unsigned int steps;
     double delta;
+    boost::shared_ptr<IModel> model;
+    boost::shared_ptr<IContext> context;
     boost::shared_ptr<IBlockFactory> factory;
 
     boost::shared_ptr<IContext> setup(boost::shared_ptr<IModel> model);

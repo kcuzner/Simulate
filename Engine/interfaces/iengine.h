@@ -28,12 +28,12 @@ public:
      * @brief Returns the number of steps which constitute a "run"
      * @return
      */
-    virtual int getStepsToRun() = 0;
+    virtual unsigned int getStepsToRun() = 0;
     /**
      * @brief Sets the number of steps which constitute a "run"
      * @param n
      */
-    virtual void setStepsToRun(int n) = 0;
+    virtual void setStepsToRun(unsigned int n) = 0;
 
     /**
      * @brief Gets the delta to increment the time constant by after each step
@@ -47,10 +47,23 @@ public:
     virtual void setStepDelta(double d) = 0;
 
     /**
-     * @brief Runs a model.
+     * @brief Returns the context for this engine. This should be used when setting options for the blocks in the root level model.
+     * @return
+     */
+    virtual boost::shared_ptr<IContext> getContext() = 0;
+
+    /**
+     * @brief Returns the model that this engine simulates. Note that a model may have multiple
+     * engines but an engine may have only one model attached.
+     * @return
+     */
+    virtual boost::shared_ptr<IModel> getRootModel() = 0;
+
+    /**
+     * @brief Runs the model attached to this engine.
      * @param model
      */
-    virtual void run(boost::shared_ptr<IModel> model) = 0;
+    virtual void run() = 0;
 
     /**
      * @brief Returns the block factory for this engine

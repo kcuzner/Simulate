@@ -13,6 +13,16 @@
 #include "icontext.h"
 
 /**
+ * Special Options. These are meant for internal use and are prefixed with
+ * an underscore so they are omitted from general option listings
+ */
+
+//if this option is set to anything but null, this is a visual block
+#define BLOCK_OPTION_VISUAL "_VISUAL_ENABLED"
+#define BLOCK_OPTION_VISUAL_CHANNELS "_VISUAL_CHANNELS"
+#define BLOCK_OPTION_VISUAL_DATA_PREFIX "_VISUAL_DATA"
+
+/**
  * @brief Interface to a block
  *
  * Blocks should be supplied with a unique id, a non-unique group name, and a

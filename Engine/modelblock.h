@@ -44,6 +44,8 @@ public:
 
     virtual boost::shared_ptr<IModel> getModel();
 
+    virtual boost::shared_ptr<IContext> getContext(IContext* context);
+
 protected:
     void entryAdded(boost::shared_ptr<IEntryBlock>);
     void entryRemoved(boost::shared_ptr<IEntryBlock>);
