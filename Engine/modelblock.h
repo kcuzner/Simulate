@@ -25,13 +25,13 @@ public:
      * @param name Name of the option to get
      * @return Option value
      */
-    virtual const std::vector<double>& getOption(const std::string& name);
+    virtual boost::shared_ptr<std::vector<double> > getOption(IContext* context, const std::string& name);
     /**
      * @brief Options for a ModelBlock are the initial values of the entry/exit pairs that are looped around when a model is executed
      * @param name Name of the option to set
      * @param value Value to set
      */
-    virtual void setOption(const std::string& name, const std::vector<double>& value);
+    virtual void setOption(IContext* context, const std::string& name, boost::shared_ptr<std::vector<double> > value);
 
 
     virtual void initialize(IContext* context);
@@ -53,11 +53,14 @@ protected:
 private:
     long id;
     boost::shared_ptr<IModel> model;
+
     std::map<std::string, boost::shared_ptr<IBlockInput> > inputs;
     std::map<std::string, boost::shared_ptr<IBlockOutput> > outputs;
-    std::map<std::string, std::pair<boost::shared_ptr<IEntryBlock>, boost::shared_ptr<IExitBlock> > > optionBlocks;
     std::map<std::string, boost::shared_ptr<IEntryBlock> > inputEntryBlocks;
     std::map<std::string, boost::shared_ptr<IExitBlock> > outputExitBlocks;
+
+    std::map<std::string, std::pair<boost::shared_ptr<IEntryBlock>, boost::shared_ptr<IExitBlock> > > optionBlocks;
+    std::list<std::string> optionBlockNames;
 };
 
 #endif // MODELBLOCK_H

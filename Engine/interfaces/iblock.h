@@ -50,16 +50,16 @@ public:
      * @param name Name of the option
      * @return
      */
-    virtual const std::vector<double>& getOption(const std::string& name) = 0;
+    virtual boost::shared_ptr<std::vector<double> > getOption(IContext* context, const std::string& name) = 0;
     /**
      * @brief Sets a block option value
      * @param name Name of the option
      * @param value Value of the option
      */
-    virtual void setOption(const std::string& name, const std::vector<double>& value) = 0;
+    virtual void setOption(IContext* context, const std::string& name, boost::shared_ptr<std::vector<double> > value) = 0;
 
     /**
-     * @brief Initializes the context to this block
+     * @brief Initializes the context to this block. This will be called each time the context is reset the first step.
      * @param context Context to initialize
      */
     virtual void initialize(IContext* context) = 0;

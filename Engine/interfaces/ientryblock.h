@@ -4,6 +4,8 @@
 #include <boost/smart_ptr.hpp>
 #include "iblock.h"
 
+#define IENTRYBLOCK_OPTION_NAME "Initial Value"
+
 class IEntryBlock : public IBlock
 {
 public:

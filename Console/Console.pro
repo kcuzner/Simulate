@@ -12,6 +12,8 @@ TARGET = Console
 CONFIG   += console
 CONFIG   -= app_bundle
 
+SUBDIRS += ../Engine
+
 TEMPLATE = app
 
 

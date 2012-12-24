@@ -3,6 +3,8 @@
 #include "baseblockinput.h"
 #include "baseblockoutput.h"
 
+#include <boost/foreach.hpp>
+
 ModelBlock::ModelBlock(long id, boost::shared_ptr<IModel> model)
 {
     this->id = id;
@@ -46,20 +48,49 @@ std::string ModelBlock::getName()
 
 const std::list<std::string> &ModelBlock::getOptionNames()
 {
+    return this->optionBlockNames;
 }
 
-const std::vector<double>& ModelBlock::getOption(const std::string &name)
+boost::shared_ptr<std::vector<double> > ModelBlock::getOption(IContext *context, const std::string &name)
 {
+    //in reality: we store/retrieve this option value in our context and then when we are initialized, we set the option values
+
+    if (this->optionBlocks.count(name))
+    {
+        return context->getStoredValue(this->getId(), name);
+    }
+
+    return boost::shared_ptr<std::vector<double> >(); //return null
 }
 
-void ModelBlock::setOption(const std::string &name, const std::vector<double>& value)
+void ModelBlock::setOption(IContext *context, const std::string &name, boost::shared_ptr<std::vector<double> > value)
 {
+    //in reality: we store/retrieve this option value in our context and then when we are initialized, we set the option values
+
+    if (this->optionBlocks.count(name))
+    {
+        context->setStoredValue(this->getId(), name, value);
+    }
 }
 
 void ModelBlock::initialize(IContext *context)
 {
-    //create a child context for our model
-    context->createChildContext(this->getId(), this->model);
+    boost::shared_ptr<IContext> childContext = context->getChildContext(this->getId());
+    if (!childContext)
+    {
+        //create a new child context
+        childContext = context->createChildContext(this->getId(), this->model);
+    }
+
+    //reset this since a simulation is about to start
+    childContext->reset();
+
+    //set all the initial values for the entry blocks from our context (our options)
+    typedef std::pair<std::string, std::pair<boost::shared_ptr<IEntryBlock>, boost::shared_ptr<IExitBlock> > > OptionBlock;
+    BOOST_FOREACH( OptionBlock option, this->optionBlocks)
+    {
+        option.second.first->setOption(childContext.get(), IENTRYBLOCK_OPTION_NAME, context->getStoredValue(this->getId(), option.first));
+    }
 }
 
 void ModelBlock::execute(IContext *context, double delta)
@@ -72,11 +103,30 @@ void ModelBlock::execute(IContext *context, double delta)
      */
     //get our context
     boost::shared_ptr<IContext> mContext = context->getChildContext(this->getId());
-    //set the current values of the inputs to the context
+
+    //set the entry values to our inputs
+    typedef std::pair<std::string, boost::shared_ptr<IEntryBlock> > EntryRecord;
+    BOOST_FOREACH(EntryRecord entry, this->inputEntryBlocks)
+    {
+        entry.second->setCurrentValue(mContext.get(), context->getInputValue(this->getId(), entry.first));
+    }
 
     //execute the step
     mContext->step();
-    //syncronize our outputs
+
+    //set the current option values
+    typedef std::pair<std::string, std::pair<boost::shared_ptr<IEntryBlock>, boost::shared_ptr<IExitBlock> > > OptionBlock;
+    BOOST_FOREACH(OptionBlock option, this->optionBlocks)
+    {
+        option.second.first->setCurrentValue(mContext.get(), option.second.second->getCurrentValue(mContext.get()));
+    }
+
+    //set our outputs to the exit block values
+    typedef std::pair<std::string, boost::shared_ptr<IExitBlock> > ExitRecord;
+    BOOST_FOREACH(ExitRecord record, this->outputExitBlocks)
+    {
+        context->setOutputValue(this->getId(), record.first, record.second->getCurrentValue(mContext.get()));
+    }
 }
 
 const std::map<std::string, boost::shared_ptr<IBlockInput> > &ModelBlock::getInputs()

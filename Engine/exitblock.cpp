@@ -33,12 +33,12 @@ const std::list<std::string> &ExitBlock::getOptionNames()
     return this->options;
 }
 
-const std::vector<double> &ExitBlock::getOption(const std::string &name)
+boost::shared_ptr<std::vector<double> > ExitBlock::getOption(IContext *, const std::string &)
 {
-    return std::vector<double>();
+    return boost::shared_ptr<std::vector<double> >();
 }
 
-void ExitBlock::setOption(const std::string &, const std::vector<double> &)
+void ExitBlock::setOption(IContext *, const std::string &, boost::shared_ptr<std::vector<double> >)
 {
     //do nothing
 }
@@ -48,7 +48,7 @@ void ExitBlock::initialize(IContext *)
     //do nothing
 }
 
-void ExitBlock::execute(IContext *context, double delta)
+void ExitBlock::execute(IContext *context, double)
 {
     context->setStoredValue(this->getId(), "Value", context->getInputValue(this->getId(), EXITBLOCK_INPUT_NAME));
 }

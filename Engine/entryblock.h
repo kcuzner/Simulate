@@ -15,8 +15,8 @@ public:
 
     virtual const std::list<std::string>& getOptionNames();
 
-    virtual const std::vector<double>& getOption(const std::string &name);
-    virtual void setOption(const std::string &name, const std::vector<double> &value);
+    virtual boost::shared_ptr<std::vector<double> > getOption(IContext* context, const std::string &name);
+    virtual void setOption(IContext* context, const std::string &name, boost::shared_ptr<std::vector<double> > value);
 
     virtual void initialize(IContext* context);
 

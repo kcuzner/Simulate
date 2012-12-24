@@ -29,7 +29,7 @@ public:
     virtual void setStepDelta(double d) = 0;
 
     /**
-     * @brief Resets this context to a cleared state
+     * @brief Resets this context to its initial state. Also should initialize all the blocks
      */
     virtual void reset() = 0;
 
@@ -72,7 +72,7 @@ public:
     //virtual boost::weak_ptr<IContext> getParent() = 0;
 
     /**
-     * @brief Creates a child context for a model assigned to a block
+     * @brief Creates a child context for a model assigned to a block. This will replace any existing context.
      * @param blockId
      * @param model
      * @return
@@ -80,7 +80,7 @@ public:
     virtual boost::shared_ptr<IContext> createChildContext(long blockId, boost::shared_ptr<IModel> model) = 0;
 
     /**
-     * @brief Returns the child context assigned to the block
+     * @brief Returns the child context assigned to the block or null of not found
      * @param blockId
      * @return
      */

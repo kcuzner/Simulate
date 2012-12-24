@@ -63,5 +63,12 @@ To do list
     inputs/outputs and strong references to them should be very temporary so that
     when the block is destroyed its ios go away.
   * The DefaultContext 
+ * Build a loader (possibly a separate qt plugin...at least make the interface)
+  * The sequence for loading:
+    1) Scan the file for all model definitions
+    2) For each model, create it with only the entry and exit blocks. This
+       makes modelblocks possible with partial model definitions.
+    3) Then in any order, add the additional blocks to each model until the file
+       is loaded.
 
 
