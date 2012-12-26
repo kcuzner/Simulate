@@ -14,17 +14,23 @@ public:
 
     virtual bool isSiblingOf(boost::weak_ptr<IBlockIO> io);
 
-    virtual const std::set<boost::weak_ptr<IBlockInput> > &getAttachedInputs();
+    virtual const std::vector<boost::shared_ptr<IBlockInput> > &getAttachedInputs();
 
-    virtual bool attachInput(boost::weak_ptr<IBlockInput> input);
+    virtual void detachAllInputs();
 
-    virtual bool detachInput(boost::weak_ptr<IBlockInput> input);
+    virtual bool attachInput(boost::shared_ptr<IBlockInput> input);
+
+    virtual bool detachInput(boost::shared_ptr<IBlockInput> input);
+
+protected:
+    virtual void onInputOutputChanged(IBlockInput* input, IBlockOutput* output);
 
 private:
     std::string name;
     long blockId;
 
-    std::set<boost::weak_ptr<IBlockInput> > attachedInputs;
+    boost::signals2::connection subscription;
+    std::vector<boost::shared_ptr<IBlockInput> > attachedInputs;
 };
 
 #endif // BASEBLOCKOUTPUT_H

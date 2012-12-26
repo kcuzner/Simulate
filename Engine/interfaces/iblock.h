@@ -93,6 +93,16 @@ public:
      */
     virtual const std::map<std::string, boost::shared_ptr<IBlockOutput> >& getOutputs() = 0;
 
+    /**
+     * @brief Connects an output from this block to the input of the passed block
+     * @param output This block's output name to connect from
+     * @param block Block to connect to
+     * @param input Input on the other block to connect to
+     * @param overwrite If true, this will disconnect outputs connected to the input
+     * @return False if something was already connected and we are not overwriting
+     */
+    virtual bool connect(const std::string& output, boost::shared_ptr<IBlock> block, const std::string& input, bool overwrite) = 0;
+
     boost::signals2::signal<void (boost::weak_ptr<IBlockInput>)> sigInputAdded;
     boost::signals2::signal<void (boost::shared_ptr<IBlockInput>)> sigInputRemoved;
     boost::signals2::signal<void (boost::weak_ptr<IBlockOutput>)> sigOutputAdded;

@@ -52,8 +52,6 @@ boost::shared_ptr<IModel> SimpleEngine::getRootModel()
 
 void SimpleEngine::run()
 {
-    this->setup(model); //prepare the model for running (note that this may have to be removed)
-
     //reset the context
     this->context->reset();
 
@@ -70,9 +68,4 @@ void SimpleEngine::run()
 boost::shared_ptr<IBlockFactory> SimpleEngine::getBlockFactory()
 {
     return this->factory;
-}
-
-boost::shared_ptr<IContext> SimpleEngine::setup(boost::shared_ptr<IModel> model)
-{
-
 }

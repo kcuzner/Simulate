@@ -63,6 +63,26 @@ const std::map<std::string, boost::shared_ptr<IBlockOutput> > &ExitBlock::getOut
     return this->outputs;
 }
 
+bool ExitBlock::connect(const std::string &outputName, boost::shared_ptr<IBlock> block, const std::string &inputName, bool overwrite)
+{
+    //do we have this output?
+    if (this->outputs.count(outputName))
+    {
+        boost::shared_ptr<IBlockOutput> output = this->outputs.at(outputName);
+        //does the other block have the required input?
+        if (block->getInputs().count(inputName))
+        {
+            boost::shared_ptr<IBlockInput> input = block->getInputs().at(inputName);
+            if (input->isAttached() && !overwrite)
+                return false; //we don't overwrite attached inputs
+
+            output->attachInput(input); //attach the input
+        }
+    }
+
+    return false; //we failed to connect this for one reason or another
+}
+
 boost::shared_ptr<std::vector<double> > ExitBlock::getCurrentValue(IContext *context)
 {
     return context->getStoredValue(this->getId(), "Value");

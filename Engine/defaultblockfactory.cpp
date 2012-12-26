@@ -42,5 +42,5 @@ boost::shared_ptr<IModelBlock> DefaultBlockFactory::generateModelBlock(int id, b
 
 void DefaultBlockFactory::declareBlock(const boost::function<boost::shared_ptr<IBlock> (int)> &generator, const std::string &group, const std::string &name)
 {
-    this->generators.at(group).at(name) = generator;
+    this->generators[group][name] = generator;
 }

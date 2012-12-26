@@ -36,11 +36,13 @@ public:
 
     virtual void initialize(IContext* context);
 
-    virtual void execute(IContext* context, double delta);
+    virtual void execute(IContext* context, double);
 
     virtual const std::map<std::string, boost::shared_ptr<IBlockInput> >& getInputs();
 
     virtual const std::map<std::string, boost::shared_ptr<IBlockOutput> >& getOutputs();
+
+    virtual bool connect(const std::string &outputName, boost::shared_ptr<IBlock> block, const std::string &inputName, bool overwrite);
 
     virtual boost::shared_ptr<IModel> getModel();
 

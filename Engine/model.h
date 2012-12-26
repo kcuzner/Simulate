@@ -7,7 +7,7 @@
 /**
  * @brief The Model class, using the default block factory
  */
-class Model : IModel
+class Model : public IModel
 {
 public:
     Model(boost::shared_ptr<IBlockFactory> factory);

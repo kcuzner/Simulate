@@ -4,6 +4,8 @@ BaseBlockInput::BaseBlockInput(long parentId, const std::string &name)
 {
     this->name = name;
     this->blockId = parentId;
+
+    this->output = 0;
 }
 
 long BaseBlockInput::getBlockId()
@@ -26,26 +28,21 @@ bool BaseBlockInput::isSiblingOf(boost::weak_ptr<IBlockIO> io)
     return io.lock()->getBlockId() == this->getBlockId();
 }
 
-boost::weak_ptr<IBlockOutput> BaseBlockInput::getAttachedOutput()
+bool BaseBlockInput::isAttached()
 {
-    return this->output;
+    return output != 0;
 }
 
-bool BaseBlockInput::attachOutput(boost::weak_ptr<IBlockOutput> output)
+bool BaseBlockInput::setOutput(IBlockOutput *output)
 {
-    if (!this->output.expired())
-        return false; //can't attach while one is still attached
-
-    this->output = output;
-    return true;
-}
-
-bool BaseBlockInput::detachOutput(boost::weak_ptr<IBlockOutput> output)
-{
-    if (this->output.lock().get() == output.lock().get())
+    if (this->output != output)
     {
-        this->output = boost::shared_ptr<IBlockOutput>();
+        //we are changing owners
+        this->output = output;
+        this->sigOutputChanged(this, output);
+
         return true;
     }
+
     return false;
 }

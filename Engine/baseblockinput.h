@@ -14,16 +14,14 @@ public:
 
     virtual bool isSiblingOf(boost::weak_ptr<IBlockIO> io);
 
-    virtual boost::weak_ptr<IBlockOutput> getAttachedOutput();
+    virtual bool isAttached();
 
-    virtual bool attachOutput(boost::weak_ptr<IBlockOutput> output);
-
-    virtual bool detachOutput(boost::weak_ptr<IBlockOutput> output);
+    virtual bool setOutput(IBlockOutput* output);
 private:
     std::string name;
     long blockId; //parent block id
 
-    boost::weak_ptr<IBlockOutput> output;
+    IBlockOutput* output; //don't use this for anything but comparisons on when to send the changed signal
 };
 
 #endif // BASEBLOCKINPUT_H

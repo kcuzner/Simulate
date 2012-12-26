@@ -41,20 +41,20 @@ boost::shared_ptr<std::vector<double> > EntryBlock::getOption(IContext *context,
     if (name != IENTRYBLOCK_OPTION_NAME)
         return boost::shared_ptr<std::vector<double> >();
 
-    return this->initialValue;
+    return context->getStoredValue(this->getId(), IENTRYBLOCK_OPTION_NAME);
 }
 
 void EntryBlock::setOption(IContext *context, const std::string &name, boost::shared_ptr<std::vector<double> > value)
 {
     if (name == IENTRYBLOCK_OPTION_NAME)
     {
-        this->initialValue = value;
+        context->setStoredValue(this->getId(), IENTRYBLOCK_OPTION_NAME, value);
     }
 }
 
 void EntryBlock::initialize(IContext *context)
 {
-    context->setStoredValue(this->getId(), "Value", this->initialValue);
+    context->setStoredValue(this->getId(), "Value", context->getStoredValue(this->getId(), IENTRYBLOCK_OPTION_NAME));
 }
 
 void EntryBlock::execute(IContext *context, double)
@@ -70,6 +70,26 @@ const std::map<std::string, boost::shared_ptr<IBlockInput> > &EntryBlock::getInp
 const std::map<std::string, boost::shared_ptr<IBlockOutput> > &EntryBlock::getOutputs()
 {
     return this->outputs;
+}
+
+bool EntryBlock::connect(const std::string &outputName, boost::shared_ptr<IBlock> block, const std::string &inputName, bool overwrite)
+{
+    //do we have this output?
+    if (this->outputs.count(outputName))
+    {
+        boost::shared_ptr<IBlockOutput> output = this->outputs.at(outputName);
+        //does the other block have the required input?
+        if (block->getInputs().count(inputName))
+        {
+            boost::shared_ptr<IBlockInput> input = block->getInputs().at(inputName);
+            if (input->isAttached() && !overwrite)
+                return false; //we don't overwrite attached inputs
+
+            output->attachInput(input); //attach the input
+        }
+    }
+
+    return false; //we failed to connect this for one reason or another
 }
 
 void EntryBlock::setCurrentValue(IContext *context, boost::shared_ptr<std::vector<double> > value)

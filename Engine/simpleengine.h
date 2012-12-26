@@ -7,7 +7,7 @@
 
 #include <boost/smart_ptr.hpp>
 
-class SimpleEngine : IEngine
+class SimpleEngine : public IEngine
 {
 public:
     SimpleEngine(boost::shared_ptr<IModel> model, int steps, double delta);
@@ -32,8 +32,6 @@ protected:
     boost::shared_ptr<IModel> model;
     boost::shared_ptr<IContext> context;
     boost::shared_ptr<IBlockFactory> factory;
-
-    boost::shared_ptr<IContext> setup(boost::shared_ptr<IModel> model);
 };
 
 #endif // ENGINE_H

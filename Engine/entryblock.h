@@ -25,6 +25,8 @@ public:
     virtual const std::map<std::string, boost::shared_ptr<IBlockInput> >& getInputs();
     virtual const std::map<std::string, boost::shared_ptr<IBlockOutput> >& getOutputs();
 
+    virtual bool connect(const std::string &outputName, boost::shared_ptr<IBlock> block, const std::string &inputName, bool overwrite);
+
     virtual void setCurrentValue(IContext *context, boost::shared_ptr<std::vector<double> > value);
 
     virtual std::string getEntryName();

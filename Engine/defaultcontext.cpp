@@ -196,11 +196,11 @@ void DefaultContext::queueBlock(int blockId)
 void DefaultContext::setAttachedInputs(boost::shared_ptr<IBlockOutput> output, boost::shared_ptr<std::vector<double> > value)
 {
     //set this output's attached inputs to their values
-    std::set<boost::weak_ptr<IBlockInput> > inputs = output->getAttachedInputs();
-    std::set<boost::weak_ptr<IBlockInput> >::const_iterator iter;
+    std::vector<boost::shared_ptr<IBlockInput> > inputs = output->getAttachedInputs();
+    std::vector<boost::shared_ptr<IBlockInput> >::const_iterator iter;
     for(iter = inputs.begin(); iter != inputs.end(); iter++)
     {
-        boost::shared_ptr<IBlockInput> input = (*iter).lock();
+        boost::shared_ptr<IBlockInput> input = (*iter);
         if (input)
         {
             //from the block id of this input, set its spot

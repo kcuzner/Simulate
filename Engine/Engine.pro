@@ -22,7 +22,10 @@ SOURCES += \
     simpleengine.cpp \
     entryblock.cpp \
     exitblock.cpp \
-    system/varstatic.cpp
+    system/varstatic.cpp \
+    system/systemblocks.cpp \
+    system/varramp.cpp \
+    system/mathmultiply.cpp
 
 HEADERS += \
     model.h \
@@ -46,7 +49,11 @@ HEADERS += \
     simpleengine.h \
     entryblock.h \
     exitblock.h \
-    system/varstatic.h
+    system/varstatic.h \
+    interfaces/iblockcollection.h \
+    system/systemblocks.h \
+    system/varramp.h \
+    system/mathmultiply.h
 unix:!symbian {
     maemo5 {
         target.path = /opt/usr/lib
