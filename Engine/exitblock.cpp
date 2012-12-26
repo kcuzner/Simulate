@@ -2,15 +2,15 @@
 
 #include "baseblockinput.h"
 
-#define EXITBLOCK_INPUT_NAME "Input"
+#include <iostream>
 
 ExitBlock::ExitBlock(long id, std::string name)
 {
     this->id = id;
     this->name = name;
 
-    boost::shared_ptr<IBlockInput> input(new BaseBlockInput(this->getId(), EXITBLOCK_INPUT_NAME));
-    this->inputs[EXITBLOCK_INPUT_NAME] = input;
+    boost::shared_ptr<IBlockInput> input(new BaseBlockInput(this->getId(), IEXITBLOCK_INPUT_NAME));
+    this->inputs[IEXITBLOCK_INPUT_NAME] = input;
 }
 
 long ExitBlock::getId()
@@ -50,7 +50,7 @@ void ExitBlock::initialize(IContext *)
 
 void ExitBlock::execute(IContext *context, double)
 {
-    context->setStoredValue(this->getId(), "Value", context->getInputValue(this->getId(), EXITBLOCK_INPUT_NAME));
+    context->setStoredValue(this->getId(), "Value", context->getInputValue(this->getId(), IEXITBLOCK_INPUT_NAME));
 }
 
 const std::map<std::string, boost::shared_ptr<IBlockInput> > &ExitBlock::getInputs()

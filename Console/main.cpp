@@ -28,6 +28,16 @@ int main(int argc, char *argv[])
 
     block->setOption(engine->getContext().get(), "Value", value);
 
+    std::cout << block->getOption(engine->getContext().get(), "Value");
+
+    boost::shared_ptr<IExitBlock> exit = model->addExit("Output");
+
+    block->connect("Output", exit, IEXITBLOCK_INPUT_NAME, true);
+
+    engine->run();
+
+    std::cout << exit->getCurrentValue(engine->getContext().get()) << std::endl;
+
     std::cout << "All done" << std::endl;
     
     return a.exec();

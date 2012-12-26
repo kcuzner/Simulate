@@ -12,11 +12,11 @@ class Model : public IModel
 public:
     Model(boost::shared_ptr<IBlockFactory> factory);
 
-    virtual bool addEntry(const std::string& name);
+    virtual boost::shared_ptr<IEntryBlock> addEntry(const std::string& name);
     virtual bool removeEntry(const std::string& name);
     virtual const std::map<std::string, boost::shared_ptr<IEntryBlock> >& getEntries();
 
-    virtual bool addExit(const std::string& name);
+    virtual boost::shared_ptr<IExitBlock> addExit(const std::string& name);
     virtual bool removeExit(const std::string& name);
     virtual const std::map<std::string, boost::shared_ptr<IExitBlock> >& getExits();
 

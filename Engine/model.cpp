@@ -8,12 +8,13 @@
 Model::Model(boost::shared_ptr<IBlockFactory> factory)
 {
     this->factory = factory;
+    this->currentId = 0; //reset current id
 }
 
-bool Model::addEntry(const std::string &name)
+boost::shared_ptr<IEntryBlock> Model::addEntry(const std::string &name)
 {
     if (this->entries.count(name))
-        return false;
+        return this->entries[name];
 
     boost::shared_ptr<IEntryBlock> entry(new EntryBlock(this->getNextId(), name));
 
@@ -23,7 +24,7 @@ bool Model::addEntry(const std::string &name)
     this->sigBlockAdded(entry);
     this->sigEntryAdded(entry);
 
-    return true;
+    return entry;
 }
 
 bool Model::removeEntry(const std::string &name)
@@ -48,10 +49,10 @@ const std::map<std::string, boost::shared_ptr<IEntryBlock> > &Model::getEntries(
     return this->entries;
 }
 
-bool Model::addExit(const std::string &name)
+boost::shared_ptr<IExitBlock> Model::addExit(const std::string &name)
 {
     if (this->exits.count(name))
-        return false;
+        return this->exits[name];
 
     boost::shared_ptr<IExitBlock> exit(new ExitBlock(this->getNextId(), name));
 
@@ -61,7 +62,7 @@ bool Model::addExit(const std::string &name)
     this->sigBlockAdded(exit);
     this->sigExitAdded(exit);
 
-    return true;
+    return exit;
 }
 
 bool Model::removeExit(const std::string &name)

@@ -5,6 +5,8 @@
 
 #include <boost/foreach.hpp>
 
+#include <iostream>
+
 DefaultContext::DefaultContext(double stepDelta, const boost::shared_ptr<IModel>& model)
 {
     this->stepDelta = stepDelta;
@@ -97,11 +99,6 @@ void DefaultContext::setStoredValue(int blockId, const std::string &name, boost:
     this->storedValues[blockId][name] = value;
 }
 
-/*boost::weak_ptr<IContext> DefaultContext::getParent()
-{
-    return this->parent;
-}*/
-
 boost::shared_ptr<IContext> DefaultContext::createChildContext(long blockId, boost::shared_ptr<IModel> model)
 {
     boost::shared_ptr<IContext> child(new DefaultContext(this->getStepDelta(), model));
@@ -190,11 +187,13 @@ void DefaultContext::prepare()
 
 void DefaultContext::queueBlock(int blockId)
 {
+    std::cout << blockId << " queued for execution" << std::endl;
     this->executionQueue.push(blockId);
 }
 
 void DefaultContext::setAttachedInputs(boost::shared_ptr<IBlockOutput> output, boost::shared_ptr<std::vector<double> > value)
 {
+    std::cout << value << std::endl;
     //set this output's attached inputs to their values
     std::vector<boost::shared_ptr<IBlockInput> > inputs = output->getAttachedInputs();
     std::vector<boost::shared_ptr<IBlockInput> >::const_iterator iter;
@@ -207,6 +206,12 @@ void DefaultContext::setAttachedInputs(boost::shared_ptr<IBlockOutput> output, b
             if (this->ioCache.count(input->getBlockId()))
             {
                 this->ioCache[input->getBlockId()]->inputValues[input->getName()] = value;
+
+                //if all the cached inputs are set we queue this for execution
+                if (this->areAllCachedInputsSet(input->getBlockId()))
+                {
+                    this->queueBlock(input->getBlockId());
+                }
             }
         }
     }
@@ -220,7 +225,6 @@ bool DefaultContext::areAllCachedInputsSet(int blockId)
         boost::shared_ptr<BlockIOCache> cache = this->ioCache[blockId];
         return cache->nInputs == cache->inputValues.size();
     }
-
     //if we make it this far, all the inputs have a value
     return true;
 }

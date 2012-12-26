@@ -23,9 +23,6 @@ namespace System
         virtual void initialize(IContext *);
 
         virtual void execute(IContext *context, double);
-
-    protected:
-        std::list<std::string> options;
     };
 }
 

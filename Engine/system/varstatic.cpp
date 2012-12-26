@@ -1,5 +1,7 @@
 #include "varstatic.h"
 
+#include <iostream>
+
 using namespace System;
 
 VarStatic::VarStatic(long id)
@@ -22,4 +24,5 @@ void VarStatic::initialize(IContext *)
 void VarStatic::execute(IContext *context, double)
 {
     context->setOutputValue(this->getId(), "Output", context->getStoredValue(this->getId(), "Value"));
+    std::cout << "executed " << this->getId() << std::endl;
 }

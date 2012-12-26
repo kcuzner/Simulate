@@ -27,11 +27,11 @@ public:
      * TODO: Add methods for tracking blocks like an id or something
      */
 
-    virtual bool addEntry(const std::string& name) = 0;
+    virtual boost::shared_ptr<IEntryBlock> addEntry(const std::string& name) = 0;
     virtual bool removeEntry(const std::string& name) = 0;
     virtual const std::map<std::string, boost::shared_ptr<IEntryBlock> >& getEntries() = 0;
 
-    virtual bool addExit(const std::string& name) = 0;
+    virtual boost::shared_ptr<IExitBlock> addExit(const std::string& name) = 0;
     virtual bool removeExit(const std::string& name) = 0;
     virtual const std::map<std::string, boost::shared_ptr<IExitBlock> >& getExits() = 0;
 

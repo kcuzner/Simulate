@@ -3,6 +3,8 @@
 
 #include "iblock.h"
 
+#define IEXITBLOCK_INPUT_NAME "Input"
+
 class IExitBlock : public IBlock
 {
 public:
