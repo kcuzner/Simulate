@@ -22,7 +22,7 @@ void MathMultiply::initialize(IContext *)
 
 void MathMultiply::execute(IContext *context, double)
 {
-    double value = context->getInputValue(this->getId(), "Multiplicand 1")->at(0) * context->getInputValue(this->getId(), "Multiplicand 1")->at(0);
+    double value = context->getInputValue(this->getId(), "Multiplicand 1")->at(0) * context->getInputValue(this->getId(), "Multiplicand 2")->at(0);
 
     boost::shared_ptr<std::vector<double> > result(new std::vector<double>());
     result->push_back(value);

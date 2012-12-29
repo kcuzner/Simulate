@@ -2,8 +2,6 @@
 
 #include "baseblockoutput.h"
 
-#define ENTRYBLOCK_OUTPUT_NAME "Output"
-
 EntryBlock::EntryBlock(long id, std::string name)
 {
     this->id = id;
@@ -12,8 +10,8 @@ EntryBlock::EntryBlock(long id, std::string name)
     this->options.clear();
     this->options.push_back(IENTRYBLOCK_OPTION_NAME);
 
-    boost::shared_ptr<IBlockOutput> output(new BaseBlockOutput(this->getId(), ENTRYBLOCK_OUTPUT_NAME));
-    this->outputs[ENTRYBLOCK_OUTPUT_NAME] = output;
+    boost::shared_ptr<IBlockOutput> output(new BaseBlockOutput(this->getId(), IENTRYBLOCK_OUTPUT_NAME));
+    this->outputs[IENTRYBLOCK_OUTPUT_NAME] = output;
 }
 
 long EntryBlock::getId()
@@ -59,7 +57,7 @@ void EntryBlock::initialize(IContext *context)
 
 void EntryBlock::execute(IContext *context, double)
 {
-    context->setOutputValue(this->getId(), ENTRYBLOCK_OUTPUT_NAME, context->getStoredValue(this->getId(), "Value"));
+    context->setOutputValue(this->getId(), IENTRYBLOCK_OUTPUT_NAME, context->getStoredValue(this->getId(), "Value"));
 }
 
 const std::map<std::string, boost::shared_ptr<IBlockInput> > &EntryBlock::getInputs()
@@ -86,6 +84,8 @@ bool EntryBlock::connect(const std::string &outputName, boost::shared_ptr<IBlock
                 return false; //we don't overwrite attached inputs
 
             output->attachInput(input); //attach the input
+
+            return true;
         }
     }
 

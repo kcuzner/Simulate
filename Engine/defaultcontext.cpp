@@ -124,6 +124,7 @@ void DefaultContext::step()
     while(!this->executionQueue.empty())
     {
         int blockId = this->executionQueue.front();
+        std::cout << "executing " << blockId << std::endl;
         boost::shared_ptr<IBlock> block = this->model->getBlock(blockId);
         if (block)
         {
@@ -187,13 +188,11 @@ void DefaultContext::prepare()
 
 void DefaultContext::queueBlock(int blockId)
 {
-    std::cout << blockId << " queued for execution" << std::endl;
     this->executionQueue.push(blockId);
 }
 
 void DefaultContext::setAttachedInputs(boost::shared_ptr<IBlockOutput> output, boost::shared_ptr<std::vector<double> > value)
 {
-    std::cout << value << std::endl;
     //set this output's attached inputs to their values
     std::vector<boost::shared_ptr<IBlockInput> > inputs = output->getAttachedInputs();
     std::vector<boost::shared_ptr<IBlockInput> >::const_iterator iter;
@@ -206,6 +205,8 @@ void DefaultContext::setAttachedInputs(boost::shared_ptr<IBlockOutput> output, b
             if (this->ioCache.count(input->getBlockId()))
             {
                 this->ioCache[input->getBlockId()]->inputValues[input->getName()] = value;
+
+                std::cout << "input " << input->getName() << " for block " << input->getBlockId() << " set" << std::endl;
 
                 //if all the cached inputs are set we queue this for execution
                 if (this->areAllCachedInputsSet(input->getBlockId()))

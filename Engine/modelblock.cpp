@@ -5,6 +5,9 @@
 
 #include <boost/foreach.hpp>
 
+#include <algorithm>
+#include <iostream>
+
 ModelBlock::ModelBlock(long id, boost::shared_ptr<IModel> model)
 {
     this->id = id;
@@ -153,6 +156,8 @@ bool ModelBlock::connect(const std::string &outputName, boost::shared_ptr<IBlock
                 return false; //we don't overwrite attached inputs
 
             output->attachInput(input); //attach the input
+
+            return true;
         }
     }
 
@@ -178,9 +183,11 @@ boost::shared_ptr<IContext> ModelBlock::getContext(IContext *context)
 
 void ModelBlock::entryAdded(boost::shared_ptr<IEntryBlock> entry)
 {
+    std::cout << "entry adding " << entry->getEntryName() << std::endl;
     //do we have any exits matching the name of this entry?
     if (this->outputExitBlocks.count(entry->getEntryName()))
     {
+        std::cout << "added option " << entry->getEntryName() << std::endl;
         //remove the exit and its output
         boost::shared_ptr<IExitBlock> exit = this->outputExitBlocks[entry->getEntryName()];
         this->outputExitBlocks.erase(entry->getEntryName());
@@ -192,12 +199,15 @@ void ModelBlock::entryAdded(boost::shared_ptr<IEntryBlock> entry)
 
         //create a pair
         this->optionBlocks[entry->getEntryName()] = std::pair<boost::shared_ptr<IEntryBlock>, boost::shared_ptr<IExitBlock> >(entry, exit);
+        this->optionBlockNames.push_back(entry->getEntryName());
     }
     else
     {
         //add an input to match this entry
         boost::shared_ptr<BaseBlockInput> input(new BaseBlockInput(this->getId(), entry->getEntryName()));
         this->inputs[entry->getEntryName()] = input;
+
+        this->inputEntryBlocks[entry->getEntryName()] = entry;
 
         //signal than an input was added
         this->sigInputAdded(input);
@@ -211,6 +221,8 @@ void ModelBlock::entryRemoved(boost::shared_ptr<IEntryBlock> entry)
     {
         //create an output from this pair
         std::pair<boost::shared_ptr<IEntryBlock>, boost::shared_ptr<IExitBlock> > option = this->optionBlocks[entry->getEntryName()];
+        std::list<std::string>::iterator iter = std::find(this->optionBlockNames.begin(), this->optionBlockNames.end(), entry->getEntryName());
+        this->optionBlockNames.erase(iter);
         this->optionBlocks.erase(entry->getEntryName());
 
         //add an output for the exit block
@@ -225,6 +237,7 @@ void ModelBlock::entryRemoved(boost::shared_ptr<IEntryBlock> entry)
         //remove the input for this entry
         boost::shared_ptr<IBlockInput> input = this->inputs[entry->getEntryName()];
         this->inputs.erase(entry->getEntryName());
+        this->inputEntryBlocks.erase(entry->getEntryName());
 
         this->sigInputRemoved(input);
     }
@@ -232,9 +245,11 @@ void ModelBlock::entryRemoved(boost::shared_ptr<IEntryBlock> entry)
 
 void ModelBlock::exitAdded(boost::shared_ptr<IExitBlock> exit)
 {
+    std::cout << "exit adding " << exit->getExitName() << std::endl;
     //do we have any entries matching the name of this exit?
     if (this->inputEntryBlocks.count(exit->getExitName()))
     {
+        std::cout << "creating option " << exit->getExitName() << std::endl;
         //remove the entry and its input
         boost::shared_ptr<IEntryBlock> entry = this->inputEntryBlocks[exit->getExitName()];
         this->inputEntryBlocks.erase(exit->getExitName());
@@ -246,12 +261,15 @@ void ModelBlock::exitAdded(boost::shared_ptr<IExitBlock> exit)
 
         //create a pair
         this->optionBlocks[exit->getExitName()] = std::pair<boost::shared_ptr<IEntryBlock>, boost::shared_ptr<IExitBlock> >(entry, exit);
+        this->optionBlockNames.push_back(exit->getExitName());
     }
     else
     {
         //add an output to match this exit
         boost::shared_ptr<BaseBlockOutput> output(new BaseBlockOutput(this->getId(), exit->getExitName()));
         this->outputs[exit->getExitName()] = output;
+
+        this->outputExitBlocks[exit->getExitName()] = exit;
 
         //signal than an input was added
         this->sigOutputAdded(output);
@@ -263,11 +281,13 @@ void ModelBlock::exitRemoved(boost::shared_ptr<IExitBlock> exit)
     //do we have any pairs with this name?
     if (this->optionBlocks.count(exit->getExitName()))
     {
-        //create an output from this pair
+        //create an input from this pair
         std::pair<boost::shared_ptr<IEntryBlock>, boost::shared_ptr<IExitBlock> > option = this->optionBlocks[exit->getExitName()];
+        std::list<std::string>::iterator iter = std::find(this->optionBlockNames.begin(), this->optionBlockNames.end(), exit->getExitName());
+        this->optionBlockNames.erase(iter);
         this->optionBlocks.erase(exit->getExitName());
 
-        //add an output for the entry block
+        //add an input for the entry block
         boost::shared_ptr<IBlockInput> input(new BaseBlockInput(this->getId(), option.first->getEntryName()));
         this->inputs[option.first->getEntryName()] = input;
         this->inputEntryBlocks[option.first->getEntryName()] = option.first;
@@ -279,6 +299,8 @@ void ModelBlock::exitRemoved(boost::shared_ptr<IExitBlock> exit)
         //remove the output for this exit
         boost::shared_ptr<IBlockOutput> output = this->outputs[exit->getExitName()];
         this->outputs.erase(exit->getExitName());
+
+        this->outputExitBlocks.erase(exit->getExitName());
 
         this->sigOutputRemoved(output);
     }

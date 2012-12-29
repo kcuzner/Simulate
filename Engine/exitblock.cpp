@@ -77,6 +77,8 @@ bool ExitBlock::connect(const std::string &outputName, boost::shared_ptr<IBlock>
                 return false; //we don't overwrite attached inputs
 
             output->attachInput(input); //attach the input
+
+            return true;
         }
     }
 

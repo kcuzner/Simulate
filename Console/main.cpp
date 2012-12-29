@@ -8,9 +8,11 @@
 
 #include <iostream>
 
+void onStepCompleted(boost::shared_ptr<IModel>, int, int);
+
 int main(int argc, char *argv[])
 {
-    QCoreApplication a(argc, argv);
+    //QCoreApplication a(argc, argv);
 
     std::cout << "Creating system blocks container" << std::endl;
     boost::shared_ptr<System::SystemBlocks> systemBlocks(new System::SystemBlocks());
@@ -34,11 +36,20 @@ int main(int argc, char *argv[])
 
     block->connect("Output", exit, IEXITBLOCK_INPUT_NAME, true);
 
+    engine->sigStepCompleted.connect(&onStepCompleted);
+
     engine->run();
 
     std::cout << exit->getCurrentValue(engine->getContext().get()) << std::endl;
 
     std::cout << "All done" << std::endl;
+
+    return 0;
     
-    return a.exec();
+    //return a.exec();
+}
+
+void onStepCompleted(boost::shared_ptr<IModel>, int s, int)
+{
+    std::cout << "Step " << s << " completed" << std::endl;
 }

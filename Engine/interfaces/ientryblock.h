@@ -5,6 +5,7 @@
 #include "iblock.h"
 
 #define IENTRYBLOCK_OPTION_NAME "Initial Value"
+#define IENTRYBLOCK_OUTPUT_NAME "Output"
 
 class IEntryBlock : public IBlock
 {

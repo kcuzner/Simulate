@@ -6,7 +6,6 @@
 #include <boost/foreach.hpp>
 
 #include <algorithm>
-#include <iostream>
 
 BaseBlock::BaseBlock(long id, const std::string& group, const std::string& name)
 {
@@ -53,17 +52,9 @@ void BaseBlock::setOption(IContext *context, const std::string &name, boost::sha
 {
     std::list<std::string>::iterator iter = std::find(this->options.begin(), this->options.end(), name);
 
-    BOOST_FOREACH(std::string str, this->options)
-    {
-        std::cout << "option: " << str << std::endl;
-    }
-
-    std::cout << "found? " << (int)(iter == this->options.begin()) << std::endl;
-
     if (iter != this->options.end())
     {
         //we found it!
-        std::cout << "setting " << name << std::endl;
         context->setStoredValue(this->getId(), name, value);
     }
 }
@@ -92,6 +83,8 @@ bool BaseBlock::connect(const std::string &outputName, boost::shared_ptr<IBlock>
                 return false; //we don't overwrite attached inputs
 
             output->attachInput(input); //attach the input
+
+            return true;
         }
     }
 
