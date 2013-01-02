@@ -12,6 +12,8 @@
 #include "iblockoutput.h"
 #include "icontext.h"
 
+#include "ifileblockdescription.h"
+
 /**
  * Special Options. These are meant for internal use and are prefixed with
  * an underscore so they are omitted from general option listings
@@ -102,6 +104,24 @@ public:
      * @return False if something was already connected and we are not overwriting
      */
     virtual bool connect(const std::string& output, boost::shared_ptr<IBlock> block, const std::string& input, bool overwrite) = 0;
+
+    /**
+     * @brief Returns all the arbitrary data associated with this block
+     * @return
+     */
+    virtual const std::map<std::string, std::string>& getData() = 0;
+    /**
+     * @brief Returns a specific arbitrary value. If it doesn't exist, an out of range exception should bubble up
+     * @param key
+     * @return
+     */
+    virtual const std::string& getData(const std::string& key) = 0;
+    /**
+     * @brief Sets an arbitrary data value
+     * @param key
+     * @param value
+     */
+    virtual void setData(const std::string& key, const std::string& value) = 0;
 
     boost::signals2::signal<void (boost::weak_ptr<IBlockInput>)> sigInputAdded;
     boost::signals2::signal<void (boost::shared_ptr<IBlockInput>)> sigInputRemoved;

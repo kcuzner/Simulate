@@ -63,6 +63,8 @@ To do list
     inputs/outputs and strong references to them should be very temporary so that
     when the block is destroyed its ios go away.
   * The DefaultContext 
+ * Resolve whether or not block ids are longs or int. Make this consistent
+ * Make a triggering mechanism for blocks so they don't always have to be executed.
  * Build a loader (possibly a separate qt plugin...at least make the interface)
   * The sequence for loading:
     1) Scan the file for all model definitions

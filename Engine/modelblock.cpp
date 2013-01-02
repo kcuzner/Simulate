@@ -164,6 +164,21 @@ bool ModelBlock::connect(const std::string &outputName, boost::shared_ptr<IBlock
     return false; //we failed to connect this for one reason or another
 }
 
+const std::map<std::string, std::string> &ModelBlock::getData()
+{
+    return this->data;
+}
+
+const std::string &ModelBlock::getData(const std::string &key)
+{
+    return this->data.at(key);
+}
+
+void ModelBlock::setData(const std::string &key, const std::string &value)
+{
+    this->data[key] = value;
+}
+
 boost::shared_ptr<IModel> ModelBlock::getModel()
 {
     return this->model;

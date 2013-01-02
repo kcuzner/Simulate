@@ -1,0 +1,55 @@
+The .simx file format is a simple XML based file format used for storing
+simulation data.
+
+At the root of the file, we have the simulation node
+
+<simulation steps="1000" delta="0.000000001" root="Root model name">
+</simulation>
+
+Simulations don't need to specify an engine or factory. The simulationcore's
+default will always be used. This is so that people with custom engines don't
+end up making incompatible files that can't really be shared with others. The
+point is that any engine should be able to run any simulation and that any
+block factory should be able to handle all the blocks the simulations request.
+
+If the simulation doesn't specify a steps or delta value, they will be set to
+0 and 1.0 respectively.
+
+Inside the simulation, models are specified as follows:
+
+<model name="Model Name">
+	<entry id="0" name="Entry name"/>
+	<exit id="1" name="Exit name"/>
+	<model id="2" model="Sub-model name"/>
+	<block id="3" group="Block group" name="Block name"/>
+	<connection from="0" output="output name" to="2" input="input name"/>
+	<connection from="2" output="output name" to="1" input="input name"/>
+</model>
+
+If a model tag has an id attribute, it must be found inside another model tag.
+Models inside of a model tag must have this attribute and models directly
+under the simulation tag must not have an id. This reduces the need for
+recursion when processing.
+
+The entry, exit, model, and block tags when found inside a model tag are
+interpreted as the special IBlock cases IEntryBlock, IExitBlock, IModelBlock,
+and IBlock respectively. Entries/Exits need only specify a name for the entry
+or exit. Models must give the name of the model they point to. Blocks must
+give their group and name.
+
+Connections are specified in the same manner as the IBlock->connect function
+is defined. A "from block" id is specified, the output to connect from, the
+"to block", and the input.
+
+Any tag may have additional attributes. All attributes are available inside the
+description object attached to models and blocks. These may be modified and are
+meant to be used for things like position in the view, engine settings, and
+other things.
+
+During parsing, all models are first parsed with only their entries and exits
+being created. After all models have been declared with the correct entries and
+exits, the models may be "filled out" with their other blocks in any order. At
+this point the loader will ensure that no infinite recursions are created in
+nesting blocks. If one is found, the file is declared invalid unless the skip
+invalid models flag is set. In this case, the loader will remove one block from
+the chain in order to break it.

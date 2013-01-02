@@ -27,6 +27,10 @@ public:
 
     virtual bool connect(const std::string &outputName, boost::shared_ptr<IBlock> block, const std::string &inputName, bool overwrite);
 
+    virtual const std::map<std::string, std::string>& getData();
+    virtual const std::string& getData(const std::string& key);
+    virtual void setData(const std::string& key, const std::string& value);
+
     virtual boost::shared_ptr<std::vector<double> > getCurrentValue(IContext *context);
 
     virtual std::string getExitName();
@@ -34,6 +38,8 @@ public:
 protected:
     long id;
     std::string name; //entry name...not block name
+
+    std::map<std::string, std::string> data;
 
     std::list<std::string> options; //there should only end up being no options here
 

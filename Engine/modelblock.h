@@ -44,6 +44,10 @@ public:
 
     virtual bool connect(const std::string &outputName, boost::shared_ptr<IBlock> block, const std::string &inputName, bool overwrite);
 
+    virtual const std::map<std::string, std::string>& getData();
+    virtual const std::string& getData(const std::string& key);
+    virtual void setData(const std::string& key, const std::string& value);
+
     virtual boost::shared_ptr<IModel> getModel();
 
     virtual boost::shared_ptr<IContext> getContext(IContext* context);
@@ -57,6 +61,8 @@ protected:
 private:
     long id;
     boost::shared_ptr<IModel> model;
+
+    std::map<std::string, std::string> data;
 
     std::map<std::string, boost::shared_ptr<IBlockInput> > inputs;
     std::map<std::string, boost::shared_ptr<IBlockOutput> > outputs;

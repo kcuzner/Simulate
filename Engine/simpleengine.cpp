@@ -20,6 +20,11 @@ SimpleEngine::SimpleEngine(boost::shared_ptr<IModel> model, int steps, double de
     this->factory = DefaultBlockFactory::getInstance();
 }
 
+boost::shared_ptr<IEngine> SimpleEngine::generate(boost::shared_ptr<IModel> model, int steps, double delta)
+{
+    return boost::shared_ptr<IEngine>(new SimpleEngine(model, steps, delta));
+}
+
 unsigned int SimpleEngine::getStepsToRun()
 {
     return steps;

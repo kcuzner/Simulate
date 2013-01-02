@@ -52,6 +52,10 @@ public:
 
     virtual bool connect(const std::string &outputName, boost::shared_ptr<IBlock> block, const std::string &inputName, bool overwrite);
 
+    virtual const std::map<std::string, std::string>& getData();
+    virtual const std::string& getData(const std::string& key);
+    virtual void setData(const std::string& key, const std::string& value);
+
     boost::signals2::signal<void (boost::weak_ptr<IBlockInput>)> sigInputAdded;
     boost::signals2::signal<void (boost::weak_ptr<IBlockInput>)> sigInputRemoved;
     boost::signals2::signal<void (boost::weak_ptr<IBlockOutput>)> sigOutputAdded;
@@ -68,6 +72,8 @@ protected:
 private:
     long id;
     std::string name, group;
+
+    std::map<std::string, std::string> data;
 
     std::map<std::string, boost::shared_ptr<IBlockInput> > inputs;
     std::map<std::string, boost::shared_ptr<IBlockOutput> > outputs;

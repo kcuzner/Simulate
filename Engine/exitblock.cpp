@@ -85,6 +85,21 @@ bool ExitBlock::connect(const std::string &outputName, boost::shared_ptr<IBlock>
     return false; //we failed to connect this for one reason or another
 }
 
+const std::map<std::string, std::string> &ExitBlock::getData()
+{
+    return this->data;
+}
+
+const std::string &ExitBlock::getData(const std::string &key)
+{
+    return this->data.at(key);
+}
+
+void ExitBlock::setData(const std::string &key, const std::string &value)
+{
+    this->data[key] = value;
+}
+
 boost::shared_ptr<std::vector<double> > ExitBlock::getCurrentValue(IContext *context)
 {
     return context->getStoredValue(this->getId(), "Value");

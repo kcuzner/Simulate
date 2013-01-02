@@ -25,7 +25,9 @@ SOURCES += \
     system/varstatic.cpp \
     system/systemblocks.cpp \
     system/varramp.cpp \
-    system/mathmultiply.cpp
+    system/mathmultiply.cpp \
+    simulationcore.cpp \
+    xmlfileloader.cpp
 
 HEADERS += \
     model.h \
@@ -53,7 +55,14 @@ HEADERS += \
     interfaces/iblockcollection.h \
     system/systemblocks.h \
     system/varramp.h \
-    system/mathmultiply.h
+    system/mathmultiply.h \
+    interfaces/ifilemodeldescription.h \
+    interfaces/ifileloader.h \
+    interfaces/ifileblockdescription.h \
+    interfaces/isimulation.h \
+    simulationcore.h \
+    interfaces/isimulationcore.h \
+    xmlfileloader.h
 unix:!symbian {
     maemo5 {
         target.path = /opt/usr/lib

@@ -7,7 +7,7 @@
 #include "defaultblockfactory.h"
 #include "system/systemblocks.h"
 #include "model.h"
-#include "simpleengine.h"
+#include "simulationcore.h"
 
 BOOST_AUTO_TEST_CASE( declareBlocks )
 {
@@ -52,11 +52,10 @@ BOOST_AUTO_TEST_CASE( instantiateBlocks )
 
 BOOST_AUTO_TEST_CASE( runSimulation )
 {
-    boost::shared_ptr<IModel> model(new Model(DefaultBlockFactory::getInstance()));
-    boost::shared_ptr<IEngine> engine(new SimpleEngine(model, 20, 0.1));
+    boost::shared_ptr<ISimulationCore> core = SimulationCore::getInstance();
 
-    boost::shared_ptr<IBlockCollection> systemBlocks(new System::SystemBlocks());
-    systemBlocks->declareToFactory(DefaultBlockFactory::getInstance());
+    boost::shared_ptr<IModel> model = core->createModel("test");
+    boost::shared_ptr<IEngine> engine = core->createEngine(model, 20, 0.1);
 
     //test a normal simulation multiplying two unchanging numbers together
     boost::shared_ptr<IBlock> block = model->createBlock("Var", "Static");
@@ -83,7 +82,7 @@ BOOST_AUTO_TEST_CASE( runSimulation )
 
     //create a sub-model executing inside a model twice
     std::cout << std::endl << std::endl;
-    boost::shared_ptr<IModel> integration(new Model(DefaultBlockFactory::getInstance()));
+    boost::shared_ptr<IModel> integration = core->createModel("integration");
 
     integration->addEntry("Accumulation");
     integration->addExit("Accumulation");
@@ -98,8 +97,8 @@ BOOST_AUTO_TEST_CASE( runSimulation )
     BOOST_CHECK(block->connect("Product", integration->getExits().at("Accumulation"), IEXITBLOCK_INPUT_NAME, false));
     BOOST_CHECK(block->connect("Product", integration->getExits().at("Value"), IEXITBLOCK_INPUT_NAME, false));
 
-    model = boost::shared_ptr<IModel>(new Model(DefaultBlockFactory::getInstance()));
-    engine = boost::shared_ptr<IEngine>(new SimpleEngine(model, 5, 0.1));
+    model = core->createModel("test");
+    engine = core->createEngine(model, 5, 0.1);
     block = model->addModel(integration);
     std::cout << "model 1 id " << block->getId() << std::endl;
     if (!block)
@@ -139,7 +138,7 @@ BOOST_AUTO_TEST_CASE( runSimulation )
 
 BOOST_AUTO_TEST_CASE( instantiateModelBlock )
 {
-    boost::shared_ptr<IModel> model(new Model(DefaultBlockFactory::getInstance()));
+    boost::shared_ptr<IModel> model = SimulationCore::getInstance()->createModel("inside");
 
     model->addEntry("Entry 1");
     model->addEntry("Entry 2");
@@ -148,7 +147,7 @@ BOOST_AUTO_TEST_CASE( instantiateModelBlock )
     model->addExit("Exit 2");
     model->addExit("Exit 3");
 
-    boost::shared_ptr<IModel> root(new Model(DefaultBlockFactory::getInstance()));
+    boost::shared_ptr<IModel> root = SimulationCore::getInstance()->createModel("root");
 
     //test creating a block
     boost::shared_ptr<IModelBlock> modelBlock = root->addModel(model);
