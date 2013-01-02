@@ -2,6 +2,7 @@
 
 #include "defaultblockfactory.h"
 #include "simpleengine.h"
+#include "model.h"
 
 #include <boost/foreach.hpp>
 
@@ -11,6 +12,10 @@ SimulationCore::SimulationCore()
 
     this->addEngineType("simple", SimpleEngine::generate);
     this->setEngineType("simple");
+
+    boost::shared_ptr<IModelGenerator> modelGenerator(new ModelGenerator());
+    this->addModelType(modelGenerator);
+    this->setModelType(modelGenerator->getModelTypeName());
 }
 
 boost::shared_ptr<SimulationCore> SimulationCore::instance;

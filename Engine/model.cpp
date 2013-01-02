@@ -5,15 +5,17 @@
 #include "exitblock.h"
 #include "modelblock.h"
 
-Model::Model(boost::shared_ptr<IBlockFactory> factory)
+Model::Model(const std::string &name, boost::shared_ptr<IBlockFactory> factory)
 {
     this->factory = factory;
     this->currentId = 0; //reset current id
+
+    this->name = name;
 }
 
 const std::string &Model::getName()
 {
-    return "";
+    return this->name;
 }
 
 boost::shared_ptr<IEntryBlock> Model::addEntry(const std::string &name)
@@ -194,4 +196,20 @@ bool Model::useId(long id)
         this->currentId = id + 1;
 
     return true;
+}
+
+
+ModelGenerator::ModelGenerator()
+{
+    name = "default";
+}
+
+const std::string &ModelGenerator::getModelTypeName()
+{
+    return this->name;
+}
+
+boost::shared_ptr<IModel> ModelGenerator::generate(const std::string &name, boost::shared_ptr<IBlockFactory> factory)
+{
+    return boost::shared_ptr<IModel>(new Model(name, factory));
 }

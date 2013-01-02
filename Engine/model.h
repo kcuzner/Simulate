@@ -10,7 +10,7 @@
 class Model : public IModel
 {
 public:
-    Model(boost::shared_ptr<IBlockFactory> factory);
+    Model(const std::string& name, boost::shared_ptr<IBlockFactory> factory);
 
     virtual const std::string& getName();
 
@@ -43,10 +43,25 @@ protected:
     std::map<std::string, boost::shared_ptr<IExitBlock> > exits;
     std::map<int, boost::shared_ptr<IModelBlock> > modelBlocks;
 
+    std::string name;
+
     long getNextId();
     bool useId(long id);
 
     boost::shared_ptr<IBlockFactory> factory;
+};
+
+class ModelGenerator : public IModelGenerator
+{
+public:
+    ModelGenerator();
+
+    virtual const std::string& getModelTypeName();
+
+    virtual boost::shared_ptr<IModel> generate(const std::string &name, boost::shared_ptr<IBlockFactory> factory);
+
+protected:
+    std::string name;
 };
 
 #endif // MODEL_H
