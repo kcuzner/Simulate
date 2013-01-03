@@ -66,6 +66,7 @@ public:
     virtual const std::string& getLastFileError();
 
     virtual boost::shared_ptr<ISimulation> createSimulation(int steps, double delta);
+    virtual boost::shared_ptr<ISimulation> createSimulation(int steps, double delta, const std::string& fileName);
 
 private:
     SimulationCore();

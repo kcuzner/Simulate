@@ -19,7 +19,7 @@ unix:LIBS += -lboost_unit_test_framework
 
 win32:CONFIG(release, debug|release): LIBS += -L$$PWD/../lib/release/ -lEngine
 else:win32:CONFIG(debug, debug|release): LIBS += -L$$PWD/../lib/debug/ -lEngine
-else:unix: LIBS += -L$$PWD/../lib/ -lEngine
+else:unix: LIBS += -L$$PWD/../lib/ -lEngine -lboost_regex
 
 INCLUDEPATH += $$PWD/../Engine
 DEPENDPATH += $$PWD/../Engine

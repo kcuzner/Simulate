@@ -65,6 +65,7 @@ To do list
   * The DefaultContext 
  * Resolve whether or not block ids are longs or int. Make this consistent
  * Make a triggering mechanism for blocks so they don't always have to be executed.
+ * Change models to be identified by a UUID and a readable name.
  * Build a loader (possibly a separate qt plugin...at least make the interface)
   * The sequence for loading:
     1) Scan the file for all model definitions

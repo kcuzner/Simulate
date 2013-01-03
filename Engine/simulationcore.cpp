@@ -3,8 +3,10 @@
 #include "defaultblockfactory.h"
 #include "simpleengine.h"
 #include "model.h"
+#include "simulation.h"
 
 #include <boost/foreach.hpp>
+#include <boost/regex.hpp>
 
 SimulationCore::SimulationCore()
 {
@@ -106,12 +108,12 @@ boost::shared_ptr<ISimulation> SimulationCore::loadSimulation(const std::string 
     boost::shared_ptr<IFileLoader> loader;
     BOOST_FOREACH(LoaderRecord loaderRecord, this->fileLoaders)
     {
-        /*boost::regex r(loaderRecord.first);
+        boost::regex r(loaderRecord.first);
         if (boost::regex_match(fileName, r))
         {
             loader = loaderRecord.second;
             break;
-        }*/
+        }
     }
 
     if (loader)
@@ -131,12 +133,12 @@ bool SimulationCore::saveSimulation(boost::shared_ptr<ISimulation> simulation, c
     boost::shared_ptr<IFileLoader> loader;
     BOOST_FOREACH(LoaderRecord loaderRecord, this->fileLoaders)
     {
-        /*boost::regex r(loaderRecord.first);
+        boost::regex r(loaderRecord.first);
         if (boost::regex_match(fileName, r))
         {
             loader = loaderRecord.second;
             break;
-        }*/
+        }
     }
 
     if (loader)
@@ -155,4 +157,10 @@ const std::string &SimulationCore::getLastFileError()
 
 boost::shared_ptr<ISimulation> SimulationCore::createSimulation(int steps, double delta)
 {
+    return boost::shared_ptr<ISimulation>(new Simulation(steps, delta));
+}
+
+boost::shared_ptr<ISimulation> SimulationCore::createSimulation(int steps, double delta, const std::string &fileName)
+{
+    return boost::shared_ptr<ISimulation>(new Simulation(steps, delta, fileName));
 }

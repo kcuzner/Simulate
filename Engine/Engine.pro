@@ -27,7 +27,8 @@ SOURCES += \
     system/varramp.cpp \
     system/mathmultiply.cpp \
     simulationcore.cpp \
-    xmlfileloader.cpp
+    xmlfileloader.cpp \
+    simulation.cpp
 
 HEADERS += \
     model.h \
@@ -62,7 +63,8 @@ HEADERS += \
     interfaces/isimulation.h \
     simulationcore.h \
     interfaces/isimulationcore.h \
-    xmlfileloader.h
+    xmlfileloader.h \
+    simulation.h
 unix:!symbian {
     maemo5 {
         target.path = /opt/usr/lib

@@ -242,7 +242,7 @@ boost::shared_ptr<ISimulation> XMLFileLoader::loadFile(ISimulationCore *core, st
     }
 
     //create the simuation object
-    boost::shared_ptr<ISimulation> simulation = core->createSimulation(steps, delta);
+    boost::shared_ptr<ISimulation> simulation = core->createSimulation(steps, delta, fileName);
 
     //add all the models
     BOOST_FOREACH(ModelRecord modelRecord, models)
@@ -399,6 +399,9 @@ bool XMLFileLoader::saveFile(ISimulationCore *, boost::shared_ptr<ISimulation> s
     //write the document out to the file
     file << doc;
     file.close();
+
+    //the simulation now has a filename
+    simulation->setFileName(fileName);
 }
 
 std::string XMLFileLoader::getLastError()

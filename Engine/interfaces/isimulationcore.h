@@ -90,6 +90,7 @@ public:
      * @return
      */
     virtual boost::shared_ptr<ISimulation> createSimulation(int steps, double delta) = 0;
+    virtual boost::shared_ptr<ISimulation> createSimulation(int steps, double delta, const std::string& fileName) = 0;
 };
 
 #endif // ISIMULATIONCORE_H
