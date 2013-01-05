@@ -28,7 +28,9 @@ SOURCES += \
     system/mathmultiply.cpp \
     simulationcore.cpp \
     xmlfileloader.cpp \
-    simulation.cpp
+    simulation.cpp \
+    system/mathgain.cpp \
+    system/mathintegrate.cpp
 
 HEADERS += \
     model.h \
@@ -64,7 +66,9 @@ HEADERS += \
     simulationcore.h \
     interfaces/isimulationcore.h \
     xmlfileloader.h \
-    simulation.h
+    simulation.h \
+    system/mathgain.h \
+    system/mathintegrate.h
 unix:!symbian {
     maemo5 {
         target.path = /opt/usr/lib
