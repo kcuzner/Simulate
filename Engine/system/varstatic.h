@@ -20,7 +20,7 @@ namespace System
          */
         static boost::shared_ptr<VarStatic> generate(long id);
 
-        virtual void initialize(IContext *);
+        virtual bool initialize(IContext *, std::string& error);
 
         virtual void execute(IContext *context, double);
     };

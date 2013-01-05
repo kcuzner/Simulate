@@ -12,7 +12,7 @@ namespace System
 
         static boost::shared_ptr<MathMultiply> generate(long id);
 
-        virtual void initialize(IContext *);
+        virtual bool initialize(IContext *, std::string&);
 
         virtual void execute(IContext *context, double);
     };

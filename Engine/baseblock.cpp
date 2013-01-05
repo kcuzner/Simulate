@@ -34,29 +34,34 @@ const std::list<std::string> &BaseBlock::getOptionNames()
     return this->options;
 }
 
-boost::shared_ptr<std::vector<double> > BaseBlock::getOption(IContext *context, const std::string &name)
+boost::shared_ptr<std::vector<double> > BaseBlock::getOption(const std::string &name) const
 {
-    std::list<std::string>::iterator iter = std::find(this->options.begin(), this->options.end(), name);
+    std::list<std::string>::const_iterator iter = std::find(this->options.begin(), this->options.end(), name);
 
-    if (iter != this->options.end())
+    if (iter != this->options.end() && this->optionValues.count(name))
     {
         //we found it!
-        return context->getStoredValue(this->getId(), name);
+        return this->optionValues.at(name);
     }
 
     //if we made it this far it wasn't found
     return boost::shared_ptr<std::vector<double> >();
 }
 
-void BaseBlock::setOption(IContext *context, const std::string &name, boost::shared_ptr<std::vector<double> > value)
+void BaseBlock::setOption(const std::string &name, boost::shared_ptr<std::vector<double> > value)
 {
     std::list<std::string>::iterator iter = std::find(this->options.begin(), this->options.end(), name);
 
     if (iter != this->options.end())
     {
         //we found it!
-        context->setStoredValue(this->getId(), name, value);
+        this->optionValues[name] = value;
     }
+}
+
+const std::map<std::string, boost::shared_ptr<std::vector<double> > > &BaseBlock::getOptions() const
+{
+    return this->optionValues;
 }
 
 const std::map<std::string, boost::shared_ptr<IBlockInput> >& BaseBlock::getInputs()

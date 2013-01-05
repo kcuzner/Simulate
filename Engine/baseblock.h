@@ -24,11 +24,13 @@ public:
 
     /**
      * @brief This implementation retrieves options directly with the names being stored values and checking against the list
+     * THIS SHOULD NOT BE USED DURING execute()!!! IContext::getOption should be used instead. This prevents thread safety
+     * issues by delegating that responsibility to the context
      * @param context
      * @param name
      * @return
      */
-    virtual boost::shared_ptr<std::vector<double> > getOption(IContext *context, const std::string &name);
+    virtual boost::shared_ptr<std::vector<double> > getOption(const std::string &name) const;
 
     /**
      * @brief This implementation stores options directly with the names being stored values checked against the list
@@ -36,7 +38,13 @@ public:
      * @param name
      * @param value
      */
-    virtual void setOption(IContext *context, const std::string &name, boost::shared_ptr<std::vector<double> > value);
+    virtual void setOption(const std::string &name, boost::shared_ptr<std::vector<double> > value);
+
+    /**
+     * @brief Returns all the options for this block
+     * @return
+     */
+    virtual const std::map<std::string, boost::shared_ptr<std::vector<double> > >& getOptions() const;
 
     /**
      * @brief Gets the inputs to this block
@@ -74,6 +82,8 @@ private:
     std::string name, group;
 
     std::map<std::string, std::string> data;
+
+    std::map<std::string, boost::shared_ptr<std::vector<double> > > optionValues;
 
     std::map<std::string, boost::shared_ptr<IBlockInput> > inputs;
     std::map<std::string, boost::shared_ptr<IBlockOutput> > outputs;

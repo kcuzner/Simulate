@@ -39,7 +39,7 @@ public:
      * @param name Name of the input
      * @return Value of the input or a null pointer
      */
-    virtual boost::shared_ptr<std::vector<double> > getInputValue(int blockId, const std::string& name) = 0;
+    virtual boost::shared_ptr<std::vector<double> > getInputValue(long blockId, const std::string& name) = 0;
 
     /**
      * @brief Sets the value of an output for the passed context
@@ -47,7 +47,7 @@ public:
      * @param name Name of the output
      * @param value Value to set the output to
      */
-    virtual void setOutputValue(int blockId, const std::string& name, boost::shared_ptr<std::vector<double> > value) = 0;
+    virtual void setOutputValue(long blockId, const std::string& name, boost::shared_ptr<std::vector<double> > value) = 0;
 
     /**
      * @brief Returns a stored value in this context
@@ -55,7 +55,7 @@ public:
      * @param name Name of the value
      * @return The value
      */
-    virtual boost::shared_ptr<std::vector<double> > getStoredValue(int blockId, const std::string& name) = 0;
+    virtual boost::shared_ptr<std::vector<double> > getStoredValue(long blockId, const std::string& name) = 0;
 
     /**
      * @brief Stores a value in this context
@@ -63,13 +63,16 @@ public:
      * @param name Name of the value
      * @param value Value to set
      */
-    virtual void setStoredValue(int blockId, const std::string& name, boost::shared_ptr<std::vector<double> > value) = 0;
+    virtual void setStoredValue(long blockId, const std::string& name, boost::shared_ptr<std::vector<double> > value) = 0;
 
     /**
-     * @brief Gets the parent context of this child context.
-     * @return Parent context
+     * @brief Gets an option value for the passed block id. Options should be cached at the beginning of a run (when reset
+     * is called) to promote thread safety
+     * @param blockId
+     * @param name
+     * @return
      */
-    //virtual boost::weak_ptr<IContext> getParent() = 0;
+    virtual boost::shared_ptr<std::vector<double> > getOption(long blockId, const std::string& name) = 0;
 
     /**
      * @brief Creates a child context for a model assigned to a block. This will replace any existing context.

@@ -15,10 +15,12 @@ public:
 
     virtual const std::list<std::string>& getOptionNames();
 
-    virtual boost::shared_ptr<std::vector<double> > getOption(IContext* context, const std::string &name);
-    virtual void setOption(IContext* context, const std::string &name, boost::shared_ptr<std::vector<double> > value);
+    virtual boost::shared_ptr<std::vector<double> > getOption(const std::string &name) const;
+    virtual void setOption(const std::string &name, boost::shared_ptr<std::vector<double> > value);
 
-    virtual void initialize(IContext* context);
+    virtual const std::map<std::string, boost::shared_ptr<std::vector<double> > >& getOptions() const;
+
+    virtual bool initialize(IContext*, std::string &error);
 
     virtual void execute(IContext *context, double delta);
 
@@ -46,7 +48,7 @@ protected:
     std::map<std::string, boost::shared_ptr<IBlockInput> > inputs;
     std::map<std::string, boost::shared_ptr<IBlockOutput> > outputs;
 
-    boost::shared_ptr<std::vector<double> > initialValue;
+    std::map<std::string, boost::shared_ptr<std::vector<double> > > optionValues;
 };
 
 #endif // ENTRYBLOCK_H

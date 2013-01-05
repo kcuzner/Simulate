@@ -9,7 +9,7 @@
  * to and from simulations. Files must have the extension
  * .simx
  */
-class XMLFileLoader
+class XMLFileLoader : public IFileLoader
 {
 public:
     XMLFileLoader();
@@ -22,9 +22,11 @@ public:
 
     virtual bool saveFile(ISimulationCore*, boost::shared_ptr<ISimulation> simulation, std::string fileName);
 
-    virtual std::string getLastError();
+    virtual const std::string& getLastError() const;
 
 protected:
+    std::string lastError;
+
     void appendDataToBlockNode(rapidxml::xml_document<>* doc, rapidxml::xml_node<>* blockNode, boost::shared_ptr<IBlock> block);
     void attachConnectionsToModel(rapidxml::xml_document<>* doc, rapidxml::xml_node<>* modelNode, char *id, boost::shared_ptr<IBlock> block);
 };

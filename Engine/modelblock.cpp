@@ -51,32 +51,37 @@ std::string ModelBlock::getName()
 
 const std::list<std::string> &ModelBlock::getOptionNames()
 {
-    return this->optionBlockNames;
+    return this->optionBlockNames; //this should be empty
 }
 
-boost::shared_ptr<std::vector<double> > ModelBlock::getOption(IContext *context, const std::string &name)
+boost::shared_ptr<std::vector<double> > ModelBlock::getOption(const std::string &) const
 {
     //in reality: we store/retrieve this option value in our context and then when we are initialized, we set the option values
 
-    if (this->optionBlocks.count(name))
+    /*if (this->optionBlocks.count(name) && this->optionValues.count(name))
     {
-        return context->getStoredValue(this->getId(), name);
-    }
+        return this->optionValues.at(name);
+    }*/
 
     return boost::shared_ptr<std::vector<double> >(); //return null
 }
 
-void ModelBlock::setOption(IContext *context, const std::string &name, boost::shared_ptr<std::vector<double> > value)
+void ModelBlock::setOption(const std::string &, boost::shared_ptr<std::vector<double> >)
 {
     //in reality: we store/retrieve this option value in our context and then when we are initialized, we set the option values
 
-    if (this->optionBlocks.count(name))
+    /*if (this->optionBlocks.count(name))
     {
-        context->setStoredValue(this->getId(), name, value);
-    }
+        this->optionValues[name] = value;
+    }*/
 }
 
-void ModelBlock::initialize(IContext *context)
+const std::map<std::string, boost::shared_ptr<std::vector<double> > > &ModelBlock::getOptions() const
+{
+    return this->optionValues;
+}
+
+bool ModelBlock::initialize(IContext *context, std::string &)
 {
     boost::shared_ptr<IContext> childContext = context->getChildContext(this->getId());
     if (!childContext)
@@ -89,11 +94,13 @@ void ModelBlock::initialize(IContext *context)
     childContext->reset();
 
     //set all the initial values for the entry blocks from our context (our options)
-    typedef std::pair<std::string, std::pair<boost::shared_ptr<IEntryBlock>, boost::shared_ptr<IExitBlock> > > OptionBlock;
+    /*typedef std::pair<std::string, std::pair<boost::shared_ptr<IEntryBlock>, boost::shared_ptr<IExitBlock> > > OptionBlock;
     BOOST_FOREACH( OptionBlock option, this->optionBlocks)
     {
         option.second.first->setOption(childContext.get(), IENTRYBLOCK_OPTION_NAME, context->getStoredValue(this->getId(), option.first));
-    }
+    }*/
+
+    return true;
 }
 
 void ModelBlock::execute(IContext *context, double)
@@ -214,7 +221,7 @@ void ModelBlock::entryAdded(boost::shared_ptr<IEntryBlock> entry)
 
         //create a pair
         this->optionBlocks[entry->getEntryName()] = std::pair<boost::shared_ptr<IEntryBlock>, boost::shared_ptr<IExitBlock> >(entry, exit);
-        this->optionBlockNames.push_back(entry->getEntryName());
+        //this->optionBlockNames.push_back(entry->getEntryName()); //create an option
     }
     else
     {
@@ -236,8 +243,8 @@ void ModelBlock::entryRemoved(boost::shared_ptr<IEntryBlock> entry)
     {
         //create an output from this pair
         std::pair<boost::shared_ptr<IEntryBlock>, boost::shared_ptr<IExitBlock> > option = this->optionBlocks[entry->getEntryName()];
-        std::list<std::string>::iterator iter = std::find(this->optionBlockNames.begin(), this->optionBlockNames.end(), entry->getEntryName());
-        this->optionBlockNames.erase(iter);
+        //std::list<std::string>::iterator iter = std::find(this->optionBlockNames.begin(), this->optionBlockNames.end(), entry->getEntryName());
+        //this->optionBlockNames.erase(iter);
         this->optionBlocks.erase(entry->getEntryName());
 
         //add an output for the exit block
@@ -276,7 +283,7 @@ void ModelBlock::exitAdded(boost::shared_ptr<IExitBlock> exit)
 
         //create a pair
         this->optionBlocks[exit->getExitName()] = std::pair<boost::shared_ptr<IEntryBlock>, boost::shared_ptr<IExitBlock> >(entry, exit);
-        this->optionBlockNames.push_back(exit->getExitName());
+        //this->optionBlockNames.push_back(exit->getExitName());
     }
     else
     {
@@ -298,8 +305,8 @@ void ModelBlock::exitRemoved(boost::shared_ptr<IExitBlock> exit)
     {
         //create an input from this pair
         std::pair<boost::shared_ptr<IEntryBlock>, boost::shared_ptr<IExitBlock> > option = this->optionBlocks[exit->getExitName()];
-        std::list<std::string>::iterator iter = std::find(this->optionBlockNames.begin(), this->optionBlockNames.end(), exit->getExitName());
-        this->optionBlockNames.erase(iter);
+        //std::list<std::string>::iterator iter = std::find(this->optionBlockNames.begin(), this->optionBlockNames.end(), exit->getExitName());
+        //this->optionBlockNames.erase(iter);
         this->optionBlocks.erase(exit->getExitName());
 
         //add an input for the entry block

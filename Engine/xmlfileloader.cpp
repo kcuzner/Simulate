@@ -17,6 +17,7 @@ using namespace rapidxml;
 
 XMLFileLoader::XMLFileLoader()
 {
+    this->lastError = "";
 }
 
 std::string XMLFileLoader::getFileMatchPattern()
@@ -48,12 +49,18 @@ boost::shared_ptr<ISimulation> XMLFileLoader::loadFile(ISimulationCore *core, st
     xml_node<>* simulationNode = doc.first_node("simulation");
 
     if (!simulationNode)
+    {
+        this->lastError = "Missing root <simulation>";
         return boost::shared_ptr<ISimulation>(); //null since there was no simulation
+    }
 
     xml_attribute<>* rootModelNameAttribute = simulationNode->first_attribute("root");
 
     if (!rootModelNameAttribute)
+    {
+        this->lastError = "Missing root model entry point name";
         return boost::shared_ptr<ISimulation>(); //null since no entry point was specified
+    }
 
     std::string rootModelName = rootModelNameAttribute->value();
 
@@ -404,8 +411,9 @@ bool XMLFileLoader::saveFile(ISimulationCore *, boost::shared_ptr<ISimulation> s
     simulation->setFileName(fileName);
 }
 
-std::string XMLFileLoader::getLastError()
+const std::string &XMLFileLoader::getLastError() const
 {
+    return this->lastError;
 }
 
 void XMLFileLoader::appendDataToBlockNode(xml_document<>* doc, rapidxml::xml_node<> *blockNode, boost::shared_ptr<IBlock> block)

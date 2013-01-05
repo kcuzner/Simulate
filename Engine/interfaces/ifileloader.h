@@ -1,7 +1,9 @@
 #ifndef IFILELOADER_H
 #define IFILELOADER_H
 
+#include <exception>
 #include <string>
+
 #include <boost/smart_ptr.hpp>
 
 #include "isimulation.h"
@@ -55,7 +57,7 @@ public:
      * @brief Returns a string describing the last error that occured when saving or loading a file
      * @return
      */
-    virtual std::string getLastError();
+    virtual const std::string& getLastError() const;
 };
 
 #endif // IFILELOADER_H

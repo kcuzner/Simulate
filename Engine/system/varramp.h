@@ -17,7 +17,7 @@ namespace System
          */
         static boost::shared_ptr<VarRamp> generate(long id);
 
-        virtual void initialize(IContext *context);
+        virtual bool initialize(IContext *context, std::string &error);
 
         virtual void execute(IContext *context, double delta);
 

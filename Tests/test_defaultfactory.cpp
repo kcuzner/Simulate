@@ -9,6 +9,8 @@
 #include "model.h"
 #include "simulationcore.h"
 
+#include "xmlfileloader.h"
+
 BOOST_AUTO_TEST_CASE( declareBlocks )
 {
     //if this completes without throwing exceptions, we assume it can declare blocks
@@ -61,12 +63,12 @@ BOOST_AUTO_TEST_CASE( runSimulation )
     boost::shared_ptr<IBlock> block = model->createBlock("Var", "Static");
     boost::shared_ptr<std::vector<double> > value(new std::vector<double>());
     value->push_back(5.5);
-    block->setOption(engine->getContext().get(), "Value", value);
+    block->setOption("Value", value);
 
     boost::shared_ptr<IBlock> block2 = model->createBlock("Var", "Static");
     value = boost::shared_ptr<std::vector<double> >(new std::vector<double>());
     value->push_back(2.0);
-    block2->setOption(engine->getContext().get(), "Value", value);
+    block2->setOption("Value", value);
 
     boost::shared_ptr<IBlock> block3 = model->createBlock("Math", "Multiply");
 
@@ -84,9 +86,15 @@ BOOST_AUTO_TEST_CASE( runSimulation )
     std::cout << std::endl << std::endl;
     boost::shared_ptr<IModel> integration = core->createModel("integration");
 
-    integration->addEntry("Accumulation");
+    value = boost::shared_ptr<std::vector<double> >(new std::vector<double>());
+    value->push_back(1.0);
+    integration->addEntry("Accumulation")->setOption(IENTRYBLOCK_OPTION_NAME, value);
     integration->addExit("Accumulation");
-    integration->addEntry("Input");
+
+    value = boost::shared_ptr<std::vector<double> >(new std::vector<double>());
+    value->push_back(1.0);
+    integration->addEntry("Input")->setOption(IENTRYBLOCK_OPTION_NAME, value); //this needs to be set so no errors are thrown
+
     integration->addExit("Value");
 
     block = integration->createBlock("Math", "Multiply");
@@ -98,29 +106,37 @@ BOOST_AUTO_TEST_CASE( runSimulation )
     BOOST_CHECK(block->connect("Product", integration->getExits().at("Value"), IEXITBLOCK_INPUT_NAME, false));
 
     model = core->createModel("test");
-    engine = core->createEngine(model, 5, 0.1);
+    engine = core->createEngine(model, 2, 0.1);
     block = model->addModel(integration);
     std::cout << "model 1 id " << block->getId() << std::endl;
     if (!block)
         BOOST_FAIL("Returned null creating block from model 1st time.");
 
-    typedef std::pair<std::string, boost::shared_ptr<IBlockOutput> > OutputRecord;
-    BOOST_FOREACH(OutputRecord record, block->getOutputs())
-    {
-        std::cout << record.first << std::endl;
-    }
+    //check out the inputs, outputs, and options for the 1st block
+    BOOST_CHECK_EQUAL(block->getOutputs().count("Value"), 1); //it should have a Value output
+    BOOST_CHECK_EQUAL(block->getOutputs().count("Accumulation"), 0); //it should not have an accumulation output
+    BOOST_CHECK_EQUAL(block->getInputs().count("Input"), 1); //it should have an input input
+    BOOST_CHECK_EQUAL(block->getInputs().count("Accumulation"), 0); //it should not have an accumulation input
+    //BOOST_CHECK(std::find(block->getOptionNames().begin(), block->getOptionNames().end(), "Accumulation") != block->getOptionNames().end()); //it should find accumulation in there
 
     block2 = model->addModel(integration);
     std::cout << "model 2 id " << block2->getId() << std::endl;
     if (!block2)
         BOOST_FAIL("Returned null creating block from model 2nd time.");
 
+    //check out the inputs, outputs, and options for the 2nd block
+    BOOST_CHECK_EQUAL(block2->getOutputs().count("Value"), 1); //it should have a Value output
+    BOOST_CHECK_EQUAL(block2->getOutputs().count("Accumulation"), 0); //it should not have an accumulation output
+    BOOST_CHECK_EQUAL(block2->getInputs().count("Input"), 1); //it should have an input input
+    BOOST_CHECK_EQUAL(block2->getInputs().count("Accumulation"), 0); //it should not have an accumulation input
+    //BOOST_CHECK(std::find(block2->getOptionNames().begin(), block2->getOptionNames().end(), "Accumulation") != block2->getOptionNames().end()); //it should find accumulation in there
+
     block->connect("Value", block2, "Input", true);
     block3 = model->createBlock("Var", "Static");
     std::cout << "static block id " << block3->getId() << std::endl;
     value = boost::shared_ptr<std::vector<double> >(new std::vector<double>());
-    value->push_back(1.001);
-    block3->setOption(engine->getContext().get(), "Value", value);
+    value->push_back(0.5);
+    block3->setOption("Value", value);
     BOOST_CHECK(block3->connect("Output", block, "Input", false));
 
     block = model->addExit("Result");
@@ -131,8 +147,15 @@ BOOST_AUTO_TEST_CASE( runSimulation )
 
     engine->run();
 
-    std::cout << model->getExits().at("Result")->getCurrentValue(engine->getContext().get()) << std::endl;
-    std::cout << model->getExits().at("Result")->getCurrentValue(engine->getContext().get())->at(0) << std::endl;
+    //this computes 1*0.5*0.5*0.5 (2 steps of multiplying the last value by 0.5) and it should come out to 0.125
+    if (model->getExits().at("Result")->getCurrentValue(engine->getContext().get()))
+    {
+        BOOST_CHECK_EQUAL(model->getExits().at("Result")->getCurrentValue(engine->getContext().get())->at(0), 0.125);
+    }
+    else
+    {
+        BOOST_FAIL("Null result in cascading modelblock test");
+    }
 }
 
 

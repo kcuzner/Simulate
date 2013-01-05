@@ -1,5 +1,7 @@
 #include "varramp.h"
 
+#include <sstream>
+
 using namespace System;
 
 
@@ -18,9 +20,22 @@ boost::shared_ptr<VarRamp> VarRamp::generate(long id)
     return boost::shared_ptr<VarRamp>(new VarRamp(id));
 }
 
-void VarRamp::initialize(IContext *context)
+bool VarRamp::initialize(IContext *context, std::string& error)
 {
-    context->setStoredValue(this->getId(), "Value", context->getStoredValue(this->getId(), "Starting Value"));
+    if (!this->getOption("Positive Slope") ||
+            !this->getOption("Negative Slope") ||
+            !this->getOption("Low Value") ||
+            !this->getOption("High Value") ||
+            !this->getOption("Starting Value"))
+    {
+        std::stringstream s;
+        s << "Not all options specified for Var.Ramp " << this->getId();
+        error = s.str();
+        return false;
+    }
+
+    context->setStoredValue(this->getId(), "Value", this->getOption("Starting Value"));
+    return true;
 }
 
 void VarRamp::execute(IContext *context, double delta)
@@ -43,15 +58,15 @@ void VarRamp::execute(IContext *context, double delta)
 
     double current = value->at(0);
 
-    if (current <= context->getStoredValue(this->getId(), "Low Value")->at(0))
+    if (current <= context->getOption(this->getId(), "Low Value")->at(0))
     {
         //high slope time
-        current += context->getStoredValue(this->getId(), "Positive Slope")->at(0) * delta;
+        current += context->getOption(this->getId(), "Positive Slope")->at(0) * delta;
     }
-    else if (current >= context->getStoredValue(this->getId(), "High Value")->at(0))
+    else if (current >= context->getOption(this->getId(), "High Value")->at(0))
     {
         //low slope time
-        current -= context->getStoredValue(this->getId(), "Negative Slope")->at(0) * delta;
+        current -= context->getOption(this->getId(), "Negative Slope")->at(0) * delta;
     }
 
     (*value)[0] = current;

@@ -25,16 +25,18 @@ public:
      * @param name Name of the option to get
      * @return Option value
      */
-    virtual boost::shared_ptr<std::vector<double> > getOption(IContext* context, const std::string& name);
+    virtual boost::shared_ptr<std::vector<double> > getOption(const std::string&) const;
     /**
      * @brief Options for a ModelBlock are the initial values of the entry/exit pairs that are looped around when a model is executed
      * @param name Name of the option to set
      * @param value Value to set
      */
-    virtual void setOption(IContext* context, const std::string& name, boost::shared_ptr<std::vector<double> > value);
+    virtual void setOption(const std::string&, boost::shared_ptr<std::vector<double> >);
+
+    virtual const std::map<std::string, boost::shared_ptr<std::vector<double> > >& getOptions() const;
 
 
-    virtual void initialize(IContext* context);
+    virtual bool initialize(IContext* context, std::string&);
 
     virtual void execute(IContext* context, double);
 
@@ -63,6 +65,8 @@ private:
     boost::shared_ptr<IModel> model;
 
     std::map<std::string, std::string> data;
+
+    std::map<std::string, boost::shared_ptr<std::vector<double> > > optionValues;
 
     std::map<std::string, boost::shared_ptr<IBlockInput> > inputs;
     std::map<std::string, boost::shared_ptr<IBlockOutput> > outputs;

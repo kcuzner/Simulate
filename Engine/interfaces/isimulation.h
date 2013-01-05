@@ -14,14 +14,14 @@ class ISimulation
 public:
     virtual ~ISimulation() {}
 
-    virtual bool isFileNameSet() = 0;
+    virtual bool isFileNameSet() const = 0;
     virtual void setFileName(const std::string& fileName) = 0;
-    virtual const std::string& getFileName() = 0;
+    virtual const std::string& getFileName() const = 0;
 
-    virtual int getSteps() = 0;
+    virtual int getSteps() const = 0;
     virtual void setSteps(int steps) = 0;
 
-    virtual double getDelta() = 0;
+    virtual double getDelta() const = 0;
     virtual void setDelta(double delta) = 0;
 
     virtual boost::shared_ptr<IModel> getRootModel() = 0;

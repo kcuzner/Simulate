@@ -21,15 +21,15 @@ public:
 
     virtual void reset();
 
-    virtual boost::shared_ptr<std::vector<double> > getInputValue(int blockId, const std::string& name);
+    virtual boost::shared_ptr<std::vector<double> > getInputValue(long blockId, const std::string& name);
 
-    virtual void setOutputValue(int blockId, const std::string& name, boost::shared_ptr<std::vector<double> > value);
+    virtual void setOutputValue(long blockId, const std::string& name, boost::shared_ptr<std::vector<double> > value);
 
-    virtual boost::shared_ptr<std::vector<double> > getStoredValue(int blockId, const std::string& name);
+    virtual boost::shared_ptr<std::vector<double> > getStoredValue(long blockId, const std::string& name);
 
-    virtual void setStoredValue(int blockId, const std::string& name, boost::shared_ptr<std::vector<double> > value);
+    virtual void setStoredValue(long blockId, const std::string& name, boost::shared_ptr<std::vector<double> > value);
 
-    //virtual boost::weak_ptr<IContext> getParent();
+    virtual boost::shared_ptr<std::vector<double> > getOption(long blockId, const std::string &name);
 
     virtual boost::shared_ptr<IContext> createChildContext(long blockId, boost::shared_ptr<IModel>);
 
@@ -47,6 +47,14 @@ protected:
     void cacheBlockIO(const boost::shared_ptr<IBlock>& block);
 
     /**
+     * @brief Caches the options for the passed block in preparation for simulation.
+     * This should only be called at the start of a simulation or when the context
+     * is constructed;
+     * @param block
+     */
+    void cacheBlockOptions(const boost::shared_ptr<IBlock>& block);
+
+    /**
      * @brief Prepares the context for a step
      */
     void prepare();
@@ -55,7 +63,7 @@ protected:
      * @brief Queues the block with the given id for execution
      * @param blockId
      */
-    void queueBlock(int blockId);
+    void queueBlock(long blockId);
 
     /**
      * @brief Sets the inputs attached to the passed output to the given value
@@ -69,7 +77,7 @@ protected:
      * @param blockId
      * @return
      */
-    bool areAllCachedInputsSet(int blockId);
+    bool areAllCachedInputsSet(long blockId);
 
     /**
      * @brief Cache of inputs/outputs for a block created when the simulation starts
@@ -82,13 +90,16 @@ protected:
     };
 
     //key: block id
-    std::map<int, boost::shared_ptr<BlockIOCache> > ioCache;
+    std::map<long, boost::shared_ptr<BlockIOCache> > ioCache;
 
     //key: block id
-    std::queue<int> executionQueue;
+    std::queue<long> executionQueue;
 
     //key: block id
-    std::map<int, std::map<std::string, boost::shared_ptr<std::vector<double> > > > storedValues;
+    std::map<long, std::map<std::string, boost::shared_ptr<std::vector<double> > > > storedValues;
+
+    //key: block id
+    std::map<long, std::map<std::string, boost::shared_ptr<std::vector<double> > > > optionValues;
 
     //child contexts. key: block id
     std::map<long, boost::shared_ptr<IContext> > childContexts;

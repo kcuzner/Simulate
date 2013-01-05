@@ -15,10 +15,11 @@ public:
 
     virtual const std::list<std::string>& getOptionNames();
 
-    virtual boost::shared_ptr<std::vector<double> > getOption(IContext* context, const std::string &name);
-    virtual void setOption(IContext*, const std::string &, boost::shared_ptr<std::vector<double> > );
+    virtual boost::shared_ptr<std::vector<double> > getOption(const std::string &) const;
+    virtual void setOption(const std::string &, boost::shared_ptr<std::vector<double> > );
+    virtual const std::map<std::string, boost::shared_ptr<std::vector<double> > >& getOptions() const;
 
-    virtual void initialize(IContext*);
+    virtual bool initialize(IContext*, std::string&);
 
     virtual void execute(IContext *context, double delta);
 
@@ -42,6 +43,7 @@ protected:
     std::map<std::string, std::string> data;
 
     std::list<std::string> options; //there should only end up being no options here
+    std::map<std::string, boost::shared_ptr<std::vector<double> > > optionValues;
 
     std::map<std::string, boost::shared_ptr<IBlockInput> > inputs;
     std::map<std::string, boost::shared_ptr<IBlockOutput> > outputs;

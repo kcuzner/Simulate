@@ -1,5 +1,7 @@
 #include "entryblock.h"
 
+#include <sstream>
+
 #include "baseblockoutput.h"
 
 EntryBlock::EntryBlock(long id, std::string name)
@@ -34,29 +36,47 @@ const std::list<std::string> &EntryBlock::getOptionNames()
     return this->options;
 }
 
-boost::shared_ptr<std::vector<double> > EntryBlock::getOption(IContext *context, const std::string &name)
+boost::shared_ptr<std::vector<double> > EntryBlock::getOption(const std::string &name) const
 {
     if (name != IENTRYBLOCK_OPTION_NAME)
         return boost::shared_ptr<std::vector<double> >();
 
-    return context->getStoredValue(this->getId(), IENTRYBLOCK_OPTION_NAME);
+    return this->optionValues.at(IENTRYBLOCK_OPTION_NAME);
 }
 
-void EntryBlock::setOption(IContext *context, const std::string &name, boost::shared_ptr<std::vector<double> > value)
+void EntryBlock::setOption(const std::string &name, boost::shared_ptr<std::vector<double> > value)
 {
     if (name == IENTRYBLOCK_OPTION_NAME)
     {
-        context->setStoredValue(this->getId(), IENTRYBLOCK_OPTION_NAME, value);
+        this->optionValues[IENTRYBLOCK_OPTION_NAME] = value;
     }
 }
 
-void EntryBlock::initialize(IContext *context)
+const std::map<std::string, boost::shared_ptr<std::vector<double> > > &EntryBlock::getOptions() const
 {
-    context->setStoredValue(this->getId(), "Value", context->getStoredValue(this->getId(), IENTRYBLOCK_OPTION_NAME));
+    return this->optionValues;
+}
+
+bool EntryBlock::initialize(IContext *context, std::string& error)
+{
+    if (this->optionValues.count(IENTRYBLOCK_OPTION_NAME) == 0)
+    {
+        //we need an initial value...
+        std::stringstream s;
+        s << "No initial value specified for EntryBlock " << this->getId() << " (" << this->getEntryName() << ")";
+        error = s.str();
+        return false;
+    }
+
+    //we copy our option into the stored values since later it is set on a per-context basis (setCurrentValue)
+    context->setStoredValue(this->getId(), "Value", this->getOption(IENTRYBLOCK_OPTION_NAME));
+
+    return true;
 }
 
 void EntryBlock::execute(IContext *context, double)
 {
+    //note that this is NOT copying the option to the output: it is copying the current value to the output
     context->setOutputValue(this->getId(), IENTRYBLOCK_OUTPUT_NAME, context->getStoredValue(this->getId(), "Value"));
 }
 

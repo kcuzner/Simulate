@@ -38,16 +38,22 @@ void DefaultContext::reset()
     std::map<int, boost::shared_ptr<IBlock> > blocks = this->model->getBlocks();
 
     std::map<int, boost::shared_ptr<IBlock> >::const_iterator iter;
+    std::string errorMessage;
     for(iter = blocks.begin(); iter != blocks.end(); iter++)
     {
         //cache the IO on the block
         this->cacheBlockIO((*iter).second);
+        //cache the options for the block
+        this->cacheBlockOptions((*iter).second);
         //initialize the block to this context
-        (*iter).second->initialize(this);
+        if (!(*iter).second->initialize(this, errorMessage))
+        {
+            //errorMessage contains some information about why this failed
+        }
     }
 }
 
-boost::shared_ptr<std::vector<double> > DefaultContext::getInputValue(int blockId, const std::string &name)
+boost::shared_ptr<std::vector<double> > DefaultContext::getInputValue(long blockId, const std::string &name)
 {
     //find the block cache
     if (this->ioCache.count(blockId))
@@ -64,7 +70,7 @@ boost::shared_ptr<std::vector<double> > DefaultContext::getInputValue(int blockI
     return boost::shared_ptr<std::vector<double> >();
 }
 
-void DefaultContext::setOutputValue(int blockId, const std::string &name, boost::shared_ptr<std::vector<double> > value)
+void DefaultContext::setOutputValue(long blockId, const std::string &name, boost::shared_ptr<std::vector<double> > value)
 {
     //find the block cache
     if (this->ioCache.count(blockId))
@@ -82,7 +88,7 @@ void DefaultContext::setOutputValue(int blockId, const std::string &name, boost:
     }
 }
 
-boost::shared_ptr<std::vector<double> > DefaultContext::getStoredValue(int blockId, const std::string &name)
+boost::shared_ptr<std::vector<double> > DefaultContext::getStoredValue(long blockId, const std::string &name)
 {
     if (this->storedValues.count(blockId))
     {
@@ -94,9 +100,22 @@ boost::shared_ptr<std::vector<double> > DefaultContext::getStoredValue(int block
     return boost::shared_ptr<std::vector<double> >();
 }
 
-void DefaultContext::setStoredValue(int blockId, const std::string &name, boost::shared_ptr<std::vector<double> > value)
+void DefaultContext::setStoredValue(long blockId, const std::string &name, boost::shared_ptr<std::vector<double> > value)
 {
     this->storedValues[blockId][name] = value;
+}
+
+boost::shared_ptr<std::vector<double> > DefaultContext::getOption(long blockId, const std::string &name)
+{
+    if (this->optionValues.count(blockId))
+    {
+        if (this->optionValues.at(blockId).count(name))
+        {
+            return this->optionValues.at(blockId).at(name);
+        }
+    }
+
+    return boost::shared_ptr<std::vector<double> >();
 }
 
 boost::shared_ptr<IContext> DefaultContext::createChildContext(long blockId, boost::shared_ptr<IModel> model)
@@ -169,9 +188,14 @@ void DefaultContext::cacheBlockIO(const boost::shared_ptr<IBlock>& block)
     this->ioCache[block->getId()] = cache;
 }
 
+void DefaultContext::cacheBlockOptions(const boost::shared_ptr<IBlock> &block)
+{
+    this->optionValues[block->getId()] = block->getOptions();
+}
+
 void DefaultContext::prepare()
 {
-    std::map<int, boost::shared_ptr<BlockIOCache> >::iterator iter;
+    std::map<long, boost::shared_ptr<BlockIOCache> >::iterator iter;
     for(iter = this->ioCache.begin(); iter != this->ioCache.end(); iter++)
     {
         boost::shared_ptr<BlockIOCache> cache = (*iter).second;
@@ -186,7 +210,7 @@ void DefaultContext::prepare()
     }
 }
 
-void DefaultContext::queueBlock(int blockId)
+void DefaultContext::queueBlock(long blockId)
 {
     this->executionQueue.push(blockId);
 }
@@ -206,7 +230,12 @@ void DefaultContext::setAttachedInputs(boost::shared_ptr<IBlockOutput> output, b
             {
                 this->ioCache[input->getBlockId()]->inputValues[input->getName()] = value;
 
-                std::cout << "input " << input->getName() << " for block " << input->getBlockId() << " set" << std::endl;
+                std::cout << "input " << input->getName() << " for block " << input->getBlockId() << " set to ";
+                if (value)
+                    std::cout << value->at(0);
+                else
+                    std::cout << " NULL";
+                std::cout << std::endl;
 
                 //if all the cached inputs are set we queue this for execution
                 if (this->areAllCachedInputsSet(input->getBlockId()))
@@ -218,7 +247,7 @@ void DefaultContext::setAttachedInputs(boost::shared_ptr<IBlockOutput> output, b
     }
 }
 
-bool DefaultContext::areAllCachedInputsSet(int blockId)
+bool DefaultContext::areAllCachedInputsSet(long blockId)
 {
     //if is no cache, this block has all its cached inputs set since there are no cached inputs
     if (this->ioCache.count(blockId))

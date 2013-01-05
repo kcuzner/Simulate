@@ -47,6 +47,51 @@ In a context, running each individual block is accomplished as follows:
     all the inputs for the block to be assigned, queue the block for
     execution.
 
+Data storage and reasoning
+--------------------------
+
+Different types of data are stored different places and erased at different
+times. To keep this straight, this is a list of data types, their locations,
+and lifetimes.
+
+ * Block input values
+   * *Type:* Shared pointer to vector of doubles
+   * *Stored:* The local context
+   * *Lifetime:* Until the block is next allowed to execute.
+   * *Why:* Inputs must be local to a context since the same block executed
+     in multiple contexts may have different inputs coming in for each
+     context.
+ * Block option values
+   * *Type:* Shared pointer to vector of doubles (to match input value type)
+   * *Stored:* The block itself, global to all contexts
+   * *Lifetime:* Life of the block. Should be stored in the saved file as well
+   * *Why:* Options should be used for things that are specific to the usage
+     of the block in the model. Options won't change based on the context
+     since no matter how the model is used the options should remain the same.
+     ModelBlocks should make the entries & exits of their model their options
+     and these can be set on a per-modelblock basis (not in the context, in
+     ModelBlock itself) since that is a specific usage of the "block". The
+     blocks in the model referenced by the ModelBlock will have their options
+     remain the same no matter how many times the model is used as a block and
+     where it is used. Thus, options can be stored on a per-block level.
+   * *Implementation:* When the context initializes the block, these should be
+     copied by the context into itself and then the execute() method should
+     access them only through the context. This encourages thread safety so
+     that the individual block implementations don't have to worry about their
+     safety.
+ * Symbolic variables (not yet implemented, planned)
+   * *Type:* Double
+   * *Stored:* Somewhere that all blocks can access them through their
+     contexts. Maybe on the simulation level?
+   * *Lifetime:* Life of the simulation. Should be stored in the saved file as
+     well.
+   * *Why:* Symbolic variables should be thought of the "settings" for the
+     simulation. Blocks using these variables should check for their existence
+     and then deliver an error of some sort that they need to be defined. This
+     allows models imported from other simulations to be used without fear of
+     undefined variables since the user will be informed of the additional
+     variables that need to be defined.
+
 To do list
 ----------
 
@@ -65,7 +110,12 @@ To do list
   * The DefaultContext 
  * Resolve whether or not block ids are longs or int. Make this consistent
  * Make a triggering mechanism for blocks so they don't always have to be executed.
+   * Individual blocks are given triggers. A trigger simply says whether or
+     not the block should be executed during the step. If it isn't executed,
+     its outputs should be set again to the value that they had the previous
+     step. If it is executed, things should procede as normal.
  * Change models to be identified by a UUID and a readable name.
+ * Make simulation-level global variables.
  * Build a loader (possibly a separate qt plugin...at least make the interface)
   * The sequence for loading:
     1) Scan the file for all model definitions

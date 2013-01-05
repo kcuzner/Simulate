@@ -58,23 +58,33 @@ public:
     virtual const std::list<std::string>& getOptionNames() = 0;
 
     /**
-     * @brief Returns a block option value
+     * @brief Returns a block option value. THIS SHOULD NOT BE USED DURING execute()!!!
+     * IContext::getOption should be used instead. This prevents thread safety issues
+     * by delegating that responsibility to the context
      * @param name Name of the option
      * @return
      */
-    virtual boost::shared_ptr<std::vector<double> > getOption(IContext* context, const std::string& name) = 0;
+    virtual boost::shared_ptr<std::vector<double> > getOption(const std::string& name) const = 0;
     /**
      * @brief Sets a block option value
      * @param name Name of the option
      * @param value Value of the option
      */
-    virtual void setOption(IContext* context, const std::string& name, boost::shared_ptr<std::vector<double> > value) = 0;
+    virtual void setOption(const std::string& name, boost::shared_ptr<std::vector<double> > value) = 0;
+
+    /**
+     * @brief Returns the keys and values for all options in this block
+     * @return
+     */
+    virtual const std::map<std::string, boost::shared_ptr<std::vector<double> > >& getOptions() const = 0;
 
     /**
      * @brief Initializes the context to this block. This will be called each time the context is reset the first step.
      * @param context Context to initialize
+     * @param error String that should be populated with an error message if this fails
+     * @return False if the block isn't properly set up
      */
-    virtual void initialize(IContext* context) = 0;
+    virtual bool initialize(IContext* context, std::string &error) = 0;
 
     /**
      * @brief Called to ask the block to execute

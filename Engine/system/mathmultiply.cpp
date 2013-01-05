@@ -1,5 +1,7 @@
 #include "mathmultiply.h"
 
+#include <sstream>
+
 using namespace System;
 
 MathMultiply::MathMultiply(long id)
@@ -16,16 +18,23 @@ boost::shared_ptr<MathMultiply> MathMultiply::generate(long id)
     return boost::shared_ptr<MathMultiply>(new MathMultiply(id));
 }
 
-void MathMultiply::initialize(IContext *)
+bool MathMultiply::initialize(IContext *, std::string &)
 {
+    return true;
 }
 
 void MathMultiply::execute(IContext *context, double)
 {
-    double value = context->getInputValue(this->getId(), "Multiplicand 1")->at(0) * context->getInputValue(this->getId(), "Multiplicand 2")->at(0);
+    boost::shared_ptr<std::vector<double> > multiplicand1 = context->getInputValue(this->getId(), "Multiplicand 1");
+    boost::shared_ptr<std::vector<double> > multiplicand2 = context->getInputValue(this->getId(), "Multiplicand 2");
+    if (multiplicand1 && multiplicand2)
+    {
+        //only if we find non-null values for both do we set the product
+        double value = context->getInputValue(this->getId(), "Multiplicand 1")->at(0) * context->getInputValue(this->getId(), "Multiplicand 2")->at(0);
 
-    boost::shared_ptr<std::vector<double> > result(new std::vector<double>());
-    result->push_back(value);
+        boost::shared_ptr<std::vector<double> > result(new std::vector<double>());
+        result->push_back(value);
 
-    context->setOutputValue(this->getId(), "Product", result);
+        context->setOutputValue(this->getId(), "Product", result);
+    }
 }
