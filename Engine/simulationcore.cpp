@@ -6,6 +6,8 @@
 #include "simulation.h"
 #include "xmlfileloader.h"
 
+#include "system/systemblocks.h"
+
 #include <boost/foreach.hpp>
 #include <boost/regex.hpp>
 
@@ -14,6 +16,10 @@
 SimulationCore::SimulationCore()
 {
     this->blockFactory = DefaultBlockFactory::getInstance();
+
+    //add the system blocks
+    boost::shared_ptr<IBlockCollection> systemBlocks(new System::SystemBlocks());
+    this->addBlockCollection(systemBlocks);
 
     //add the simple engine type and set us to use it
     this->addEngineType("simple", SimpleEngine::generate);

@@ -125,7 +125,8 @@ boost::shared_ptr<IBlock> Model::createBlock(int id, const std::string &group, c
 
     boost::shared_ptr<IBlock> block(this->factory->generateBlock(id, group, name));
 
-    this->blocks[block->getId()] = block;
+    if (block)
+        this->blocks[block->getId()] = block;
 
     return block;
 }
@@ -157,8 +158,11 @@ boost::shared_ptr<IModelBlock> Model::addModel(int id, boost::shared_ptr<IModel>
 
     boost::shared_ptr<IModelBlock> modelBlock(this->factory->generateModelBlock(id, model));
 
-    this->blocks[modelBlock->getId()] = modelBlock;
-    this->modelBlocks[modelBlock->getId()] = modelBlock;
+    if (modelBlock)
+    {
+        this->blocks[modelBlock->getId()] = modelBlock;
+        this->modelBlocks[modelBlock->getId()] = modelBlock;
+    }
 
     return modelBlock;
 }

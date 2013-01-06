@@ -1,55 +1,52 @@
 #include <QCoreApplication>
 
-#include "model.h"
-#include "defaultblockfactory.h"
-#include "simpleengine.h"
-
-#include "system/systemblocks.h"
+#include "simulationcore.h"
 
 #include <iostream>
 
-void onStepCompleted(boost::shared_ptr<IModel>, int, int);
+void displayHelp();
 
 int main(int argc, char *argv[])
 {
-    //QCoreApplication a(argc, argv);
+    if (argc < 2)
+    {
+        std::cout << "Error: Too few arguments" << std::endl;
+        displayHelp();
+        return -1;
+    }
 
-    std::cout << "Creating system blocks container" << std::endl;
-    boost::shared_ptr<System::SystemBlocks> systemBlocks(new System::SystemBlocks());
+    //load all the plugins in the plugin folder
 
-    std::cout << "Declaring blocks" << std::endl;
-    systemBlocks->declareToFactory(DefaultBlockFactory::getInstance());
+    //process the command line arguments
 
-    boost::shared_ptr<Model> model(new Model(DefaultBlockFactory::getInstance()));
+    //load the simulation they want us to load
+    boost::shared_ptr<ISimulation> simulation = SimulationCore::getInstance()->loadSimulation(argv[argc-1]);
+    if (!simulation)
+    {
+        std::cout << "Error: Could not load simulation. Last error: " << SimulationCore::getInstance()->getLastFileError();
+        return -1;
+    }
 
-    boost::shared_ptr<IBlock> block = model->createBlock("Var", "Static");
+    //set up the simulation
+    boost::shared_ptr<IEngine> engine = SimulationCore::getInstance()->createEngine(simulation);
 
-    boost::shared_ptr<IEngine> engine(new SimpleEngine(model, 20, 0.001));
-    boost::shared_ptr<std::vector<double> > value(new std::vector<double>());
-    value->push_back(1.587);
+    std::cout << "Running " << argv[argc-1] << ":" << std::endl;
+    std::cout << "\tSteps: " << engine->getStepsToRun() << std::endl;
+    std::cout << "\tDelta: " << engine->getStepDelta() << std::endl;
 
-    block->setOption(engine->getContext().get(), "Value", value);
-
-    std::cout << block->getOption(engine->getContext().get(), "Value");
-
-    boost::shared_ptr<IExitBlock> exit = model->addExit("Output");
-
-    block->connect("Output", exit, IEXITBLOCK_INPUT_NAME, true);
-
-    engine->sigStepCompleted.connect(&onStepCompleted);
-
+    //run the simulation
+    std::cout << "\nRunning simulation..." << std::endl;
     engine->run();
 
-    std::cout << exit->getCurrentValue(engine->getContext().get()) << std::endl;
-
-    std::cout << "All done" << std::endl;
+    std::cout << "Simulation finished." << std::endl;
 
     return 0;
-    
-    //return a.exec();
 }
 
-void onStepCompleted(boost::shared_ptr<IModel>, int s, int)
+void displayHelp()
 {
-    std::cout << "Step " << s << " completed" << std::endl;
+    std::cout << "Simulate CLI" << std::endl;
+    std::cout << "Usage:\n\tsimulate-cli [options] file.simx" << std::endl;
+    std::cout << "Options:\n\t-h\t\tShows this message" << std::endl;
+    std::cout << "\t-e [name]\tUses the specified engine" << std::endl;
 }
