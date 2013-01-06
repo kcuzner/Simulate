@@ -29,6 +29,7 @@ protected:
 
     void appendDataToBlockNode(rapidxml::xml_document<>* doc, rapidxml::xml_node<>* blockNode, boost::shared_ptr<IBlock> block);
     void attachConnectionsToModel(rapidxml::xml_document<>* doc, rapidxml::xml_node<>* modelNode, char *id, boost::shared_ptr<IBlock> block);
+    void readBlockData(rapidxml::xml_node<>* blockNode, boost::shared_ptr<IBlock> block);
 };
 
 #endif // XMLLOADER_H

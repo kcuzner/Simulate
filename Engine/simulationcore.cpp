@@ -4,20 +4,29 @@
 #include "simpleengine.h"
 #include "model.h"
 #include "simulation.h"
+#include "xmlfileloader.h"
 
 #include <boost/foreach.hpp>
 #include <boost/regex.hpp>
+
+#include <iostream>
 
 SimulationCore::SimulationCore()
 {
     this->blockFactory = DefaultBlockFactory::getInstance();
 
+    //add the simple engine type and set us to use it
     this->addEngineType("simple", SimpleEngine::generate);
     this->setEngineType("simple");
 
+    //add the normal model generator and set us to use it
     boost::shared_ptr<IModelGenerator> modelGenerator(new ModelGenerator());
     this->addModelType(modelGenerator);
     this->setModelType(modelGenerator->getModelTypeName());
+
+    //add the simx file format
+    boost::shared_ptr<IFileLoader> simxLoader(new XMLFileLoader());
+    this->addFileLoader(simxLoader);
 }
 
 boost::shared_ptr<SimulationCore> SimulationCore::instance;
@@ -50,6 +59,11 @@ boost::shared_ptr<IEngine> SimulationCore::createEngine(const std::string &name,
 boost::shared_ptr<IEngine> SimulationCore::createEngine(boost::shared_ptr<IModel> model, int steps, double delta)
 {
     return this->createEngine(this->engineType, model, steps, delta);
+}
+
+boost::shared_ptr<IEngine> SimulationCore::createEngine(boost::shared_ptr<ISimulation> simulation)
+{
+    return this->createEngine(this->engineType, simulation->getRootModel(), simulation->getSteps(), simulation->getDelta());
 }
 
 void SimulationCore::setEngineType(const std::string &typeName)
@@ -109,7 +123,7 @@ boost::shared_ptr<ISimulation> SimulationCore::loadSimulation(const std::string 
     BOOST_FOREACH(LoaderRecord loaderRecord, this->fileLoaders)
     {
         boost::regex r(loaderRecord.first);
-        if (boost::regex_match(fileName, r))
+        if (boost::regex_search(fileName, r))
         {
             loader = loaderRecord.second;
             break;
@@ -119,7 +133,13 @@ boost::shared_ptr<ISimulation> SimulationCore::loadSimulation(const std::string 
     if (loader)
     {
         //we found one!
-        return loader->loadFile(this, fileName);
+        boost::shared_ptr<ISimulation> simulation = loader->loadFile(this, fileName);
+        if (!simulation)
+        {
+            this->lastFileError = loader->getLastError();
+        }
+
+        return simulation;
     }
 
     //if we made it this far, we couldn't load the file
@@ -134,7 +154,7 @@ bool SimulationCore::saveSimulation(boost::shared_ptr<ISimulation> simulation, c
     BOOST_FOREACH(LoaderRecord loaderRecord, this->fileLoaders)
     {
         boost::regex r(loaderRecord.first);
-        if (boost::regex_match(fileName, r))
+        if (boost::regex_search(fileName, r))
         {
             loader = loaderRecord.second;
             break;
@@ -144,7 +164,15 @@ bool SimulationCore::saveSimulation(boost::shared_ptr<ISimulation> simulation, c
     if (loader)
     {
         //we found one!
-        return loader->saveFile(this, simulation, fileName);
+        if (loader->saveFile(this, simulation, fileName))
+        {
+            return true;
+        }
+        else
+        {
+            this->lastFileError = loader->getLastError();
+            return false;
+        }
     }
 
     //if we made it this far, we couldn't load the file

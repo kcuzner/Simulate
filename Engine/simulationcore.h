@@ -24,6 +24,7 @@ public:
 
     virtual boost::shared_ptr<IEngine> createEngine(const std::string& name, boost::shared_ptr<IModel> model, int steps, double delta);
     virtual boost::shared_ptr<IEngine> createEngine(boost::shared_ptr<IModel> model, int steps, double delta);
+    virtual boost::shared_ptr<IEngine> createEngine(boost::shared_ptr<ISimulation> simulation);
 
     virtual void setEngineType(const std::string &typeName);
 
@@ -82,6 +83,8 @@ private:
     std::map<std::string, boost::shared_ptr<IModelGenerator> > modelTypes;
 
     std::map<std::string, boost::shared_ptr<IFileLoader> > fileLoaders; //loaders sorted by match regex
+
+    std::string lastFileError;
 
 };
 

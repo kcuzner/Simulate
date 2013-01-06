@@ -52,6 +52,64 @@ BOOST_AUTO_TEST_CASE( instantiateBlocks )
     }
 }
 
+
+BOOST_AUTO_TEST_CASE( instantiateModelBlock )
+{
+    boost::shared_ptr<IModel> model = SimulationCore::getInstance()->createModel("inside");
+
+    model->addEntry("Entry 1");
+    model->addEntry("Entry 2");
+
+    model->addExit("Exit 1");
+    model->addExit("Exit 2");
+    model->addExit("Exit 3");
+
+    boost::shared_ptr<IModel> root = SimulationCore::getInstance()->createModel("root");
+
+    //test creating a block
+    boost::shared_ptr<IModelBlock> modelBlock = root->addModel(model);
+
+    std::map<std::string, boost::shared_ptr<IBlockInput> > inputs = modelBlock->getInputs();
+
+    BOOST_CHECK(inputs.count("Entry 1"));
+    BOOST_CHECK(inputs.count("Entry 2"));
+
+    std::map<std::string, boost::shared_ptr<IBlockOutput> > outputs = modelBlock->getOutputs();
+
+    BOOST_CHECK(outputs.count("Exit 1"));
+    BOOST_CHECK(outputs.count("Exit 2"));
+    BOOST_CHECK(outputs.count("Exit 3"));
+
+    //test adding new inputs
+    model->addEntry("Added entry");
+
+    inputs = modelBlock->getInputs();
+
+    BOOST_CHECK(inputs.count("Added entry"));
+
+    //test removing an existing input
+    model->removeEntry("Entry 2");
+
+    inputs = modelBlock->getInputs();
+
+    BOOST_CHECK(!inputs.count("Entry 2"));
+
+    //test added new outputs
+    model->addExit("Added exit");
+
+    outputs = modelBlock->getOutputs();
+
+    BOOST_CHECK(outputs.count("Added exit"));
+
+    //test removing an existing output
+    model->removeExit("Exit 2");
+
+    outputs = modelBlock->getOutputs();
+
+    BOOST_CHECK(!outputs.count("Exit 2"));
+
+}
+
 BOOST_AUTO_TEST_CASE( runSimulation )
 {
     boost::shared_ptr<ISimulationCore> core = SimulationCore::getInstance();
@@ -158,60 +216,108 @@ BOOST_AUTO_TEST_CASE( runSimulation )
     }
 }
 
-
-BOOST_AUTO_TEST_CASE( instantiateModelBlock )
+BOOST_AUTO_TEST_CASE( SimxTest )
 {
-    boost::shared_ptr<IModel> model = SimulationCore::getInstance()->createModel("inside");
+    //first test creating a simulation and saving it
+    boost::shared_ptr<ISimulationCore> core = SimulationCore::getInstance();
 
-    model->addEntry("Entry 1");
-    model->addEntry("Entry 2");
+    boost::shared_ptr<IModel> integration = core->createModel("integration");
 
-    model->addExit("Exit 1");
-    model->addExit("Exit 2");
-    model->addExit("Exit 3");
+    boost::shared_ptr<std::vector<double> > value = boost::shared_ptr<std::vector<double> >(new std::vector<double>());
+    value->push_back(1.0);
+    integration->addEntry("Accumulation")->setOption(IENTRYBLOCK_OPTION_NAME, value);
+    integration->addExit("Accumulation");
 
-    boost::shared_ptr<IModel> root = SimulationCore::getInstance()->createModel("root");
+    value = boost::shared_ptr<std::vector<double> >(new std::vector<double>());
+    value->push_back(1.0);
+    integration->addEntry("Input")->setOption(IENTRYBLOCK_OPTION_NAME, value); //this needs to be set so no errors are thrown
 
-    //test creating a block
-    boost::shared_ptr<IModelBlock> modelBlock = root->addModel(model);
+    integration->addExit("Value");
 
-    std::map<std::string, boost::shared_ptr<IBlockInput> > inputs = modelBlock->getInputs();
+    boost::shared_ptr<IBlock> block = integration->createBlock("Math", "Multiply");
 
-    BOOST_CHECK(inputs.count("Entry 1"));
-    BOOST_CHECK(inputs.count("Entry 2"));
+    BOOST_CHECK(integration->getEntries().at("Accumulation")->connect(IENTRYBLOCK_OUTPUT_NAME, block, "Multiplicand 1", false));
+    BOOST_CHECK(integration->getEntries().at("Input")->connect(IENTRYBLOCK_OUTPUT_NAME, block, "Multiplicand 2", false));
 
-    std::map<std::string, boost::shared_ptr<IBlockOutput> > outputs = modelBlock->getOutputs();
+    BOOST_CHECK(block->connect("Product", integration->getExits().at("Accumulation"), IEXITBLOCK_INPUT_NAME, false));
+    BOOST_CHECK(block->connect("Product", integration->getExits().at("Value"), IEXITBLOCK_INPUT_NAME, false));
 
-    BOOST_CHECK(outputs.count("Exit 1"));
-    BOOST_CHECK(outputs.count("Exit 2"));
-    BOOST_CHECK(outputs.count("Exit 3"));
+    boost::shared_ptr<IModel> model = core->createModel("test");
+    block = model->addModel(integration);
+    std::cout << "model 1 id " << block->getId() << std::endl;
+    if (!block)
+        BOOST_FAIL("Returned null creating block from model 1st time.");
 
-    //test adding new inputs
-    model->addEntry("Added entry");
+    //check out the inputs, outputs, and options for the 1st block
+    BOOST_CHECK_EQUAL(block->getOutputs().count("Value"), 1); //it should have a Value output
+    BOOST_CHECK_EQUAL(block->getOutputs().count("Accumulation"), 0); //it should not have an accumulation output
+    BOOST_CHECK_EQUAL(block->getInputs().count("Input"), 1); //it should have an input input
+    BOOST_CHECK_EQUAL(block->getInputs().count("Accumulation"), 0); //it should not have an accumulation input
+    //BOOST_CHECK(std::find(block->getOptionNames().begin(), block->getOptionNames().end(), "Accumulation") != block->getOptionNames().end()); //it should find accumulation in there
 
-    inputs = modelBlock->getInputs();
+    boost::shared_ptr<IBlock> block2 = model->addModel(integration);
+    std::cout << "model 2 id " << block2->getId() << std::endl;
+    if (!block2)
+        BOOST_FAIL("Returned null creating block from model 2nd time.");
 
-    BOOST_CHECK(inputs.count("Added entry"));
+    //add some arbitrary data to block2
+    block2->setData("view:x", "200");
+    block2->setData("view:y", "240");
 
-    //test removing an existing input
-    model->removeEntry("Entry 2");
+    //check out the inputs, outputs, and options for the 2nd block
+    BOOST_CHECK_EQUAL(block2->getOutputs().count("Value"), 1); //it should have a Value output
+    BOOST_CHECK_EQUAL(block2->getOutputs().count("Accumulation"), 0); //it should not have an accumulation output
+    BOOST_CHECK_EQUAL(block2->getInputs().count("Input"), 1); //it should have an input input
+    BOOST_CHECK_EQUAL(block2->getInputs().count("Accumulation"), 0); //it should not have an accumulation input
+    //BOOST_CHECK(std::find(block2->getOptionNames().begin(), block2->getOptionNames().end(), "Accumulation") != block2->getOptionNames().end()); //it should find accumulation in there
 
-    inputs = modelBlock->getInputs();
+    block->connect("Value", block2, "Input", true);
+    boost::shared_ptr<IBlock> block3 = model->createBlock("Var", "Static");
+    std::cout << "static block id " << block3->getId() << std::endl;
+    value = boost::shared_ptr<std::vector<double> >(new std::vector<double>());
+    value->push_back(0.5);
+    block3->setOption("Value", value);
+    BOOST_CHECK(block3->connect("Output", block, "Input", false));
 
-    BOOST_CHECK(!inputs.count("Entry 2"));
+    block = model->addExit("Result");
+    if (!block)
+        BOOST_FAIL("Unable to create exit Result");
+    BOOST_CHECK(block2->connect("Value", block, IEXITBLOCK_INPUT_NAME, false));
+    std::cout << "hi" << std::endl;
 
-    //test added new outputs
-    model->addExit("Added exit");
+    boost::shared_ptr<ISimulation> simulation = core->createSimulation(2, 0.1);
+    simulation->addModel(model);
+    simulation->addModel(integration);
+    simulation->setRootModel("test");
 
-    outputs = modelBlock->getOutputs();
+    BOOST_CHECK(core->saveSimulation(simulation, "test.simx"));
 
-    BOOST_CHECK(outputs.count("Added exit"));
+    //then load the simulation back
+    simulation = core->loadSimulation("test.simx");
+    std::cout << core->getLastFileError();
+    BOOST_CHECK(simulation);
 
-    //test removing an existing output
-    model->removeExit("Exit 2");
+    //did we get both models?
+    BOOST_CHECK(simulation->getModels().count("test"));
+    BOOST_CHECK(simulation->getModels().count("integration"));
 
-    outputs = modelBlock->getOutputs();
+    //is the root model test?
+    BOOST_CHECK_EQUAL(simulation->getRootModel()->getName(), "test");
 
-    BOOST_CHECK(!outputs.count("Exit 2"));
+    core->saveSimulation(simulation, "test2.simx");
 
+    //run this
+    model = simulation->getRootModel();
+    boost::shared_ptr<IEngine> engine = core->createEngine(simulation);
+
+    engine->run();
+
+    if (model->getExits().at("Result")->getCurrentValue(engine->getContext().get()))
+    {
+        BOOST_CHECK_EQUAL(model->getExits().at("Result")->getCurrentValue(engine->getContext().get())->at(0), 0.125);
+    }
+    else
+    {
+        BOOST_FAIL("Null result in re-loading simulation test");
+    }
 }

@@ -32,6 +32,7 @@ public:
 
     virtual boost::shared_ptr<IEngine> createEngine(boost::shared_ptr<IModel> model, int steps, double delta) = 0;
     virtual boost::shared_ptr<IEngine> createEngine(const std::string& engineTypeName, boost::shared_ptr<IModel> model, int steps, double delta) = 0;
+    virtual boost::shared_ptr<IEngine> createEngine(boost::shared_ptr<ISimulation> simulation) = 0;
 
     virtual void setEngineType(const std::string& typeName) = 0;
 

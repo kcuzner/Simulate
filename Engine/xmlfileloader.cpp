@@ -22,7 +22,7 @@ XMLFileLoader::XMLFileLoader()
 
 std::string XMLFileLoader::getFileMatchPattern()
 {
-    return ".simx$";
+    return "\\.simx$";
 }
 
 std::string XMLFileLoader::getFileTypeName()
@@ -35,7 +35,10 @@ boost::shared_ptr<ISimulation> XMLFileLoader::loadFile(ISimulationCore *core, st
     //load the entire file into a string
     std::ifstream file(fileName.c_str());
     if (!file.is_open())
+    {
+        this->lastError = "Unable to open file";
         return boost::shared_ptr<ISimulation>(); //null because there was an error
+    }
 
     std::vector<char> buffer((std::istreambuf_iterator<char>(file)),
                     std::istreambuf_iterator<char>());
@@ -108,15 +111,8 @@ boost::shared_ptr<ISimulation> XMLFileLoader::loadFile(ISimulationCore *core, st
             if (!block)
                 continue; //to add data we need a block...
 
-            //add the arbitrary data to the block
-            for(xml_attribute<>* j = i->first_attribute(); j; j = j->next_attribute())
-            {
-                std::string name = j->name();
-                if (name == "id" || name == "name")
-                    continue; //skip these since they aren't arent arbitrary data fields
-
-                block->setData(name, j->value());
-            }
+            //add the data to the block
+            this->readBlockData(i, block);
         }
 
         //add exits
@@ -136,19 +132,12 @@ boost::shared_ptr<ISimulation> XMLFileLoader::loadFile(ISimulationCore *core, st
             if (!block)
                 continue; //to add data we need a block...
 
-            //add the arbitrary data to the block
-            for(xml_attribute<>* j = i->first_attribute(); j; j = j->next_attribute())
-            {
-                std::string name = j->name();
-                if (name == "id" || name == "name")
-                    continue; //skip these since they aren't arent arbitrary data fields
-
-                block->setData(name, j->value());
-            }
+            //add the data to the block
+            this->readBlockData(i, block);
         }
 
         //save it
-        models[nameAttribute->value()] = std::pair<xml_node<>*, boost::shared_ptr<IModel> >(modelNode, model);
+        models[model->getName()] = std::pair<xml_node<>*, boost::shared_ptr<IModel> >(modelNode, model);
     }
 
     typedef std::pair<std::string, std::pair<xml_node<>*, boost::shared_ptr<IModel> > > ModelRecord;
@@ -170,32 +159,36 @@ boost::shared_ptr<ISimulation> XMLFileLoader::loadFile(ISimulationCore *core, st
             xml_attribute<>* nameAttribute = i->first_attribute("model");
             xml_attribute<>* idAttribute = i->first_attribute("id");
             if (!nameAttribute || !idAttribute)
+            {
+                std::cout << "no name for model block" << std::endl;
                 continue; //no name or id? skip
+            }
 
             int id = atoi(idAttribute->value());
 
             if (!models.count(nameAttribute->value()))
+            {
+                std::cout << "model " << nameAttribute->value() << " doesn't exist" << std::endl;
                 continue; //the model doesn't exist
+            }
 
             boost::shared_ptr<IModelBlock> block = model->addModel(id, models.at(nameAttribute->value()).second);
 
             //TODO: Do we want an exception when this returns null? That means there was infinite recursion
 
             if (!block)
-                continue; //to add data we need a block...
-
-            //add the arbitrary data to the block
-            for(xml_attribute<>* j = i->first_attribute(); j; j = j->next_attribute())
             {
-                std::string name = j->name();
-                if (name == "id" || name == "model")
-                    continue; //skip these since they aren't arent arbitrary data fields
-
-                block->setData(name, j->value());
+                std::cout << "Unable to create a modelblock " << std::endl;
+                continue; //to add data we need a block...
             }
+
+            //add the data to the block
+            std::cout << "reading block data" << std::endl;
+            this->readBlockData(i, block);
         }
 
         //go through all the normal blocks
+        std::cout << "going through normal blocks..." << std::endl;
         for(xml_node<>* i = modelNode->first_node("block"); i; i = i->next_sibling("block"))
         {
             xml_attribute<>* idAttribute = i->first_attribute("id");
@@ -212,15 +205,8 @@ boost::shared_ptr<ISimulation> XMLFileLoader::loadFile(ISimulationCore *core, st
             if (!block)
                 continue; //to add data we need a block...
 
-            //add the arbitrary data to the block
-            for(xml_attribute<>* j = i->first_attribute(); j; j = j->next_attribute())
-            {
-                std::string name = j->name();
-                if (name == "id" || name == "name" || name == "group")
-                    continue; //skip these since they aren't arent arbitrary data fields
-
-                block->setData(name, j->value());
-            }
+            //add the data to the block
+            this->readBlockData(i, block);
         }
 
         //go through all the connections
@@ -278,6 +264,11 @@ bool XMLFileLoader::saveFile(ISimulationCore *, boost::shared_ptr<ISimulation> s
         return false; //the file didn't open
 
     xml_document<> doc;
+
+    xml_node<>* declaration = doc.allocate_node(node_declaration);
+    declaration->append_attribute(doc.allocate_attribute("version", "1.0"));
+    doc.append_node(declaration);
+
     xml_node<>* simulationNode = doc.allocate_node(node_element, "simulation");
 
     //set the steps, delta, and root model name
@@ -304,6 +295,9 @@ bool XMLFileLoader::saveFile(ISimulationCore *, boost::shared_ptr<ISimulation> s
     {
         xml_node<>* modelNode = doc.allocate_node(node_element, "model");
         std::set<int> blocksAdded; //this helps separate the special blocks from normal blocks
+
+        char* modelName = doc.allocate_string(modelRecord.second->getName().c_str());
+        modelNode->append_attribute(doc.allocate_attribute("name", modelName));
 
         //go through entries
         typedef std::pair<std::string, boost::shared_ptr<IEntryBlock> > EntryRecord;
@@ -409,6 +403,7 @@ bool XMLFileLoader::saveFile(ISimulationCore *, boost::shared_ptr<ISimulation> s
 
     //the simulation now has a filename
     simulation->setFileName(fileName);
+    return true;
 }
 
 const std::string &XMLFileLoader::getLastError() const
@@ -418,11 +413,31 @@ const std::string &XMLFileLoader::getLastError() const
 
 void XMLFileLoader::appendDataToBlockNode(xml_document<>* doc, rapidxml::xml_node<> *blockNode, boost::shared_ptr<IBlock> block)
 {
+    //append options
+    for(std::map<std::string, boost::shared_ptr<std::vector<double> > >::const_iterator iter = block->getOptions().begin(); iter != block->getOptions().end(); iter++)
+    {
+        char* optionName = doc->allocate_string((*iter).first.c_str());
+        xml_node<>* option = doc->allocate_node(node_element, "option");
+        option->append_attribute(doc->allocate_attribute("name", optionName));
+        for(std::vector<double>::const_iterator iter2 = (*iter).second->begin(); iter2 != (*iter).second->end(); iter2++)
+        {
+            std::stringstream s;
+            s << (*iter2);
+            char* value = doc->allocate_string(s.str().c_str());
+            option->append_node(doc->allocate_node(node_element, "value", value));
+        }
+
+        blockNode->append_node(option);
+    }
+    //append actual data
     for(std::map<std::string, std::string>::const_iterator iter = block->getData().begin(); iter != block->getData().end(); iter++)
     {
         char* name = doc->allocate_string((*iter).first.c_str());
         char* value = doc->allocate_string((*iter).second.c_str());
-        blockNode->append_attribute(doc->allocate_attribute(name, value));
+        xml_node<>* dataNode = doc->allocate_node(node_element, "data", value);
+        dataNode->append_attribute(doc->allocate_attribute("name", name));
+
+        blockNode->append_node(dataNode);
     }
 }
 
@@ -446,6 +461,38 @@ void XMLFileLoader::attachConnectionsToModel(xml_document<> *doc, rapidxml::xml_
             connection->append_attribute(doc->allocate_attribute("input", inputName));
 
             modelNode->append_node(connection);
+        }
+    }
+}
+
+void XMLFileLoader::readBlockData(rapidxml::xml_node<> *blockNode, boost::shared_ptr<IBlock> block)
+{
+    //read options
+    for(xml_node<>* i = blockNode->first_node("option"); i; i = i->next_sibling("option"))
+    {
+        xml_attribute<>* name = i->first_attribute("name");
+        if (name)
+        {
+            boost::shared_ptr<std::vector<double> > value(new std::vector<double>());
+            //find out its value
+            for(xml_node<>* j = i->first_node("value"); j; j = j->next_sibling("value"))
+            {
+                value->push_back(atof(j->value()));
+            }
+
+            if (value->size())
+            {
+                block->setOption(name->value(), value);
+            }
+        }
+    }
+    //read data
+    for(xml_node<>* i = blockNode->first_node("data"); i; i = i->next_sibling("data"))
+    {
+        xml_attribute<>* name = i->first_attribute("name");
+        if (name)
+        {
+            block->setData(name->value(), i->value());
         }
     }
 }

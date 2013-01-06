@@ -57,7 +57,7 @@ public:
      * @brief Returns a string describing the last error that occured when saving or loading a file
      * @return
      */
-    virtual const std::string& getLastError() const;
+    virtual const std::string& getLastError() const = 0;
 };
 
 #endif // IFILELOADER_H
