@@ -304,8 +304,6 @@ BOOST_AUTO_TEST_CASE( SimxTest )
     //is the root model test?
     BOOST_CHECK_EQUAL(simulation->getRootModel()->getName(), "test");
 
-    core->saveSimulation(simulation, "test2.simx");
-
     //run this
     model = simulation->getRootModel();
     boost::shared_ptr<IEngine> engine = core->createEngine(simulation);
