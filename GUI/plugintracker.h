@@ -9,10 +9,6 @@
 #define PLUGIN_NAME_FILTERS "*.so"
 #endif
 
-#include "interfaces/ipluginbase.h"
-#include "interfaces/iblockplugin.h"
-#include "interfaces/iblockfactory.h"
-
 #include <QObject>
 #include <QString>
 #include <QDir>
@@ -22,11 +18,15 @@
 #include <QSharedPointer>
 #include <QQueue>
 
+#include "iplugin.h"
+#include "iblockcollectionplugin.h"
+#include "iengineplugin.h"
+
 class PluginTracker : public QAbstractItemModel
 {
     Q_OBJECT
 public:
-    explicit PluginTracker(Interfaces::IBlockFactory* blockFactory, QObject *parent = 0);
+    explicit PluginTracker(QObject *parent = 0);
 
     QVariant data(const QModelIndex &index, int role) const;
     int rowCount(const QModelIndex &parent) const;
@@ -39,7 +39,7 @@ public:
     QString getError();
     
 signals:
-    void pluginLoaded(QSharedPointer<Interfaces::IPluginBase> plugin);
+    void pluginLoaded(QSharedPointer<IPlugin> plugin);
     void errorsWhileLoading();
 
 public slots:
@@ -70,12 +70,11 @@ protected:
     };
 
     QDir pluginDirectory;
-    QHash<QString, Interfaces::IPluginBase* > plugins;
-    QHash<QString, Interfaces::IBlockPlugin*> blockPlugins;
+    QHash<QString, IPlugin* > plugins;
+    QHash<QString, IEnginePlugin* > enginePlugins;
+    QHash<QString, IBlockCollectionPlugin* > blockCollectionPlugins;
     QQueue<QString> errors;
     PluginTrackerNode* root;
-
-    Interfaces::IBlockFactory* blockFactory;
 };
 
 #endif // PLUGINTRACKER_H

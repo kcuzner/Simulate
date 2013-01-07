@@ -13,9 +13,16 @@ Model::Model(const std::string &name, boost::shared_ptr<IBlockFactory> factory)
     this->name = name;
 }
 
-const std::string &Model::getName()
+const std::string &Model::getName() const
 {
     return this->name;
+}
+
+void Model::setName(const std::string &name)
+{
+    this->name = name;
+
+    this->sigNameChanged(this, name);
 }
 
 boost::shared_ptr<IEntryBlock> Model::addEntry(const std::string &name)
@@ -34,10 +41,10 @@ boost::shared_ptr<IEntryBlock> Model::addEntry(int id, const std::string &name)
     boost::shared_ptr<IEntryBlock> entry(new EntryBlock(id, name));
 
     this->entries[name] = entry;
-    this->blocks[entry->getId()] = entry;
+    this->entriesById[entry->getId()] = entry;
 
-    this->sigBlockAdded(entry);
-    this->sigEntryAdded(entry);
+    this->addBlock(entry);
+    this->sigEntryAdded(this, entry);
 
     return entry;
 }
@@ -47,11 +54,7 @@ bool Model::removeEntry(const std::string &name)
     if (this->entries.count(name))
     {
         boost::shared_ptr<IEntryBlock> entry = this->entries[name];
-        this->entries.erase(name);
-        this->blocks.erase(entry->getId());
-
-        this->sigBlockRemoved(entry);
-        this->sigEntryRemoved(entry);
+        this->removeBlock(entry);
 
         return true;
     }
@@ -59,7 +62,7 @@ bool Model::removeEntry(const std::string &name)
     return false;
 }
 
-const std::map<std::string, boost::shared_ptr<IEntryBlock> > &Model::getEntries()
+const std::map<std::string, boost::shared_ptr<IEntryBlock> > &Model::getEntries() const
 {
     return this->entries;
 }
@@ -80,10 +83,10 @@ boost::shared_ptr<IExitBlock> Model::addExit(int id, const std::string &name)
     boost::shared_ptr<IExitBlock> exit(new ExitBlock(id, name));
 
     this->exits[name] = exit;
-    this->blocks[exit->getId()] = exit;
+    this->exitsById[exit->getId()] = exit;
 
-    this->sigBlockAdded(exit);
-    this->sigExitAdded(exit);
+    this->addBlock(exit);
+    this->sigExitAdded(this, exit);
 
     return exit;
 }
@@ -93,11 +96,7 @@ bool Model::removeExit(const std::string &name)
     if (this->exits.count(name))
     {
         boost::shared_ptr<IExitBlock> exit = this->exits[name];
-        this->exits.erase(name);
-        this->blocks.erase(exit->getId());
-
-        this->sigBlockRemoved(exit);
-        this->sigExitRemoved(exit);
+        this->removeBlock(exit);
 
         return true;
     }
@@ -105,7 +104,7 @@ bool Model::removeExit(const std::string &name)
     return false;
 }
 
-const std::map<std::string, boost::shared_ptr<IExitBlock> > &Model::getExits()
+const std::map<std::string, boost::shared_ptr<IExitBlock> > &Model::getExits() const
 {
     return this->exits;
 }
@@ -125,22 +124,54 @@ boost::shared_ptr<IBlock> Model::createBlock(int id, const std::string &group, c
 
     boost::shared_ptr<IBlock> block(this->factory->generateBlock(id, group, name));
 
-    if (block)
-        this->blocks[block->getId()] = block;
+    this->addBlock(block);
 
     return block;
 }
 
 bool Model::removeBlock(boost::shared_ptr<IBlock> block)
 {
-    this->blocks.erase(block->getId());
-    return true;
+    if (this->blocks.count(block->getId()))
+    {
+        if (this->entriesById.count(block->getId()))
+        {
+            //this is an entry
+            boost::shared_ptr<IEntryBlock> entry = this->entriesById.at(block->getId());
+            this->entriesById.erase(entry->getId());
+            this->entries.erase(entry->getEntryName());
+
+            this->sigEntryRemoved(this, entry);
+        }
+        if (this->exitsById.count(block->getId()))
+        {
+            //this is an exit
+            boost::shared_ptr<IExitBlock> exit = this->exitsById.at(block->getId());
+            this->exitsById.erase(exit->getId());
+            this->exits.erase(exit->getExitName());
+
+            this->sigExitRemoved(this, exit);
+        }
+        if (this->modelBlocks.count(block->getId()))
+        {
+            //this is a modelblock
+            this->modelBlocks.erase(block->getId());
+        }
+
+        this->blocks.erase(block->getId());
+        this->sigBlockRemoved(this, block);
+
+        return true;
+    }
+
+    return false;
 }
 
 bool Model::removeBlock(int id)
 {
-    this->blocks.erase(id);
-    return true;
+    if (this->blocks.count(id))
+        return this->removeBlock(this->blocks.at(id));
+
+    return false;
 }
 
 boost::shared_ptr<IModelBlock> Model::addModel(boost::shared_ptr<IModel> model)
@@ -160,7 +191,7 @@ boost::shared_ptr<IModelBlock> Model::addModel(int id, boost::shared_ptr<IModel>
 
     if (modelBlock)
     {
-        this->blocks[modelBlock->getId()] = modelBlock;
+        this->addBlock(modelBlock);
         this->modelBlocks[modelBlock->getId()] = modelBlock;
     }
 
@@ -200,6 +231,81 @@ bool Model::useId(long id)
         this->currentId = id + 1;
 
     return true;
+}
+
+void Model::addBlock(boost::shared_ptr<IBlock> block)
+{
+    if (block)
+    {
+        this->blocks[block->getId()] = block;
+
+        block->sigBlockChanged.connect(boost::bind(&Model::onBlockChanged, this, _1));
+        block->sigConnected.connect(boost::bind(&Model::onBlockConnected, this, _1, _2, _3, _4));
+        block->sigDataChanged.connect(boost::bind(&Model::onBlockDatachanged, this, _1, _2));
+        block->sigInputAdded.connect(boost::bind(&Model::onBlockInputAdded, this, _1, _2));
+        block->sigInputRemoved.connect(boost::bind(&Model::onBlockInputRemoved, this, _1, _2));
+        block->sigOutputAdded.connect(boost::bind(&Model::onBlockOutputAdded, this, _1, _2));
+        block->sigOutputRemoved.connect(boost::bind(&Model::onBlockOutputRemoved, this, _1, _2));
+
+        this->sigBlockAdded(this, block);
+    }
+}
+
+void Model::onBlockChanged(IBlock *block)
+{
+    boost::shared_ptr<IBlock> blockPtr = this->blocks[block->getId()];
+
+    this->sigBlockChanged(this, blockPtr);
+
+}
+
+void Model::onBlockConnected(IBlock *block, const std::string &output, boost::shared_ptr<IBlock> toBlock, const std::string &input)
+{
+    boost::shared_ptr<IBlock> blockPtr = this->blocks[block->getId()];
+
+    this->sigBlockConnected(this, blockPtr, output, toBlock, input);
+}
+
+void Model::onBlockOptionChanged(IBlock *block, const std::string &name)
+{
+    boost::shared_ptr<IBlock> blockPtr = this->blocks[block->getId()];
+
+    this->sigBlockOptionChanged(this, blockPtr, name);
+}
+
+void Model::onBlockDatachanged(IBlock *block, const std::string &name)
+{
+    boost::shared_ptr<IBlock> blockPtr = this->blocks[block->getId()];
+
+    this->sigBlockDataChanged(this, blockPtr, name);
+}
+
+void Model::onBlockInputAdded(IBlock *block, boost::shared_ptr<IBlockInput> input)
+{
+    boost::shared_ptr<IBlock> blockPtr = this->blocks[block->getId()];
+
+    this->sigBlockInputAdded(this, blockPtr, input);
+}
+
+void Model::onBlockInputRemoved(IBlock *block, boost::shared_ptr<IBlockInput> input)
+{
+    boost::shared_ptr<IBlock> blockPtr = this->blocks[block->getId()];
+
+    this->sigBlockInputRemoved(this, blockPtr, input);
+}
+
+void Model::onBlockOutputAdded(IBlock *block, boost::shared_ptr<IBlockOutput> output)
+{
+    boost::shared_ptr<IBlock> blockPtr = this->blocks[block->getId()];
+
+    this->sigBlockOutputAdded(this, blockPtr, output);
+}
+
+void Model::onBlockOutputRemoved(IBlock *block, boost::shared_ptr<IBlockOutput> output)
+{
+    boost::shared_ptr<IBlock> blockPtr = this->blocks[block->getId()];
+
+    this->sigBlockOutputRemoved(this, blockPtr, output);
 }
 
 

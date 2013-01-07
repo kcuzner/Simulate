@@ -39,23 +39,23 @@ public:
      * @brief Returns the model-unique idenfier for this block
      * @return
      */
-    virtual long getId() = 0;
+    virtual long getId() const = 0;
     /**
      * @brief Returns the group this block belongs to
      * @return
      */
-    virtual std::string getGroup() = 0;
+    virtual std::string getGroup() const = 0;
     /**
      * @brief Returns the name of this block type
      * @return
      */
-    virtual std::string getName() = 0;
+    virtual std::string getName() const = 0;
 
     /**
      * @brief Returns block option names
      * @return
      */
-    virtual const std::list<std::string>& getOptionNames() = 0;
+    virtual const std::list<std::string>& getOptionNames() const = 0;
 
     /**
      * @brief Returns a block option value. THIS SHOULD NOT BE USED DURING execute()!!!
@@ -97,13 +97,13 @@ public:
      * @brief Gets the inputs to this block
      * @return The inputs to this block
      */
-    virtual const std::map<std::string, boost::shared_ptr<IBlockInput> >& getInputs() = 0;
+    virtual const std::map<std::string, boost::shared_ptr<IBlockInput> >& getInputs() const = 0;
 
     /**
      * @brief Gets the outputs from this blockqa
      * @return The outputs from this block
      */
-    virtual const std::map<std::string, boost::shared_ptr<IBlockOutput> >& getOutputs() = 0;
+    virtual const std::map<std::string, boost::shared_ptr<IBlockOutput> >& getOutputs() const = 0;
 
     /**
      * @brief Connects an output from this block to the input of the passed block
@@ -119,13 +119,13 @@ public:
      * @brief Returns all the arbitrary data associated with this block
      * @return
      */
-    virtual const std::map<std::string, std::string>& getData() = 0;
+    virtual const std::map<std::string, std::string>& getData() const = 0;
     /**
      * @brief Returns a specific arbitrary value. If it doesn't exist, an out of range exception should bubble up
      * @param key
      * @return
      */
-    virtual const std::string& getData(const std::string& key) = 0;
+    virtual const std::string& getData(const std::string& key) const = 0;
     /**
      * @brief Sets an arbitrary data value
      * @param key
@@ -133,10 +133,15 @@ public:
      */
     virtual void setData(const std::string& key, const std::string& value) = 0;
 
-    boost::signals2::signal<void (boost::weak_ptr<IBlockInput>)> sigInputAdded;
-    boost::signals2::signal<void (boost::shared_ptr<IBlockInput>)> sigInputRemoved;
-    boost::signals2::signal<void (boost::weak_ptr<IBlockOutput>)> sigOutputAdded;
-    boost::signals2::signal<void (boost::shared_ptr<IBlockOutput>)> sigOutputRemoved;
+    //block events
+    boost::signals2::signal<void (IBlock*)> sigBlockChanged;
+    boost::signals2::signal<void (IBlock*, const std::string&, boost::shared_ptr<IBlock>, const std::string& input)> sigConnected;
+    boost::signals2::signal<void (IBlock*, const std::string&)> sigOptionChanged;
+    boost::signals2::signal<void (IBlock*, const std::string&)> sigDataChanged;
+    boost::signals2::signal<void (IBlock*, boost::shared_ptr<IBlockInput>)> sigInputAdded;
+    boost::signals2::signal<void (IBlock*, boost::shared_ptr<IBlockInput>)> sigInputRemoved;
+    boost::signals2::signal<void (IBlock*, boost::shared_ptr<IBlockOutput>)> sigOutputAdded;
+    boost::signals2::signal<void (IBlock*, boost::shared_ptr<IBlockOutput>)> sigOutputRemoved;
 };
 
 #endif // IBLOCK_H

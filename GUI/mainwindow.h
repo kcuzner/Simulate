@@ -3,9 +3,9 @@
 
 #include "pluginsdialog.h"
 #include "plugintracker.h"
-#include "simulation/blockfactory.h"
 
 #include <QMainWindow>
+#include <QSettings>
 
 namespace Ui {
 class MainWindow;
@@ -21,6 +21,9 @@ public:
 
 public slots:
     void viewPlugins();
+    void newSimulation();
+    void openSimulation();
+    void saveSimulation();
     void onPluginError();
     
 private:
@@ -28,7 +31,8 @@ private:
     PluginsDialog* pluginsDialog;
     PluginTracker* pluginTracker;
 
-    Simulation::BlockFactory* blockFactory;
+    QDir lastOpenDirectory;
+    QSettings settings;
 };
 
 #endif // MAINWINDOW_H

@@ -12,6 +12,7 @@
 #include <boost/regex.hpp>
 
 #include <iostream>
+#include <sstream>
 
 SimulationCore::SimulationCore()
 {
@@ -42,6 +43,11 @@ boost::shared_ptr<ISimulationCore> SimulationCore::getInstance()
         instance = boost::shared_ptr<SimulationCore>(new SimulationCore());
 
     return instance;
+}
+
+boost::shared_ptr<IBlockFactory> SimulationCore::getBlockFactory()
+{
+    return this->blockFactory;
 }
 
 bool SimulationCore::addEngineType(const std::string &name, boost::function<boost::shared_ptr<IEngine> (boost::shared_ptr<IModel>, int, double)> generator)
@@ -119,6 +125,24 @@ bool SimulationCore::addFileLoader(boost::shared_ptr<IFileLoader> loader)
     this->fileLoaders[loader->getFileMatchPattern()] = loader;
 
     return true;
+}
+
+std::string SimulationCore::getFileFilterString()
+{
+    std::stringstream s;
+    typedef std::pair<std::string, boost::shared_ptr<IFileLoader> > FileLoaderRecord;
+    bool first = true;
+    BOOST_FOREACH(FileLoaderRecord fileLoaderRecord, this->fileLoaders)
+    {
+        if (!first)
+            s << ";;";
+        else
+            first = false;
+
+        s << fileLoaderRecord.second->getFileTypeName();
+    }
+
+    return s.str();
 }
 
 boost::shared_ptr<ISimulation> SimulationCore::loadSimulation(const std::string &fileName)

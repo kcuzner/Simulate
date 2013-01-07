@@ -1,27 +1,23 @@
 #include "plugintracker.h"
 
-#include "interfaces/iblockplugin.h"
+#include "simulationcore.h"
 
 #include <QPluginLoader>
 #include <iostream>
 using namespace std;
 
-using namespace Interfaces;
-
-PluginTracker::PluginTracker(Interfaces::IBlockFactory* blockFactory, QObject *parent) :
+PluginTracker::PluginTracker(QObject *parent) :
     QAbstractItemModel(parent)
 {
     this->pluginDirectory = QDir::current();
     this->pluginDirectory.cd(PLUGIN_DEFAULT_DIRECTORY);
 
-    this->blockFactory = blockFactory;
-
     this->root = new PluginTrackerNode(false, "Plugins", "Loaded Plugins");
     //we support only blocks at the moment
-    PluginTrackerNode* child = new PluginTrackerNode(false, "Block Plugins", "Block plugins to the simulation engine.", this->root);
+    /*PluginTrackerNode* child = new PluginTrackerNode(false, "Block Plugins", "Block plugins to the simulation engine.", this->root);
     this->root->appendChild(child);
     PluginTrackerNode* plugin = new PluginTrackerNode(false, "System Blocks", "System blocks", child);
-    child->appendChild(plugin);
+    child->appendChild(plugin);*/
 }
 
 QVariant PluginTracker::data(const QModelIndex &index, int role) const
@@ -163,11 +159,13 @@ void PluginTracker::scan()
             errors = true;
         }
         //attempt to cast the instance to one of our plugins
-        Interfaces::IBlockPlugin* blockPlugin = qobject_cast<Interfaces::IBlockPlugin*>(instance);
-        if (blockPlugin) {
-            this->plugins[blockPlugin->getName()] = blockPlugin;
-            this->blockPlugins[blockPlugin->getName()] = blockPlugin;
-            blockPlugin->declareBlocks(this->blockFactory);
+        IEnginePlugin* enginePlugin = qobject_cast<IEnginePlugin*>(instance);
+        if (enginePlugin) {
+            this->enginePlugins[enginePlugin->getPluginName()] = enginePlugin;
+        }
+        IBlockCollectionPlugin* blockCollectionPlugin = qobject_cast<IBlockCollectionPlugin*>(instance);
+        if (blockCollectionPlugin) {
+            this->blockCollectionPlugins[blockCollectionPlugin->getPluginName()] = blockCollectionPlugin;
         }
     }
 

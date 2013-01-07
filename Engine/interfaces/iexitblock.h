@@ -10,9 +10,9 @@ class IExitBlock : public IBlock
 public:
     virtual ~IExitBlock() {}
 
-    virtual boost::shared_ptr<std::vector<double> > getCurrentValue(IContext* context) = 0;
+    virtual boost::shared_ptr<std::vector<double> > getCurrentValue(IContext* context) const = 0;
 
-    virtual std::string getExitName() = 0;
+    virtual const std::string& getExitName() const = 0;
 };
 
 #endif // IEXITBLOCK_H

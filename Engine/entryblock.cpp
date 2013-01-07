@@ -16,22 +16,22 @@ EntryBlock::EntryBlock(long id, std::string name)
     this->outputs[IENTRYBLOCK_OUTPUT_NAME] = output;
 }
 
-long EntryBlock::getId()
+long EntryBlock::getId() const
 {
     return this->id;
 }
 
-std::string EntryBlock::getGroup()
+std::string EntryBlock::getGroup() const
 {
     return "engine";
 }
 
-std::string EntryBlock::getName()
+std::string EntryBlock::getName() const
 {
     return "entry";
 }
 
-const std::list<std::string> &EntryBlock::getOptionNames()
+const std::list<std::string> &EntryBlock::getOptionNames() const
 {
     return this->options;
 }
@@ -80,12 +80,12 @@ void EntryBlock::execute(IContext *context, double)
     context->setOutputValue(this->getId(), IENTRYBLOCK_OUTPUT_NAME, context->getStoredValue(this->getId(), "Value"));
 }
 
-const std::map<std::string, boost::shared_ptr<IBlockInput> > &EntryBlock::getInputs()
+const std::map<std::string, boost::shared_ptr<IBlockInput> > &EntryBlock::getInputs() const
 {
     return this->inputs;
 }
 
-const std::map<std::string, boost::shared_ptr<IBlockOutput> > &EntryBlock::getOutputs()
+const std::map<std::string, boost::shared_ptr<IBlockOutput> > &EntryBlock::getOutputs() const
 {
     return this->outputs;
 }
@@ -112,12 +112,12 @@ bool EntryBlock::connect(const std::string &outputName, boost::shared_ptr<IBlock
     return false; //we failed to connect this for one reason or another
 }
 
-const std::map<std::string, std::string> &EntryBlock::getData()
+const std::map<std::string, std::string> &EntryBlock::getData() const
 {
     return this->data;
 }
 
-const std::string &EntryBlock::getData(const std::string &key)
+const std::string &EntryBlock::getData(const std::string &key) const
 {
     return this->data.at(key);
 }
@@ -132,7 +132,7 @@ void EntryBlock::setCurrentValue(IContext *context, boost::shared_ptr<std::vecto
     context->setStoredValue(this->getId(), "Value", value);
 }
 
-std::string EntryBlock::getEntryName()
+const std::string &EntryBlock::getEntryName() const
 {
     return this->name;
 }

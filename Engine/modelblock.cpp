@@ -13,10 +13,10 @@ ModelBlock::ModelBlock(long id, boost::shared_ptr<IModel> model)
     this->id = id;
     this->model = model;
 
-    model->sigEntryAdded.connect(boost::bind(&ModelBlock::entryAdded, this, _1));
-    model->sigEntryRemoved.connect(boost::bind(&ModelBlock::entryRemoved, this, _1));
-    model->sigExitAdded.connect(boost::bind(&ModelBlock::exitAdded, this, _1));
-    model->sigExitRemoved.connect(boost::bind(&ModelBlock::exitRemoved, this, _1));
+    model->sigEntryAdded.connect(boost::bind(&ModelBlock::entryAdded, this, _1, _2));
+    model->sigEntryRemoved.connect(boost::bind(&ModelBlock::entryRemoved, this, _1, _2));
+    model->sigExitAdded.connect(boost::bind(&ModelBlock::exitAdded, this, _1, _2));
+    model->sigExitRemoved.connect(boost::bind(&ModelBlock::exitRemoved, this, _1, _2));
 
     //inspect the entries and exits
     std::map<std::string, boost::shared_ptr<IEntryBlock> > entries = model->getEntries();
@@ -25,31 +25,31 @@ ModelBlock::ModelBlock(long id, boost::shared_ptr<IModel> model)
     std::map<std::string, boost::shared_ptr<IEntryBlock> >::iterator enIter;
     for(enIter = entries.begin(); enIter != entries.end(); enIter++)
     {
-        this->entryAdded((*enIter).second);
+        this->entryAdded(model.get(), (*enIter).second);
     }
     std::map<std::string, boost::shared_ptr<IExitBlock> >::iterator exIter;
     for(exIter = exits.begin(); exIter != exits.end(); exIter++)
     {
-        this->exitAdded((*exIter).second);
+        this->exitAdded(model.get(), (*exIter).second);
     }
 }
 
-long ModelBlock::getId()
+long ModelBlock::getId() const
 {
     return this->id;
 }
 
-std::string ModelBlock::getGroup()
+std::string ModelBlock::getGroup() const
 {
     return "engine";
 }
 
-std::string ModelBlock::getName()
+std::string ModelBlock::getName() const
 {
     return "model";
 }
 
-const std::list<std::string> &ModelBlock::getOptionNames()
+const std::list<std::string> &ModelBlock::getOptionNames() const
 {
     return this->optionBlockNames; //this should be empty
 }
@@ -139,12 +139,12 @@ void ModelBlock::execute(IContext *context, double)
     }
 }
 
-const std::map<std::string, boost::shared_ptr<IBlockInput> > &ModelBlock::getInputs()
+const std::map<std::string, boost::shared_ptr<IBlockInput> > &ModelBlock::getInputs() const
 {
     return this->inputs;
 }
 
-const std::map<std::string, boost::shared_ptr<IBlockOutput> > &ModelBlock::getOutputs()
+const std::map<std::string, boost::shared_ptr<IBlockOutput> > &ModelBlock::getOutputs() const
 {
     return this->outputs;
 }
@@ -164,6 +164,9 @@ bool ModelBlock::connect(const std::string &outputName, boost::shared_ptr<IBlock
 
             output->attachInput(input); //attach the input
 
+            this->sigConnected(this, outputName, block, inputName);
+            this->sigBlockChanged(this);
+
             return true;
         }
     }
@@ -171,12 +174,12 @@ bool ModelBlock::connect(const std::string &outputName, boost::shared_ptr<IBlock
     return false; //we failed to connect this for one reason or another
 }
 
-const std::map<std::string, std::string> &ModelBlock::getData()
+const std::map<std::string, std::string> &ModelBlock::getData() const
 {
     return this->data;
 }
 
-const std::string &ModelBlock::getData(const std::string &key)
+const std::string &ModelBlock::getData(const std::string &key) const
 {
     return this->data.at(key);
 }
@@ -184,14 +187,16 @@ const std::string &ModelBlock::getData(const std::string &key)
 void ModelBlock::setData(const std::string &key, const std::string &value)
 {
     this->data[key] = value;
+    this->sigDataChanged(this, key);
+    this->sigBlockChanged(this);
 }
 
-boost::shared_ptr<IModel> ModelBlock::getModel()
+boost::shared_ptr<IModel> ModelBlock::getModel() const
 {
     return this->model;
 }
 
-boost::shared_ptr<IContext> ModelBlock::getContext(IContext *context)
+boost::shared_ptr<IContext> ModelBlock::getContext(IContext *context) const
 {
     boost::shared_ptr<IContext> childContext = context->getChildContext(this->getId());
 
@@ -203,7 +208,7 @@ boost::shared_ptr<IContext> ModelBlock::getContext(IContext *context)
     return childContext;
 }
 
-void ModelBlock::entryAdded(boost::shared_ptr<IEntryBlock> entry)
+void ModelBlock::entryAdded(IModel *, boost::shared_ptr<IEntryBlock> entry)
 {
     std::cout << "entry adding " << entry->getEntryName() << std::endl;
     //do we have any exits matching the name of this entry?
@@ -217,7 +222,7 @@ void ModelBlock::entryAdded(boost::shared_ptr<IEntryBlock> entry)
         this->outputs.erase(entry->getEntryName());
 
         //signal that an output was removed
-        this->sigOutputRemoved(output);
+        this->sigOutputRemoved(this, output);
 
         //create a pair
         this->optionBlocks[entry->getEntryName()] = std::pair<boost::shared_ptr<IEntryBlock>, boost::shared_ptr<IExitBlock> >(entry, exit);
@@ -232,11 +237,13 @@ void ModelBlock::entryAdded(boost::shared_ptr<IEntryBlock> entry)
         this->inputEntryBlocks[entry->getEntryName()] = entry;
 
         //signal than an input was added
-        this->sigInputAdded(input);
+        this->sigInputAdded(this, input);
     }
+
+    this->sigBlockChanged(this);
 }
 
-void ModelBlock::entryRemoved(boost::shared_ptr<IEntryBlock> entry)
+void ModelBlock::entryRemoved(IModel *, boost::shared_ptr<IEntryBlock> entry)
 {
     //do we have any pairs with this name?
     if (this->optionBlocks.count(entry->getEntryName()))
@@ -252,7 +259,7 @@ void ModelBlock::entryRemoved(boost::shared_ptr<IEntryBlock> entry)
         this->outputs[option.second->getExitName()] = output;
         this->outputExitBlocks[option.second->getExitName()] = option.second;
 
-        this->sigOutputAdded(output);
+        this->sigOutputAdded(this, output);
     }
     else
     {
@@ -261,11 +268,13 @@ void ModelBlock::entryRemoved(boost::shared_ptr<IEntryBlock> entry)
         this->inputs.erase(entry->getEntryName());
         this->inputEntryBlocks.erase(entry->getEntryName());
 
-        this->sigInputRemoved(input);
+        this->sigInputRemoved(this, input);
     }
+
+    this->sigBlockChanged(this);
 }
 
-void ModelBlock::exitAdded(boost::shared_ptr<IExitBlock> exit)
+void ModelBlock::exitAdded(IModel *, boost::shared_ptr<IExitBlock> exit)
 {
     std::cout << "exit adding " << exit->getExitName() << std::endl;
     //do we have any entries matching the name of this exit?
@@ -279,7 +288,7 @@ void ModelBlock::exitAdded(boost::shared_ptr<IExitBlock> exit)
         this->inputs.erase(exit->getExitName());
 
         //signal that an input was removed
-        this->sigInputRemoved(input);
+        this->sigInputRemoved(this, input);
 
         //create a pair
         this->optionBlocks[exit->getExitName()] = std::pair<boost::shared_ptr<IEntryBlock>, boost::shared_ptr<IExitBlock> >(entry, exit);
@@ -294,11 +303,13 @@ void ModelBlock::exitAdded(boost::shared_ptr<IExitBlock> exit)
         this->outputExitBlocks[exit->getExitName()] = exit;
 
         //signal than an input was added
-        this->sigOutputAdded(output);
+        this->sigOutputAdded(this, output);
     }
+
+    this->sigBlockChanged(this);
 }
 
-void ModelBlock::exitRemoved(boost::shared_ptr<IExitBlock> exit)
+void ModelBlock::exitRemoved(IModel *, boost::shared_ptr<IExitBlock> exit)
 {
     //do we have any pairs with this name?
     if (this->optionBlocks.count(exit->getExitName()))
@@ -314,7 +325,7 @@ void ModelBlock::exitRemoved(boost::shared_ptr<IExitBlock> exit)
         this->inputs[option.first->getEntryName()] = input;
         this->inputEntryBlocks[option.first->getEntryName()] = option.first;
 
-        this->sigInputAdded(input);
+        this->sigInputAdded(this, input);
     }
     else
     {
@@ -324,6 +335,8 @@ void ModelBlock::exitRemoved(boost::shared_ptr<IExitBlock> exit)
 
         this->outputExitBlocks.erase(exit->getExitName());
 
-        this->sigOutputRemoved(output);
+        this->sigOutputRemoved(this, output);
     }
+
+    this->sigBlockChanged(this);
 }

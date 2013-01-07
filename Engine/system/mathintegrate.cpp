@@ -1,5 +1,7 @@
 #include "mathintegrate.h"
 
+using namespace System;
+
 MathIntegrate::MathIntegrate(long id)
     : BaseBlock(id, "Math", "Integrate")
 {

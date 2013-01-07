@@ -9,14 +9,8 @@
 #include "mainwindow.h"
 #include "modelwindow.h"
 
-#include "simulation/model.h"
-#include "simulation/block.h"
-#include "interfaces/iblockplugin.h"
-#include "simulation/blockfactory.h"
-
 #include <iostream>
 
-using namespace Simulation;
 using namespace std;
 
 static const char* GENERIC_TEST_ICON = "document-open";
@@ -25,6 +19,10 @@ static const char* FALLBACK_THEME = "silk";
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
+
+    QCoreApplication::setOrganizationName("Kevincuzner");
+    QCoreApplication::setOrganizationDomain("kevincuzner.com");
+    QCoreApplication::setApplicationName("Simulate");
 
     //check for an icon theme
     if (!QIcon::hasThemeIcon(GENERIC_TEST_ICON))
@@ -58,8 +56,8 @@ int main(int argc, char *argv[])
     w.show();
     s.finish(&w);
 
-    ModelWindow mw(&w);
-    mw.show();
+    //ModelWindow mw(&w);
+    //mw.show();
 
     return a.exec();
 }

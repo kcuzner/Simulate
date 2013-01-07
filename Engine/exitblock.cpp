@@ -13,22 +13,22 @@ ExitBlock::ExitBlock(long id, std::string name)
     this->inputs[IEXITBLOCK_INPUT_NAME] = input;
 }
 
-long ExitBlock::getId()
+long ExitBlock::getId() const
 {
     return this->id;
 }
 
-std::string ExitBlock::getGroup()
+std::string ExitBlock::getGroup() const
 {
     return "engine";
 }
 
-std::string ExitBlock::getName()
+std::string ExitBlock::getName() const
 {
     return "exit";
 }
 
-const std::list<std::string> &ExitBlock::getOptionNames()
+const std::list<std::string> &ExitBlock::getOptionNames() const
 {
     return this->options;
 }
@@ -60,12 +60,12 @@ void ExitBlock::execute(IContext *context, double)
     context->setStoredValue(this->getId(), "Value", context->getInputValue(this->getId(), IEXITBLOCK_INPUT_NAME));
 }
 
-const std::map<std::string, boost::shared_ptr<IBlockInput> > &ExitBlock::getInputs()
+const std::map<std::string, boost::shared_ptr<IBlockInput> > &ExitBlock::getInputs() const
 {
     return this->inputs;
 }
 
-const std::map<std::string, boost::shared_ptr<IBlockOutput> > &ExitBlock::getOutputs()
+const std::map<std::string, boost::shared_ptr<IBlockOutput> > &ExitBlock::getOutputs() const
 {
     return this->outputs;
 }
@@ -92,12 +92,12 @@ bool ExitBlock::connect(const std::string &outputName, boost::shared_ptr<IBlock>
     return false; //we failed to connect this for one reason or another
 }
 
-const std::map<std::string, std::string> &ExitBlock::getData()
+const std::map<std::string, std::string> &ExitBlock::getData() const
 {
     return this->data;
 }
 
-const std::string &ExitBlock::getData(const std::string &key)
+const std::string &ExitBlock::getData(const std::string &key) const
 {
     return this->data.at(key);
 }
@@ -107,12 +107,12 @@ void ExitBlock::setData(const std::string &key, const std::string &value)
     this->data[key] = value;
 }
 
-boost::shared_ptr<std::vector<double> > ExitBlock::getCurrentValue(IContext *context)
+boost::shared_ptr<std::vector<double> > ExitBlock::getCurrentValue(IContext *context) const
 {
     return context->getStoredValue(this->getId(), "Value");
 }
 
-std::string ExitBlock::getExitName()
+const std::string &ExitBlock::getExitName() const
 {
     return this->name;
 }

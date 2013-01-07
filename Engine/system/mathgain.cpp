@@ -2,6 +2,8 @@
 
 #include <sstream>
 
+using namespace System;
+
 MathGain::MathGain(long id)
     : BaseBlock(id, "Math", "Gain")
 {

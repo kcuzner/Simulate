@@ -22,6 +22,8 @@ class ISimulationCore
 public:
     virtual ~ISimulationCore() {}
 
+    virtual boost::shared_ptr<IBlockFactory> getBlockFactory() = 0;
+
     /**
      * @brief Adds an engine generator with the given name to the simulation core
      * @param name
@@ -62,6 +64,12 @@ public:
      * @return False if a loader for the exact file pattern exists
      */
     virtual bool addFileLoader(boost::shared_ptr<IFileLoader> loader) = 0;
+
+    /**
+     * @brief Returns a string of the combined IFileLoader::getFileTypeName() results separated by ;;
+     * @return
+     */
+    virtual std::string getFileFilterString() = 0;
 
     /**
      * @brief Loads a simulation from a file using one of the file loaders attached to the simulation core

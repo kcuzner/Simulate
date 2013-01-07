@@ -14,6 +14,8 @@ class SimulationCore : public ISimulationCore
 public:
     static boost::shared_ptr<ISimulationCore> getInstance();
 
+    virtual boost::shared_ptr<IBlockFactory> getBlockFactory();
+
     /**
      * @brief Adds an engine generator with the given name to the simulation core
      * @param name
@@ -44,6 +46,8 @@ public:
     virtual bool addBlockCollection(boost::shared_ptr<IBlockCollection> collection);
 
     virtual bool addFileLoader(boost::shared_ptr<IFileLoader> loader);
+
+    virtual std::string getFileFilterString();
 
     /**
      * @brief Loads a simulation from a file using one of the file loaders attached to the simulation core

@@ -15,6 +15,11 @@ boost::shared_ptr<DefaultBlockFactory> DefaultBlockFactory::getInstance()
     return instance;
 }
 
+const std::map<std::string, std::list<std::string> > &DefaultBlockFactory::getValidBlockNames() const
+{
+    return this->validNames;
+}
+
 boost::shared_ptr<IBlock> DefaultBlockFactory::generateBlock(int id, const std::string &group, const std::string &name)
 {
     if (this->generators.count(group) == 0)
@@ -43,4 +48,10 @@ boost::shared_ptr<IModelBlock> DefaultBlockFactory::generateModelBlock(int id, b
 void DefaultBlockFactory::declareBlock(const boost::function<boost::shared_ptr<IBlock> (int)> &generator, const std::string &group, const std::string &name)
 {
     this->generators[group][name] = generator;
+
+    if (std::find(this->validNames[group].begin(), this->validNames[group].end(), name) == this->validNames[group].end())
+    {
+        this->validNames[group].push_back(name);
+        this->sigBlockAdded(group, name);
+    }
 }

@@ -2,9 +2,13 @@
 #define IBLOCKFACTORY_H
 
 #include <string>
+#include <map>
+#include <list>
+
 
 #include <boost/function.hpp>
 #include <boost/smart_ptr.hpp>
+#include <boost/signals2.hpp>
 
 #include "iblock.h"
 #include "imodelblock.h"
@@ -19,6 +23,12 @@ class IBlockFactory
 {
 public:
     virtual ~IBlockFactory() {}
+
+    /**
+     * @brief Returns a map sorted by group and name with the valid block names for this factory
+     * @return
+     */
+    virtual const std::map<std::string, std::list<std::string> >& getValidBlockNames() const = 0;
 
     /**
      * @brief Generates a block
@@ -42,6 +52,10 @@ public:
      * @param name Name of the block
      */
     virtual void declareBlock(const boost::function<boost::shared_ptr<IBlock> (int id)>& generator, const std::string& group, const std::string& name) = 0;
+
+
+    boost::signals2::signal<void (const std::string& group, const std::string& name)> sigBlockAdded;
+
 };
 
 #endif // IBLOCKFACTORY_H

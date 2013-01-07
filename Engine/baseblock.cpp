@@ -14,22 +14,22 @@ BaseBlock::BaseBlock(long id, const std::string& group, const std::string& name)
     this->name = name;
 }
 
-long BaseBlock::getId()
+long BaseBlock::getId() const
 {
     return id;
 }
 
-std::string BaseBlock::getGroup()
+std::string BaseBlock::getGroup() const
 {
     return group;
 }
 
-std::string BaseBlock::getName()
+std::string BaseBlock::getName() const
 {
     return name;
 }
 
-const std::list<std::string> &BaseBlock::getOptionNames()
+const std::list<std::string> &BaseBlock::getOptionNames() const
 {
     return this->options;
 }
@@ -56,6 +56,9 @@ void BaseBlock::setOption(const std::string &name, boost::shared_ptr<std::vector
     {
         //we found it!
         this->optionValues[name] = value;
+
+        this->sigOptionChanged(this, name);
+        this->sigBlockChanged(this);
     }
 }
 
@@ -64,12 +67,12 @@ const std::map<std::string, boost::shared_ptr<std::vector<double> > > &BaseBlock
     return this->optionValues;
 }
 
-const std::map<std::string, boost::shared_ptr<IBlockInput> >& BaseBlock::getInputs()
+const std::map<std::string, boost::shared_ptr<IBlockInput> >& BaseBlock::getInputs() const
 {
     return this->inputs;
 }
 
-const std::map<std::string, boost::shared_ptr<IBlockOutput> >& BaseBlock::getOutputs()
+const std::map<std::string, boost::shared_ptr<IBlockOutput> >& BaseBlock::getOutputs() const
 {
     return this->outputs;
 }
@@ -89,6 +92,9 @@ bool BaseBlock::connect(const std::string &outputName, boost::shared_ptr<IBlock>
 
             output->attachInput(input); //attach the input
 
+            this->sigConnected(this, outputName, block, inputName);
+            this->sigBlockChanged(this);
+
             return true;
         }
     }
@@ -96,12 +102,12 @@ bool BaseBlock::connect(const std::string &outputName, boost::shared_ptr<IBlock>
     return false; //we failed to connect this for one reason or another
 }
 
-const std::map<std::string, std::string> &BaseBlock::getData()
+const std::map<std::string, std::string> &BaseBlock::getData() const
 {
     return this->data;
 }
 
-const std::string &BaseBlock::getData(const std::string &key)
+const std::string &BaseBlock::getData(const std::string &key) const
 {
     return this->data.at(key);
 }
@@ -109,6 +115,9 @@ const std::string &BaseBlock::getData(const std::string &key)
 void BaseBlock::setData(const std::string &key, const std::string &value)
 {
     this->data[key] = value;
+
+    this->sigDataChanged(this, key);
+    this->sigBlockChanged(this);
 }
 
 boost::shared_ptr<IBlockInput> BaseBlock::addInput(const std::string &name)
@@ -120,7 +129,8 @@ boost::shared_ptr<IBlockInput> BaseBlock::addInput(const std::string &name)
 
     this->inputs[name] = input;
 
-    this->sigInputAdded(boost::weak_ptr<IBlockInput>(input));
+    this->sigInputAdded(this, input);
+    this->sigBlockChanged(this);
 
     return input;
 }
@@ -134,7 +144,8 @@ void BaseBlock::removeInput(const std::string &name)
 
     this->inputs.erase(name);
 
-    this->sigInputRemoved(input);
+    this->sigInputRemoved(this, input);
+    this->sigBlockChanged(this);
 
     return;
 }
@@ -148,7 +159,8 @@ boost::shared_ptr<IBlockOutput> BaseBlock::addOutput(const std::string &name)
 
     this->outputs[name] = output;
 
-    this->sigOutputAdded(boost::weak_ptr<IBlockOutput>(output));
+    this->sigOutputAdded(this, output);
+    this->sigBlockChanged(this);
 
     return output;
 }
@@ -162,7 +174,8 @@ void BaseBlock::removeOutput(const std::string &name)
 
     this->outputs.erase(name);
 
-    this->sigOutputRemoved(output);
+    this->sigOutputRemoved(this, output);
+    this->sigBlockChanged(this);
 
     return;
 }

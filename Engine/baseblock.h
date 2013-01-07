@@ -12,15 +12,15 @@ class BaseBlock : public IBlock
 public:
     BaseBlock(long id, const std::string& group, const std::string& name);
 
-    virtual long getId();
-    virtual std::string getGroup();
-    virtual std::string getName();
+    virtual long getId() const;
+    virtual std::string getGroup() const;
+    virtual std::string getName() const;
 
     /**
      * @brief This implementation returns the options named in the option list
      * @return
      */
-    virtual const std::list<std::string>& getOptionNames();
+    virtual const std::list<std::string>& getOptionNames() const;
 
     /**
      * @brief This implementation retrieves options directly with the names being stored values and checking against the list
@@ -50,24 +50,19 @@ public:
      * @brief Gets the inputs to this block
      * @return The inputs to this block
      */
-    virtual const std::map<std::string, boost::shared_ptr<IBlockInput> >& getInputs();
+    virtual const std::map<std::string, boost::shared_ptr<IBlockInput> >& getInputs() const;
 
     /**
      * @brief Gets the outputs from this blockqa
      * @return The outputs from this block
      */
-    virtual const std::map<std::string, boost::shared_ptr<IBlockOutput> >& getOutputs();
+    virtual const std::map<std::string, boost::shared_ptr<IBlockOutput> >& getOutputs() const;
 
     virtual bool connect(const std::string &outputName, boost::shared_ptr<IBlock> block, const std::string &inputName, bool overwrite);
 
-    virtual const std::map<std::string, std::string>& getData();
-    virtual const std::string& getData(const std::string& key);
+    virtual const std::map<std::string, std::string>& getData() const;
+    virtual const std::string& getData(const std::string& key) const;
     virtual void setData(const std::string& key, const std::string& value);
-
-    boost::signals2::signal<void (boost::weak_ptr<IBlockInput>)> sigInputAdded;
-    boost::signals2::signal<void (boost::weak_ptr<IBlockInput>)> sigInputRemoved;
-    boost::signals2::signal<void (boost::weak_ptr<IBlockOutput>)> sigOutputAdded;
-    boost::signals2::signal<void (boost::weak_ptr<IBlockOutput>)> sigOutputRemoved;
 
 protected:
     boost::shared_ptr<IBlockInput> addInput(const std::string& name);

@@ -3,16 +3,19 @@
 
 #include "../baseblock.h"
 
-class MathIntegrate : public BaseBlock
+namespace System
 {
-public:
-    MathIntegrate(long id);
+    class MathIntegrate : public BaseBlock
+    {
+    public:
+        MathIntegrate(long id);
 
-    static boost::shared_ptr<MathIntegrate> generate(long id);
+        static boost::shared_ptr<MathIntegrate> generate(long id);
 
-    virtual bool initialize(IContext *context, std::string&);
+        virtual bool initialize(IContext *context, std::string&);
 
-    virtual void execute(IContext *context, double delta);
-};
+        virtual void execute(IContext *context, double delta);
+    };
+}
 
 #endif // MATHINTEGRATE_H

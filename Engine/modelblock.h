@@ -13,12 +13,12 @@ class ModelBlock : public IModelBlock
 public:
     ModelBlock(long id, boost::shared_ptr<IModel> model);
 
-    virtual long getId();
+    virtual long getId() const;
 
-    virtual std::string getGroup();
-    virtual std::string getName();
+    virtual std::string getGroup() const;
+    virtual std::string getName() const;
 
-    virtual const std::list<std::string>& getOptionNames();
+    virtual const std::list<std::string>& getOptionNames() const;
 
     /**
      * @brief Options for a ModelBlock are the initial values of the entry/exit pairs that are looped around when a model is executed
@@ -40,25 +40,25 @@ public:
 
     virtual void execute(IContext* context, double);
 
-    virtual const std::map<std::string, boost::shared_ptr<IBlockInput> >& getInputs();
+    virtual const std::map<std::string, boost::shared_ptr<IBlockInput> >& getInputs() const;
 
-    virtual const std::map<std::string, boost::shared_ptr<IBlockOutput> >& getOutputs();
+    virtual const std::map<std::string, boost::shared_ptr<IBlockOutput> >& getOutputs() const;
 
     virtual bool connect(const std::string &outputName, boost::shared_ptr<IBlock> block, const std::string &inputName, bool overwrite);
 
-    virtual const std::map<std::string, std::string>& getData();
-    virtual const std::string& getData(const std::string& key);
+    virtual const std::map<std::string, std::string>& getData() const;
+    virtual const std::string& getData(const std::string& key) const;
     virtual void setData(const std::string& key, const std::string& value);
 
-    virtual boost::shared_ptr<IModel> getModel();
+    virtual boost::shared_ptr<IModel> getModel() const;
 
-    virtual boost::shared_ptr<IContext> getContext(IContext* context);
+    virtual boost::shared_ptr<IContext> getContext(IContext* context) const;
 
 protected:
-    void entryAdded(boost::shared_ptr<IEntryBlock>);
-    void entryRemoved(boost::shared_ptr<IEntryBlock>);
-    void exitAdded(boost::shared_ptr<IExitBlock>);
-    void exitRemoved(boost::shared_ptr<IExitBlock>);
+    void entryAdded(IModel*, boost::shared_ptr<IEntryBlock>);
+    void entryRemoved(IModel*, boost::shared_ptr<IEntryBlock>);
+    void exitAdded(IModel*, boost::shared_ptr<IExitBlock>);
+    void exitRemoved(IModel*, boost::shared_ptr<IExitBlock>);
 
 private:
     long id;

@@ -3,16 +3,19 @@
 
 #include "../baseblock.h"
 
-class MathGain : public BaseBlock
+namespace System
 {
-public:
-    MathGain(long id);
+    class MathGain : public BaseBlock
+    {
+    public:
+        MathGain(long id);
 
-    static boost::shared_ptr<MathGain> generate(long id);
+        static boost::shared_ptr<MathGain> generate(long id);
 
-    virtual bool initialize(IContext *, std::string&error);
+        virtual bool initialize(IContext *, std::string&error);
 
-    virtual void execute(IContext *context, double);
-};
+        virtual void execute(IContext *context, double);
+    };
+}
 
 #endif // MATHGAIN_H

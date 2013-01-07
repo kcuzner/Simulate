@@ -3,8 +3,9 @@
 
 #include <QMainWindow>
 #include <QToolBox>
+#include <QListView>
+#include <QHash>
 
-#include "simulation/blockfactory.h"
 #include "modeleditorscene.h"
 
 namespace Ui {
@@ -22,14 +23,16 @@ public:
 public slots:
     void undockBlockDock(void);
     void undockModelDock(void);
-    void addBlock(QSharedPointer<Simulation::BlockFactory::BlockInfo> info);
-    void test2(QString recv);
+
+    void addBlock(const std::string& group, const std::string&);
     
 private:
     Ui::ModelWindow *ui;
     ModelEditorScene* editorScene;
     QToolBox* blockToolbox;
-    Simulation::Model* model;
+    boost::shared_ptr<IModel> model;
+
+    QHash<QString, QListView*> toolboxListViews;
 };
 
 #endif // MODELWINDOW_H

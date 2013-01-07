@@ -14,7 +14,7 @@ public:
 
     virtual void setCurrentValue(IContext* context, boost::shared_ptr<std::vector<double> > value) = 0;
 
-    virtual std::string getEntryName() = 0;
+    virtual const std::string& getEntryName() const = 0;
 };
 
 #endif // IENTRYBLOCK_H

@@ -12,14 +12,14 @@ class IModelBlock : public IBlock
 public:
     virtual ~IModelBlock() {}
 
-    virtual boost::shared_ptr<IModel> getModel() = 0;
+    virtual boost::shared_ptr<IModel> getModel() const = 0;
 
     /**
      * @brief Returns the child context for this modelblock in the passed context
      * @param context ModelBlock context
      * @return Child Context for the passed Parent Context
      */
-    virtual boost::shared_ptr<IContext> getContext(IContext* context) = 0;
+    virtual boost::shared_ptr<IContext> getContext(IContext* context) const = 0;
 };
 
 #endif // IMODELBLOCK_H

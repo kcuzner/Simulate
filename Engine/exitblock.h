@@ -8,12 +8,12 @@ class ExitBlock : public IExitBlock
 public:
     ExitBlock(long id, std::string name);
 
-    virtual long getId();
+    virtual long getId() const;
 
-    virtual std::string getGroup();
-    virtual std::string getName();
+    virtual std::string getGroup() const;
+    virtual std::string getName() const;
 
-    virtual const std::list<std::string>& getOptionNames();
+    virtual const std::list<std::string>& getOptionNames() const;
 
     virtual boost::shared_ptr<std::vector<double> > getOption(const std::string &) const;
     virtual void setOption(const std::string &, boost::shared_ptr<std::vector<double> > );
@@ -23,18 +23,18 @@ public:
 
     virtual void execute(IContext *context, double delta);
 
-    virtual const std::map<std::string, boost::shared_ptr<IBlockInput> >& getInputs();
-    virtual const std::map<std::string, boost::shared_ptr<IBlockOutput> >& getOutputs();
+    virtual const std::map<std::string, boost::shared_ptr<IBlockInput> >& getInputs() const;
+    virtual const std::map<std::string, boost::shared_ptr<IBlockOutput> >& getOutputs() const;
 
     virtual bool connect(const std::string &outputName, boost::shared_ptr<IBlock> block, const std::string &inputName, bool overwrite);
 
-    virtual const std::map<std::string, std::string>& getData();
-    virtual const std::string& getData(const std::string& key);
+    virtual const std::map<std::string, std::string>& getData() const;
+    virtual const std::string& getData(const std::string& key) const;
     virtual void setData(const std::string& key, const std::string& value);
 
-    virtual boost::shared_ptr<std::vector<double> > getCurrentValue(IContext *context);
+    virtual boost::shared_ptr<std::vector<double> > getCurrentValue(IContext *context) const;
 
-    virtual std::string getExitName();
+    virtual const std::string& getExitName() const;
 
 protected:
     long id;
