@@ -1,11 +1,13 @@
 <RCC>
     <qresource prefix="/icons">
         <file alias="model-add">resources/application_add.png</file>
-        <file alias="model-import">resources/application_put.png</file>
+        <file alias="model-export">resources/application_put.png</file>
         <file alias="save">resources/disk.png</file>
         <file alias="save-all">resources/disk_multiple.png</file>
         <file alias="open">resources/folder_page_white.png</file>
         <file alias="new">resources/page_white.png</file>
         <file>resources/pictures.png</file>
+        <file alias="model-remove">resources/application_delete.png</file>
+        <file alias="model-import">resources/application_get.png</file>
     </qresource>
 </RCC>

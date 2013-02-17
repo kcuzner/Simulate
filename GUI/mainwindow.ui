@@ -20,7 +20,68 @@
    <string>MainWindow</string>
   </property>
   <widget class="QWidget" name="centralWidget">
-   <layout class="QHBoxLayout" name="horizontalLayout_2"/>
+   <layout class="QHBoxLayout" name="horizontalLayout_2">
+    <item>
+     <layout class="QHBoxLayout" name="horizontalLayout">
+      <item>
+       <widget class="QTreeView" name="simulationTreeView">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Maximum" vsizetype="Expanding">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>250</width>
+          <height>16777215</height>
+         </size>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QFrame" name="frame">
+        <property name="frameShape">
+         <enum>QFrame::StyledPanel</enum>
+        </property>
+        <property name="frameShadow">
+         <enum>QFrame::Raised</enum>
+        </property>
+        <layout class="QVBoxLayout" name="verticalLayout_2">
+         <item>
+          <layout class="QVBoxLayout" name="verticalLayout">
+           <item>
+            <layout class="QFormLayout" name="formLayout_2">
+             <item row="0" column="0">
+              <widget class="QLabel" name="nameLabel">
+               <property name="text">
+                <string>Name:</string>
+               </property>
+              </widget>
+             </item>
+             <item row="0" column="1">
+              <widget class="QLineEdit" name="nameEdit"/>
+             </item>
+             <item row="1" column="0">
+              <widget class="QLabel" name="usedByLabel">
+               <property name="text">
+                <string>Used By:</string>
+               </property>
+              </widget>
+             </item>
+             <item row="1" column="1">
+              <widget class="QLineEdit" name="usedByEdit"/>
+             </item>
+            </layout>
+           </item>
+          </layout>
+         </item>
+        </layout>
+       </widget>
+      </item>
+     </layout>
+    </item>
+   </layout>
   </widget>
   <widget class="QMenuBar" name="menuBar">
    <property name="geometry">
@@ -28,14 +89,14 @@
      <x>0</x>
      <y>0</y>
      <width>600</width>
-     <height>23</height>
+     <height>21</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
     <property name="title">
      <string>File</string>
     </property>
-    <addaction name="actionNew_2"/>
+    <addaction name="actionNew"/>
     <addaction name="actionOpen"/>
     <addaction name="actionSave"/>
     <addaction name="actionSave_As"/>
@@ -47,8 +108,18 @@
     </property>
     <addaction name="actionView"/>
    </widget>
+   <widget class="QMenu" name="menuModel">
+    <property name="title">
+     <string>Model</string>
+    </property>
+    <addaction name="actionAdd_Model"/>
+    <addaction name="actionRemove_Model"/>
+    <addaction name="actionExport_Model"/>
+    <addaction name="actionImport_Model"/>
+   </widget>
    <addaction name="menuFile"/>
    <addaction name="menuPlugins"/>
+   <addaction name="menuModel"/>
   </widget>
   <widget class="QToolBar" name="mainToolBar">
    <attribute name="toolBarArea">
@@ -57,9 +128,14 @@
    <attribute name="toolBarBreak">
     <bool>false</bool>
    </attribute>
-   <addaction name="actionNew_2"/>
+   <addaction name="actionNew"/>
    <addaction name="actionOpen"/>
    <addaction name="actionSave"/>
+   <addaction name="separator"/>
+   <addaction name="actionAdd_Model"/>
+   <addaction name="actionRemove_Model"/>
+   <addaction name="actionExport_Model"/>
+   <addaction name="actionImport_Model"/>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
   <action name="actionSimulation">
@@ -67,7 +143,7 @@
     <string>Simulation</string>
    </property>
   </action>
-  <action name="actionNew_2">
+  <action name="actionNew">
    <property name="icon">
     <iconset theme="theme" resource="theme.qrc">
      <normaloff>:/icons/new</normaloff>:/icons/new</iconset>
@@ -92,6 +168,9 @@
    </property>
   </action>
   <action name="actionSave">
+   <property name="enabled">
+    <bool>true</bool>
+   </property>
    <property name="icon">
     <iconset theme="theme" resource="theme.qrc">
      <normaloff>:/icons/save</normaloff>:/icons/save</iconset>
@@ -104,6 +183,9 @@
    </property>
   </action>
   <action name="actionSave_As">
+   <property name="enabled">
+    <bool>true</bool>
+   </property>
    <property name="text">
     <string>Save As</string>
    </property>
@@ -116,6 +198,60 @@
   <action name="actionView">
    <property name="text">
     <string>&amp;View</string>
+   </property>
+  </action>
+  <action name="actionAdd_Model">
+   <property name="enabled">
+    <bool>true</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="theme.qrc">
+     <normaloff>:/icons/model-add</normaloff>:/icons/model-add</iconset>
+   </property>
+   <property name="text">
+    <string>Add Model</string>
+   </property>
+   <property name="toolTip">
+    <string>Add Model</string>
+   </property>
+  </action>
+  <action name="actionRemove_Model">
+   <property name="enabled">
+    <bool>true</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="theme.qrc">
+     <normaloff>:/icons/model-remove</normaloff>:/icons/model-remove</iconset>
+   </property>
+   <property name="text">
+    <string>Remove Model</string>
+   </property>
+   <property name="toolTip">
+    <string>Remove Model</string>
+   </property>
+  </action>
+  <action name="actionExport_Model">
+   <property name="enabled">
+    <bool>true</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="theme.qrc">
+     <normaloff>:/icons/model-export</normaloff>:/icons/model-export</iconset>
+   </property>
+   <property name="text">
+    <string>Export Model</string>
+   </property>
+  </action>
+  <action name="actionImport_Model">
+   <property name="enabled">
+    <bool>true</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="theme.qrc">
+     <normaloff>:/icons/model-import</normaloff>:/icons/model-import</iconset>
+   </property>
+   <property name="text">
+    <string>Import Model</string>
    </property>
   </action>
  </widget>
@@ -141,7 +277,7 @@
    </hints>
   </connection>
   <connection>
-   <sender>actionNew_2</sender>
+   <sender>actionNew</sender>
    <signal>activated()</signal>
    <receiver>MainWindow</receiver>
    <slot>newSimulation()</slot>
