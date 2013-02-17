@@ -19,7 +19,8 @@ HEADERS += \
            plugintracker.h \
     modeleditorscene.h \
     blockfactorygrouplistmodel.h \
-    simulationtreeitemmodel.h
+    simulationtreeitemmodel.h \
+    submodellistmodel.h
 FORMS += mainwindow.ui modelwindow.ui pluginsdialog.ui
 SOURCES += main.cpp \
            mainwindow.cpp \
@@ -28,7 +29,8 @@ SOURCES += main.cpp \
            plugintracker.cpp \
     modeleditorscene.cpp \
     blockfactorygrouplistmodel.cpp \
-    simulationtreeitemmodel.cpp
+    simulationtreeitemmodel.cpp \
+    submodellistmodel.cpp
 
 RESOURCES += \
     theme.qrc

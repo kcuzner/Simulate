@@ -9,5 +9,7 @@
         <file>resources/pictures.png</file>
         <file alias="model-remove">resources/application_delete.png</file>
         <file alias="model-import">resources/application_get.png</file>
+        <file alias="start">resources/control_play_blue.png</file>
+        <file alias="stop">resources/control_stop_blue.png</file>
     </qresource>
 </RCC>

@@ -13,6 +13,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->setupUi(this);
 
     this->simulationTreeModel = NULL;
+    this->submodelListModel = NULL;
 
     //simulation loading events
     connect(this, SIGNAL(simulationLoaded(boost::shared_ptr<ISimulation>)), SLOT(onSimulationLoaded(boost::shared_ptr<ISimulation>)));
@@ -118,6 +119,11 @@ void MainWindow::onSimulationLoaded(boost::shared_ptr<ISimulation> simulation)
 
     if (enabled)
     {
+        if (this->submodelListModel)
+            delete this->submodelListModel;
+        this->submodelListModel = new SubmodelListModel(simulation, this);
+        this->ui->submodelListView->setModel(this->submodelListModel);
+
         if (this->simulationTreeModel)
             delete this->simulationTreeModel; //out with the old
         this->simulationTreeModel = new SimulationTreeItemModel(simulation, this);
@@ -125,6 +131,11 @@ void MainWindow::onSimulationLoaded(boost::shared_ptr<ISimulation> simulation)
     }
     else
     {
+        if (this->submodelListModel)
+            delete this->submodelListModel;
+        this->submodelListModel = NULL;
+        this->ui->submodelListView->setModel(NULL);
+
         if (this->simulationTreeModel)
             delete this->simulationTreeModel;
         this->simulationTreeModel = NULL;

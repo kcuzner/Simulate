@@ -150,21 +150,26 @@ SimulationTreeItemModel::SimulationTreeItem::SimulationTreeItem(boost::shared_pt
     this->simulation = simulation;
 
     //for each model, we create a child
-    typedef std::pair<std::string, boost::shared_ptr<IModel> > ModelRecord;
-    foreach(ModelRecord record, simulation->getModels())
+    boost::shared_ptr<IModel> root = simulation->getRootModel();
+    if (root)
     {
-        this->appendChild(new ModelTreeItem(record.second, this));
+        //this is our child.
+        this->appendChild(new ModelTreeItem(root, this));
     }
 }
 
 int SimulationTreeItemModel::SimulationTreeItem::columnCount() const
 {
-    return 1; //we have just one column...the name
+    return 1; //we have just one column which is the header
 }
 
 QVariant SimulationTreeItemModel::SimulationTreeItem::data(int column) const
 {
-    return QString::fromStdString(simulation->getFileName());
+    //header data comes from us since we are the root treeitem
+    if (column == 0)
+        return "Model Name";
+    else
+        return QVariant();
 }
 
 
@@ -188,5 +193,12 @@ int SimulationTreeItemModel::ModelTreeItem::columnCount() const
 
 QVariant SimulationTreeItemModel::ModelTreeItem::data(int column) const
 {
-    return QString::fromStdString(model->getName());
+    if (column == 0)
+    {
+        return QString::fromStdString(model->getName());
+    }
+    else
+    {
+        return QVariant();
+    }
 }

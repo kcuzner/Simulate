@@ -21,7 +21,12 @@ public:
     QModelIndex parent(const QModelIndex &child) const;
     int rowCount(const QModelIndex &parent) const;
     int columnCount(const QModelIndex &parent) const;
+    
+signals:
+    
+public slots:
 
+protected:
     /**
      * @brief Base TreeItem class
      */
@@ -75,10 +80,6 @@ public:
     private:
         boost::shared_ptr<IModel> model;
     };
-    
-signals:
-    
-public slots:
     
 private:
     TreeItem* rootItem;

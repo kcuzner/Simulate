@@ -4,6 +4,7 @@
 #include "interfaces/isimulation.h"
 #include "pluginsdialog.h"
 #include "plugintracker.h"
+#include "submodellistmodel.h"
 #include "simulationtreeitemmodel.h"
 
 #include <QMainWindow>
@@ -54,6 +55,7 @@ private:
     Ui::MainWindow *ui;
     PluginsDialog* pluginsDialog;
     PluginTracker* pluginTracker;
+    SubmodelListModel* submodelListModel;
     SimulationTreeItemModel* simulationTreeModel;
 
     QDir lastOpenDirectory;
